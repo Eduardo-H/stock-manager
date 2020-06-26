@@ -1,5 +1,139 @@
-{% extends 'management/base.html %}
+{% extends 'management/base.html' %}
 
 {% block content %}
+  <section class="py-5">
+    <div class="container">
+      <h1 class="display-4 text-center mb-5">Cadastrar Alocação</h1>
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <form method="POST" autocomplete="off">
 
+            <div class="d-flex justify-content-center">
+              <div class="col-lg-4 mr-3">
+                <div class="form-group">
+                  <label for="data">Data</label>
+                  <input type="text" name="data" id="data" class="form-control" placeholder="Clique para selecionar...">
+                </div>
+              </div>
+              <div class="col-lg-4 ml-3">
+                <div class="form-group d-inline">
+                  <label for="horario">Horário</label>
+                  <input type="time" name="horario" id="horario" class="form-control">
+                </div>
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-center mb-3">
+              <div class="col-lg-4 mr-3">
+                <label for="item">Item</label>
+                <select class="form-control" name="item" id="item">
+                  <option value="{{ item.id }}">Cone</option>
+                  <option value="{{ item.id }}">Barreira</option>
+                  <option value="{{ item.id }}">Cavalete</option>
+                </select>
+              </div>
+              <div class="col-lg-4 ml-3">
+                <label for="quantidade">Quantidade</label>
+                <input type="number" name="quantidade" id="quantidade" class="form-control">
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-center mb-3">
+              <div class="col-lg-4 mr-3">
+                <label for="turno">Turno</label>
+                <select class="form-control" name="turno" id="turno">
+                  <option value="{{ item.turno }}">Manhã</option>
+                  <option value="{{ item.turno }}">Tarde</option>
+                  <option value="{{ item.turno }}">Noite</option>
+                  <option value="{{ item.turno }}">Madrugada</option>
+                </select>
+              </div>
+
+              <div class="col-lg-4 ml-3">
+                <label for="viatura">Viatura</label>
+                <select class="form-control" name="viatura" id="viatura">
+                  <option value="None">-</option>
+                  <option value="{{ item.viatura }}">102</option>
+                  <option value="{{ item.viatura }}">103</option>
+                  <option value="{{ item.viatura }}">104</option>
+                  <option value="{{ item.viatura }}">105</option>
+                  <option value="{{ item.viatura }}">106</option>
+                  <option value="{{ item.viatura }}">107</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-lg-9 mx-auto">
+              <div class="form-group">
+                <label for="local">Local</label>
+                <input type="text" name="local" class="form-control" placeholder="Informe o local da alocação">
+              </div>
+            </div>
+
+            <div class="col-lg-9 mx-auto">
+              <div class="form-group">
+                <label for="motivo">Motivo</label>
+                <input type="text" name="motivo" class="form-control" placeholder="Informe o motivo da alocação">
+              </div>
+            </div>
+
+            <div class="col-lg-9 mx-auto" id="agente-1">
+              <div class="form-group">
+                <label for="agente">Agente</label>
+                <input type="text" name="agente" class="form-control" placeholder="Grito de Guerra do Agente">
+              </div>
+            </div>
+
+
+
+
+            <div class="col-lg-9 mx-auto" >
+              <div class="form-group d-none" id="agente-2">
+                <label for="agente">Agente</label>
+                <input type="text" name="agente" class="form-control" placeholder="Grito de Guerra do Agente">
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-end">
+              <a href="#" id="add-agent"><i class="fas fa-plus fa-2x" id="icon"></i></a>
+            </div>
+
+            <div class="col-lg-9 mx-auto">
+              <button type="submit" class="btn btn-primary btn-block mt-4">CADASTRAR</button>
+            </div>
+
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <script type="text/javascript">
+    $('#data').datepicker({
+			format: "dd/mm/yyyy",
+			language: "pt-BR",
+			autoclose: true,
+			todayHighlight: true,
+      orientation: "bottom left"
+		});
+  </script>
+
+  <script>
+    document.querySelector('#add-agent').addEventListener('click', function() {
+      document.querySelector('#agente-2').classList.toggle('d-none');
+
+      var icon = document.querySelector('#icon');
+
+      if (icon.classList.contains('fa-plus')) {
+        document.querySelector('#icon').classList.remove('fa-plus');
+        document.querySelector('#icon').classList.add('fa-minus');
+      } else if (icon.classList.contains('fa-minus')) {
+        document.querySelector('#icon').classList.remove('fa-minus');
+        document.querySelector('#icon').classList.add('fa-plus');
+      }
+
+    });
+  </script>
 {% endblock %}

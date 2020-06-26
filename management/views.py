@@ -8,7 +8,7 @@ def home(request):
     return render(request, 'management/home.html', {'dados':dados})
 
 def criaralocacao(request):
-    if requet.method == 'GET':
+    if request.method == 'GET':
         return render(request, 'management/criaralocacao.html', {'formulario':FormAlocacao()})
 
 
