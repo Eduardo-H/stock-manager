@@ -19,5 +19,7 @@ from management import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.home, name='home')
+    path('', views.home, name='home'),
+    path('/criar-alocacao/', views.criaralocacao, name='criaralocacao'),
+    path('/<int:pk_alocacao>/detalhes', views.detalhealocacao, name='detalhealocacao'),
 ]
