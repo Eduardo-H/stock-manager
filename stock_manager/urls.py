@@ -24,4 +24,5 @@ urlpatterns = [
     path('<int:pk_alocacao>/detalhes', views.detalhealocacao, name='detalhealocacao'),
     path('estoque/', views.menuestoque, name="menuestoque"),
     path('estoque/adicionar-ao-estoque/', views.adicionarestoque, name="adicionarestoque"),
+    path('estoque/cadastrar-item/', views.cadastraritem, name="cadastraritem"),
 ]

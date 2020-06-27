@@ -7,6 +7,8 @@ def home(request):
     dados = AlocacaoRecolhimento.objects.all()
     return render(request, 'management/home.html', {'dados':dados})
 
+# ALOCAÇÃO
+
 def criaralocacao(request):
     itens = Item.objects.all()
     viaturas = Viatura.objects.all()
@@ -36,6 +38,8 @@ def detalhealocacao(request, pk_alocacao):
         alocacao = get_object_or_404(Alocacao, pk=pk_alocacao)
         return render(request, 'management/detalhealocacao.html', {'alocacao':alocacao})
 
+# ESTOQUE
+
 def menuestoque(request):
     itensestoque = Estoque.objects.all()
     itensperdidoextraviado = ItemPerdidoExtraviado.objects.all()
@@ -55,3 +59,21 @@ def adicionarestoque(request):
             return redirect('menuestoque')
         except ValueError:
             return render(request, 'management/adicionarestoque.html', {'itens':itens, 'erro':'Não foi possível adicionar ao estoque'})
+
+def cadastraritem(request):
+    if request.method == 'GET':
+        return render(request, 'management/cadastraritem.html', {'formulario':FormItem()})
+    else:
+        try:
+            formulario = FormItem(request.POST)
+            item = formulario.save(commit=False)
+            estoque = Estoque()
+            estoque.item = item
+            quantidade = request.POST['quantidade']
+            quantidade = int(quantidade)
+            estoque.quantidade = quantidade
+            item.save()
+            estoque.save()
+            return redirect('menuestoque')
+        except ValueError:
+            return render(request, 'management/cadastraritem.html', {'formulario':FormItem(), 'erro':'Não foi possível adicionar o item'})
