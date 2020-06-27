@@ -1,0 +1,40 @@
+{% extends 'management/base.html' %}
+
+{% block content %}
+  <section class="py-5">
+    <div class="container">
+      <h1 class="display-4 text-center mb-5">Adicionar ao estoque</h1>
+      <div class="row justify-content-center">
+        <div class="col-lg-6">
+          {% if erro %}
+            <div class="alert alert-danger">
+              <p>{{ erro }}</p>
+            </div>
+          {% endif %}
+          <form method="POST" autocomplete="off">
+            {% csrf_token %}
+
+            <div class="form-group">
+              <label for="item">Selecione o item</label>
+              <select class="form-control" name="item" id="item">
+                {% for item in itens %}
+                  <option value="{{ item.id }}">{{ item.nome }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="quantidade">Quantide</label>
+              <input type="number" class="form-control" name="quantidade" id="quantidade" required>
+            </div>
+
+            <div class="d-flex justify-content-end">
+              <a href="{% url 'menuestoque' %}" class="btn btn-danger mt-3 mr-3">Cancelar</a>
+              <button type="submit" class="btn btn-primary mt-3">Salvar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

@@ -36,10 +36,22 @@ def detalhealocacao(request, pk_alocacao):
         alocacao = get_object_or_404(Alocacao, pk=pk_alocacao)
         return render(request, 'management/detalhealocacao.html', {'alocacao':alocacao})
 
-
-
-
 def menuestoque(request):
     itensestoque = Estoque.objects.all()
     itensperdidoextraviado = ItemPerdidoExtraviado.objects.all()
     return render(request, 'management/menuestoque.html', {'itensestoque':itensestoque, 'itensperdidoextraviado':itensperdidoextraviado})
+
+def adicionarestoque(request):
+    itens = Item.objects.all()
+    if request.method == 'GET':
+        return render(request, 'management/adicionarestoque.html', {'itens':itens})
+    else:
+        try:
+            estoque = get_object_or_404(Estoque, pk=request.POST['item'])
+            quantidade = request.POST['quantidade']
+            quantidade = int(quantidade)
+            estoque.quantidade += quantidade
+            estoque.save()
+            return redirect('menuestoque')
+        except ValueError:
+            return render(request, 'management/adicionarestoque.html', {'itens':itens, 'erro':'Não foi possível adicionar ao estoque'})
