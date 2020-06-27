@@ -9,6 +9,9 @@ class Viatura(models.Model):
 class Item(models.Model):
     nome = models.CharField(max_length=100)
 
+    def __str__(self):
+        return self.nome
+
 class Agente(models.Model):
     SEXO_CHOICES = (
         ('Feminino', 'Feminino'),
@@ -64,11 +67,12 @@ class AlocacaoRecolhimento(models.Model):
     alocacao = models.ForeignKey(Alocacao, on_delete=models.PROTECT, blank=True)
     recolhimento = models.ForeignKey(Recolhimento, on_delete=models.PROTECT, blank=True)
 
-
-
 class Estoque(models.Model):
     item = models.ForeignKey(Item, on_delete=models.PROTECT)
     quantidade = models.IntegerField()
+
+    def __str__(self):
+        return self.item.nome
 
 class ItemPerdidoExtraviado(models.Model):
     data = models.DateField()

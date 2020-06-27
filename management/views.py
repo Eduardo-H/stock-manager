@@ -23,7 +23,7 @@ def criaralocacao(request):
             agente2 = request.POST['agente-2']
 
             print(agente1)
-            
+
             if agente2 is not None:
                 print(agente2)
         except ValueError:
@@ -35,3 +35,11 @@ def detalhealocacao(request, pk_alocacao):
     if request.method == 'GET':
         alocacao = get_object_or_404(Alocacao, pk=pk_alocacao)
         return render(request, 'management/detalhealocacao.html', {'alocacao':alocacao})
+
+
+
+
+def menuestoque(request):
+    itensestoque = Estoque.objects.all()
+    itensperdidoextraviado = ItemPerdidoExtraviado.objects.all()
+    return render(request, 'management/menuestoque.html', {'itensestoque':itensestoque, 'itensperdidoextraviado':itensperdidoextraviado})
