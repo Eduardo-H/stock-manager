@@ -8,10 +8,28 @@ def home(request):
     return render(request, 'management/home.html', {'dados':dados})
 
 def criaralocacao(request):
+    itens = Item.objects.all()
+    viaturas = Viatura.objects.all()
+    agentes = Agente.objects.all()
+
     if request.method == 'GET':
-        return render(request, 'management/criaralocacao.html', {'formulario':FormAlocacao()})
+        return render(request, 'management/criaralocacao.html',
+                {'formulario':FormAlocacao(), 'itens':itens, 'viaturas':viaturas, 'agentes':agentes}
+            )
+    else:
+        try:
+            formulario = FormAlocacao(request.POST)
+            agente1 = request.POST['agente-1']
+            agente2 = request.POST['agente-2']
 
-
+            print(agente1)
+            
+            if agente2 is not None:
+                print(agente2)
+        except ValueError:
+            return render(request, 'management/criaralocacao.html',
+                    {'formulario':FormAlocacao(), 'itens':itens, 'viaturas':viaturas, 'agentes':agentes, 'erro':'Não foi possível cadastrar a alocação'}
+                )
 
 def detalhealocacao(request, pk_alocacao):
     if request.method == 'GET':

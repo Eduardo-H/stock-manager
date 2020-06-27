@@ -2,8 +2,23 @@ body {
   font-family: 'Roboto', Arial;
 }
 
+body::-webkit-scrollbar {
+  width: 10px;
+}
+
+body::-webkit-scrollbar-track {
+  background: #B1B1B1;
+  border-radius: 40px;
+}
+
+body::-webkit-scrollbar-thumb {
+  background: #4F4F4F;
+  border-radius: 40px;
+}
+
 #add-agent {
   margin-right: 110px;
   decoration: none;
   color: #333;
+  transition: 0.2s;
 }

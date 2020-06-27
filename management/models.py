@@ -18,7 +18,10 @@ class Agente(models.Model):
     nome = models.CharField(max_length=200)
     datanascimento = models.DateField()
     sexo = models.CharField(max_length=10, choices=SEXO_CHOICES)
-    gritodeduerra = models.CharField(max_length=50)
+    gritodeguerra = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.gritodeguerra
 
 class Alocacao(models.Model):
     TURNO_CHOICES = (
