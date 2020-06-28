@@ -8,7 +8,6 @@ body::-webkit-scrollbar {
 
 body::-webkit-scrollbar-track {
   background: #B1B1B1;
-  border-radius: 40px;
 }
 
 body::-webkit-scrollbar-thumb {
@@ -21,4 +20,8 @@ body::-webkit-scrollbar-thumb {
   decoration: none;
   color: #333;
   transition: 0.2s;
+}
+
+#my-modal {
+  top: 30%;
 }

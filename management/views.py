@@ -51,7 +51,7 @@ def adicionarestoque(request):
         return render(request, 'management/adicionarestoque.html', {'itens':itens})
     else:
         try:
-            estoque = get_object_or_404(Estoque, pk=request.POST['item'])
+            estoque = Estoque.objects.get(item_id=request.POST['item'])
             quantidade = request.POST['quantidade']
             quantidade = int(quantidade)
             estoque.quantidade += quantidade
@@ -77,3 +77,8 @@ def cadastraritem(request):
             return redirect('menuestoque')
         except ValueError:
             return render(request, 'management/cadastraritem.html', {'formulario':FormItem(), 'erro':'Não foi possível adicionar o item'})
+
+def editaritem(request, pk_item):
+    item = get_object_or_404(Item, pk=pk_item)
+    if request.method == 'GET':
+        return render(request, 'management/editaritem.html', {'item':item})

@@ -36,10 +36,34 @@
                 </div>
                 <p class="mb-1">unidades no estoque</p>
               </div>
+              <div class="card-footer text-center">
+                <a href="{% url 'editaritem' itemestoque.id %}" class="btn btn-warning mr-3"><i class="fas fa-pencil-alt"></i> Editar Item</a>
+                <button class="btn btn-danger" data-toggle="modal" data-target="#my-modal"><i class="fas fa-trash"></i> Deletar Item</button>
+              </div>
             </div>
+
+            <div class="modal" id="my-modal">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Atenção!</h5>
+                    <button class="close" data-dismiss="modal">&times;</button>
+                  </div>
+                  <div class="modal-body">
+                    Você tem certeza que quer deletar o item "{{ itemestoque.item.nome }}"
+                  </div>
+                  <div class="modal-footer">
+                    <button class="btn btn-danger" data-dismiss="modal">Não</button>
+                    <button class="btn btn-primary" data-dismiss="modal">Sim</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
         {% endfor %}
       </div>
+
     </div>
   </section>
 {% endblock %}
