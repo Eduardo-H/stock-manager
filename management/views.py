@@ -38,6 +38,11 @@ def detalhealocacao(request, pk_alocacao):
         alocacao = get_object_or_404(Alocacao, pk=pk_alocacao)
         return render(request, 'management/detalhealocacao.html', {'alocacao':alocacao})
 
+# AGENTES
+def menuagente(request):
+    agentes = Agente.objects.all()
+    return render(request, 'management/menuagente.html', {'agentes':agentes})
+
 # ESTOQUE
 
 def menuestoque(request):
@@ -82,3 +87,18 @@ def editaritem(request, pk_item):
     item = get_object_or_404(Item, pk=pk_item)
     if request.method == 'GET':
         return render(request, 'management/editaritem.html', {'item':item})
+
+def deletaritem(request):
+    if request.method == 'POST':
+        try:
+            item = get_object_or_404(Item, pk=request.POST['item'])
+            estoque = Estoque.objects.get(item_id=request.POST['item'])
+            print(item)
+            print(estoque)
+            item.delete()
+            estoque.delete()
+            return redirect('menuestoque')
+        except ValueError:
+            return render(request, 'management/menuestoque.html',
+                {'itensestoque':itensestoque, 'itensperdidoextraviado':itensperdidoextraviado, 'erro':'Não foi possível excluír o item'}
+            )

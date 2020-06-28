@@ -22,8 +22,10 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('criar-alocacao/', views.criaralocacao, name='criaralocacao'),
     path('alocacoa/<int:pk_alocacao>/detalhes', views.detalhealocacao, name='detalhealocacao'),
+    path('agente/', views.menuagente, name='menuagente'),
     path('estoque/', views.menuestoque, name="menuestoque"),
     path('estoque/adicionar-ao-estoque/', views.adicionarestoque, name="adicionarestoque"),
     path('estoque/cadastrar-item/', views.cadastraritem, name="cadastraritem"),
     path('estoque/<int:pk_item>/editar', views.editaritem, name="editaritem"),
+    path('estoque/<int:pk_item>/deletar', views.deletaritem, name="deletaritem")
 ]

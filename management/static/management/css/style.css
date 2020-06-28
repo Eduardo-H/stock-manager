@@ -25,3 +25,9 @@ body::-webkit-scrollbar-thumb {
 #my-modal {
   top: 30%;
 }
+
+#tabela-agente {
+  heigth: 500px;
+  overflow: auto;
+  overflow-x: hidden
+}

@@ -6,17 +6,17 @@
       <h1 class="display-4 text-center">Estoque</h1>
       <div class="row justify-content-center mt-4">
         <div class="col-lg-4">
-          <a href="{% url 'adicionarestoque' %}" class="btn btn-primary btn-block py-4 px-5">
+          <a href="{% url 'adicionarestoque' %}" class="btn btn-primary btn-block py-4 px-5 mb-3">
             <i class="fas fa-box-open fa-3x mb-3"></i><br> ADICIONAR AO ESTOQUE
           </a>
         </div>
         <div class="col-lg-4">
-          <a href="{% url 'cadastraritem' %}" class="btn btn-success btn-block py-4 px-5">
+          <a href="{% url 'cadastraritem' %}" class="btn btn-success btn-block py-4 px-5 mb-3">
             <i class="fas fa-plus-circle fa-3x mb-3"></i><br> ADICIONAR NOVO ITEM
           </a>
         </div>
         <div class="col-lg-4">
-          <a href="#" class="btn btn-warning btn-block py-3 px-4">
+          <a href="#" class="btn btn-warning btn-block py-3 px-4 mb-3">
             <h2 class="display-4 mb-1">{{ itensperdidoextraviado.count }}</h2>
             <p class="mb-2">ITENS PERDIDOS/EXTRAVIADOS</p>
           </a>
@@ -41,27 +41,31 @@
                 <button class="btn btn-danger" data-toggle="modal" data-target="#my-modal"><i class="fas fa-trash"></i> Deletar Item</button>
               </div>
             </div>
-
-            <div class="modal" id="my-modal">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title">Atenção!</h5>
-                    <button class="close" data-dismiss="modal">&times;</button>
-                  </div>
-                  <div class="modal-body">
-                    Você tem certeza que quer deletar o item "{{ itemestoque.item.nome }}"
-                  </div>
-                  <div class="modal-footer">
-                    <button class="btn btn-danger" data-dismiss="modal">Não</button>
-                    <button class="btn btn-primary" data-dismiss="modal">Sim</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
           </div>
         {% endfor %}
+      </div>
+
+      <!-- Modal Deleção de Item -->
+      <div class="modal" id="my-modal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Atenção!</h5>
+              <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+              Você tem certeza que quer deletar o item "{{ itemestoque.item.nome }}"
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-danger" data-dismiss="modal">Não</button>
+              <form method="POST">
+                {% csrf_token %}
+                <input name="item" value="{{ itemestoque.item_id }}" class="d-none">
+                <button type="submit" class="btn btn-primary">Sim</button>
+              </form>
+            </div>
+          </div>
+        </div>
       </div>
 
     </div>
