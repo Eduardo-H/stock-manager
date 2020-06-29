@@ -1,0 +1,65 @@
+{% extends 'management/base.html' %}
+
+{% block content %}
+  <section class="py-5">
+    <div class="container">
+      <h1 class="display-4 text-center mb-5">Viaturas</h1>
+      <div class="row justify-content-center">
+        <div class="col-lg-3 mx-auto">
+          <a href="#" class="btn btn-primary btn-block py-2 mb-4"><i class="fas fa-plus mr-2"></i>ADICIONAR NOVA VIATURA</a>
+        </div>
+        <div class="col-lg-6 ml-auto">
+          <form method="GET">
+            <div class="form-group">
+              <div class="input-group">
+                <input type="text" name="viatura" class="form-control" placeholder="Procure uma viatura">
+                <div class="input-group-append">
+                  <button type="submit" class="btn btn-outline-secondary"><i class="fas fa-search"></i></button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="row  mt-4">
+        <div class="col-lg-12">
+          {% if viaturas %}
+            <div class="table-resposive">
+              <table class="table table-hover">
+                <thead class="thead-dark">
+                  <tr>
+                    <th scope="col" class="text-center">#</th>
+                    <th scope="col" class="text-center">Número</th>
+                    <th scope="col" class="text-center">Placa</th>
+                    <th scope="col" class="text-center"><span class="fas fa-ellipsis-h"></span></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for viatura in viaturas %}
+                    <tr>
+                      <th scope="row" class="text-center py-4">{{ viatura.id }}</th>
+                      <th class="text-center py-4">{{ viatura.numero }}</th>
+                      <th class="text-center py-4">{{ viatura.placa }}</th>
+                      <th class="text-center py-3">
+                        <div class="dropdown">
+                          <a href="#" class="nav-link dropdown-toggle btn btn-outline-primary mx-auto" style="max-width: 100px" data-toggle="dropdown" aria-expanded="false">Opções</a>
+                          <div class="dropdown-menu">
+                            <a href="#" class="dropdown-item"><i class="fas fa-pencil-alt"></i> Editar</a>
+                            <a href="#" class="dropdown-item"><i class="fas fa-trash"></i> Deletar</a>
+                          </div>
+                        </div>
+                      </th>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          {% else %}
+            <h2>Nenhuma viatura cadastrada</h2>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

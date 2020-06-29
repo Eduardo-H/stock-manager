@@ -87,6 +87,10 @@ def editaragente(request, pk_agente):
                 {'agente':agente, 'formulario':formulario, 'erro':'Não foi possível editar o agente'}
             )
 
+# VIATURAS
+def menuviatura(request):
+    viaturas = Viatura.objects.all()
+    return render(request, 'management/menuviatura.html', {'viaturas':viaturas})
 
 # ESTOQUE
 def menuestoque(request):

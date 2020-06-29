@@ -26,6 +26,7 @@ urlpatterns = [
     path('agente/cadastrar-agente/', views.cadastraragente, name='cadastraragente'),
     path('agente/<int:pk_agente>/detalhes/', views.detalheagente, name="detalheagente"),
     path('agente/<int:pk_agente>/editar/', views.editaragente, name="editaragente"),
+    path('viatura/', views.menuviatura, name="menuviatura"),
     path('estoque/', views.menuestoque, name='menuestoque'),
     path('estoque/adicionar-ao-estoque/', views.adicionarestoque, name="adicionarestoque"),
     path('estoque/cadastrar-item/', views.cadastraritem, name="cadastraritem"),
