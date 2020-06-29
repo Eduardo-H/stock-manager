@@ -60,7 +60,17 @@ def detalheagente(request, pk_agente):
     agente = get_object_or_404(Agente, pk=pk_agente)
     alocacoes = AlocacaoAgente.objects.filter(agente_id=agente.id)
     recolhimentos = RecolhimentoAgente.objects.filter(agente_id=agente.id)
-    return render(request, 'management/detalheagente.html', {'agente':agente, 'alocacoes':alocacoes, 'recolhimentos':recolhimentos})
+    if request.method == 'GET':
+        return render(request, 'management/detalheagente.html', {'agente':agente, 'alocacoes':alocacoes, 'recolhimentos':recolhimentos})
+    else:
+        try:
+            agente = get_object_or_404(Agente, pk=request.POST['agente'])
+            agente.delete()
+            return redirect('menuagente')
+        except:
+            return render(request, 'management/detalheagente.html',
+                {'agente':agente, 'alocacoes':alocacoes, 'recolhimentos':recolhimentos, 'erro':'Não foi possível deletar este agente'}
+            )
 
 def editaragente(request, pk_agente):
     agente = get_object_or_404(Agente, pk=pk_agente)
@@ -82,7 +92,21 @@ def editaragente(request, pk_agente):
 def menuestoque(request):
     itensestoque = Estoque.objects.all()
     itensperdidoextraviado = ItemPerdidoExtraviado.objects.all()
-    return render(request, 'management/menuestoque.html', {'itensestoque':itensestoque, 'itensperdidoextraviado':itensperdidoextraviado})
+    if request.method == 'GET':
+        return render(request, 'management/menuestoque.html', {'itensestoque':itensestoque, 'itensperdidoextraviado':itensperdidoextraviado})
+    else:
+        try:
+            item = get_object_or_404(Item, pk=request.POST['item'])
+            itemestoque = Estoque.objects.get(item_id=item.id)
+            itemestoque.delete()
+            item.delete()
+            return render(request, 'management/menuestoque.html',
+                {'itensestoque':itensestoque, 'itensperdidoextraviado':itensperdidoextraviado, 'confirmacao':'Item excluído com sucesso!'}
+            )
+        except ValueError:
+            return render(request, 'management/menuestoque.html',
+                {'itensestoque':itensestoque, 'itensperdidoextraviado':itensperdidoextraviado, 'erro':'Não foi possível excluir o item'}
+            )
 
 def adicionarestoque(request):
     itens = Item.objects.all()
@@ -121,18 +145,3 @@ def editaritem(request, pk_item):
     item = get_object_or_404(Item, pk=pk_item)
     if request.method == 'GET':
         return render(request, 'management/editaritem.html', {'item':item})
-
-def deletaritem(request):
-    if request.method == 'POST':
-        try:
-            item = get_object_or_404(Item, pk=request.POST['item'])
-            estoque = Estoque.objects.get(item_id=request.POST['item'])
-            print(item)
-            print(estoque)
-            item.delete()
-            estoque.delete()
-            return redirect('menuestoque')
-        except ValueError:
-            return render(request, 'management/menuestoque.html',
-                {'itensestoque':itensestoque, 'itensperdidoextraviado':itensperdidoextraviado, 'erro':'Não foi possível excluír o item'}
-            )
