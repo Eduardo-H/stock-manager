@@ -38,6 +38,7 @@ def detalhealocacao(request, pk_alocacao):
         alocacao = get_object_or_404(Alocacao, pk=pk_alocacao)
         return render(request, 'management/detalhealocacao.html', {'alocacao':alocacao})
 
+
 # AGENTES
 def menuagente(request):
     agentes = Agente.objects.all()
@@ -61,6 +62,20 @@ def detalheagente(request, pk_agente):
     recolhimentos = RecolhimentoAgente.objects.filter(agente_id=agente.id)
     return render(request, 'management/detalheagente.html', {'agente':agente, 'alocacoes':alocacoes, 'recolhimentos':recolhimentos})
 
+def editaragente(request, pk_agente):
+    agente = get_object_or_404(Agente, pk=pk_agente)
+    if request.method == 'GET':
+        formulario = FormAgente(instance=agente)
+        return render(request, 'management/editaragente.html', {'agente':agente, 'formulario':formulario})
+    else:
+        try:
+            formulario = FormAgente(request.POST, instance=agente)
+            formulario.save()
+            return redirect('menuagente')
+        except ValueError:
+            return render(request, 'management/editaragente.html',
+                {'agente':agente, 'formulario':formulario, 'erro':'Não foi possível editar o agente'}
+            )
 
 
 # ESTOQUE

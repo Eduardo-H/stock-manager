@@ -22,11 +22,42 @@
 
           <div class="d-flex">
             <a href="{% url 'menuagente' %}" class="btn btn-outline-primary mt-2 mx-auto"><i class="fas fa-arrow-left"></i> Voltar</a>
-            <a href="#" class="btn btn-outline-warning mt-2 mx-auto"><i class="fas fa-pencil-alt"></i> Editar</a>
-            <a href="#" class="btn btn-outline-danger mt-2 mx-auto"><i class="fas fa-trash"></i> Deletar</a>
+            <a href="{% url 'editaragente' agente.id %}" class="btn btn-outline-warning mt-2 mx-auto"><i class="fas fa-pencil-alt"></i> Editar</a>
+            <a href="#" id="btn-deletar" class="btn btn-outline-danger mt-2 mx-auto"><i class="fas fa-trash"></i> Deletar</a>
+          </div>
+
+          <div class="card d-none" id="mensagem-confirmacao">
+            <div class="card-header bg-danger text-center text-white">
+              <div class="d-flex">
+                <h5 class="mb-0">Atenção!</h5>
+                <button class="close ml-auto">&times;</button>
+              </div>
+
+            </div>
+            <div class="card-body text-center">
+              Você tem certeza que quer deletar o agente "{{ agente.gritodeguerra }}?"
+            </div>
+            <div class="card-footer">
+              <div class="d-flex justify-content-end">
+                <button class="btn btn-danger mr-3" data-dismiss="modal">Não</button>
+                <form method="POST">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-primary">Sim</button>
+                </form>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </section>
+
+
+  <script>
+    document.querySelector('#btn-deletar').addEventListener('click', function () {
+      document.querySelector('#mensagem-confirmacao').classList.remove('d-none');
+    });
+  </script>
+
+  
 {% endblock %}

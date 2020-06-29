@@ -45,3 +45,9 @@ body::-webkit-scrollbar-thumb {
   background: #4F4F4F;
   border-radius: 40px;
 }
+
+
+#mensagem-confirmacao {
+  position: absolute;
+  top: 40%;
+}
