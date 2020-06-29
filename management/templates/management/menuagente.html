@@ -42,7 +42,7 @@
                       <th scope="row" class="text-center py-4">{{ agente.id }}</th>
                       <th class="text-center py-4">{{ agente.gritodeguerra }}</th>
                       <th class="text-center py-4">{{ agente.sexo }}</th>
-                      <th class="text-center py-3"><a href="#" class="btn btn-outline-primary">Detalhes</a></th>
+                      <th class="text-center py-3"><a href="{% url 'detalheagente' agente.id %}" class="btn btn-outline-primary">Detalhes</a></th>
                     </tr>
                   {% endfor %}
                 </tbody>

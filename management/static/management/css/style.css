@@ -31,3 +31,17 @@ body::-webkit-scrollbar-thumb {
   overflow: auto;
   overflow-x: hidden;
 }
+
+#tabela-colaboracao::-webkit-scrollbar {
+  width: 10px;
+}
+
+#tabela-colaboracao::-webkit-scrollbar-track {
+  background: #B1B1B1;
+  border-radius: 40px;
+}
+
+#tabela-colaboracao::-webkit-scrollbar-thumb {
+  background: #4F4F4F;
+  border-radius: 40px;
+}

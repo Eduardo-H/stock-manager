@@ -48,18 +48,6 @@ def cadastraragente(request):
         agente = Agente()
         return render(request, 'management/cadastraragente.html', {'formulario':FormAgente(), 'agente':agente})
     else:
-        nome = request.POST['nome']
-        datanascimento = request.POST['datanascimento']
-        sexo = request.POST['sexo']
-        gritodeguerra = request.POST['gritodeguerra']
-
-        print()
-        print(nome)
-        print(datanascimento)
-        print(sexo)
-        print(gritodeguerra)
-        print()
-
         try:
             formulario = FormAgente(request.POST)
             formulario.save()
@@ -67,9 +55,15 @@ def cadastraragente(request):
         except ValueError:
             return render(request, 'management/cadastraragente.html', {'formulario':FormAgente(), 'erro':'Não foi possível cadastrar o agente'})
 
+def detalheagente(request, pk_agente):
+    agente = get_object_or_404(Agente, pk=pk_agente)
+    alocacoes = AlocacaoAgente.objects.filter(agente_id=agente.id)
+    recolhimentos = RecolhimentoAgente.objects.filter(agente_id=agente.id)
+    return render(request, 'management/detalheagente.html', {'agente':agente, 'alocacoes':alocacoes, 'recolhimentos':recolhimentos})
+
+
 
 # ESTOQUE
-
 def menuestoque(request):
     itensestoque = Estoque.objects.all()
     itensperdidoextraviado = ItemPerdidoExtraviado.objects.all()

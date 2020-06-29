@@ -24,6 +24,7 @@ urlpatterns = [
     path('alocacoa/<int:pk_alocacao>/detalhes', views.detalhealocacao, name='detalhealocacao'),
     path('agente/', views.menuagente, name='menuagente'),
     path('agente/cadastrar-agente/', views.cadastraragente, name='cadastraragente'),
+    path('agente/<int:pk_agente>/detalhes/', views.detalheagente, name="detalheagente"),
     path('estoque/', views.menuestoque, name='menuestoque'),
     path('estoque/adicionar-ao-estoque/', views.adicionarestoque, name="adicionarestoque"),
     path('estoque/cadastrar-item/', views.cadastraritem, name="cadastraritem"),

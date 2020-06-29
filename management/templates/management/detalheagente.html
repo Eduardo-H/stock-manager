@@ -1,0 +1,32 @@
+{% extends 'management/base.html' %}
+
+{% block content %}
+  <section class="py-5">
+    <div class="container">
+      <h1 class="display-4 text-center mb-5">Detalhes sobre {{ agente.gritodeguerra }}</h1>
+      <div class="row justify-content-center">
+        <div class="col-lg-6">
+          <h3>Dados</h3>
+          <div class="alert alert-secondary mb-4">
+            <p><strong>Nome:</strong> {{ agente.nome }}</p>
+            <p><strong>Data de Nascimento:</strong> {{ agente.datanascimento|date:'d/m/Y' }}</p>
+            <p><strong>Sexo:</strong> {{ agente.sexo }}</p>
+            <p class="mb-0"><strong>Grito de Guerra:</strong> {{ agente.gritodeguerra }}</p>
+          </div>
+
+          <h3>Alocações e Recolhimentos</h3>
+          <div class="alert alert-secondary mb-4">
+            <p><strong>Alocações:</strong> {{ alocacoes.count }}</p>
+            <p class="mb-0"><strong>Recolhimentos:</strong> {{ recolhimentos.count }}</p>
+          </div>
+
+          <div class="d-flex">
+            <a href="{% url 'menuagente' %}" class="btn btn-outline-primary mt-2 mx-auto"><i class="fas fa-arrow-left"></i> Voltar</a>
+            <a href="#" class="btn btn-outline-warning mt-2 mx-auto"><i class="fas fa-pencil-alt"></i> Editar</a>
+            <a href="#" class="btn btn-outline-danger mt-2 mx-auto"><i class="fas fa-trash"></i> Deletar</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
