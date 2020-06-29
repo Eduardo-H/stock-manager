@@ -43,6 +43,31 @@ def menuagente(request):
     agentes = Agente.objects.all()
     return render(request, 'management/menuagente.html', {'agentes':agentes})
 
+def cadastraragente(request):
+    if request.method == 'GET':
+        agente = Agente()
+        return render(request, 'management/cadastraragente.html', {'formulario':FormAgente(), 'agente':agente})
+    else:
+        nome = request.POST['nome']
+        datanascimento = request.POST['datanascimento']
+        sexo = request.POST['sexo']
+        gritodeguerra = request.POST['gritodeguerra']
+
+        print()
+        print(nome)
+        print(datanascimento)
+        print(sexo)
+        print(gritodeguerra)
+        print()
+
+        try:
+            formulario = FormAgente(request.POST)
+            formulario.save()
+            return redirect('menuagente')
+        except ValueError:
+            return render(request, 'management/cadastraragente.html', {'formulario':FormAgente(), 'erro':'Não foi possível cadastrar o agente'})
+
+
 # ESTOQUE
 
 def menuestoque(request):
