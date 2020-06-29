@@ -95,18 +95,31 @@ def menuestoque(request):
     if request.method == 'GET':
         return render(request, 'management/menuestoque.html', {'itensestoque':itensestoque, 'itensperdidoextraviado':itensperdidoextraviado})
     else:
-        try:
-            item = get_object_or_404(Item, pk=request.POST['item'])
-            itemestoque = Estoque.objects.get(item_id=item.id)
-            itemestoque.delete()
-            item.delete()
-            return render(request, 'management/menuestoque.html',
-                {'itensestoque':itensestoque, 'itensperdidoextraviado':itensperdidoextraviado, 'confirmacao':'Item excluído com sucesso!'}
-            )
-        except ValueError:
-            return render(request, 'management/menuestoque.html',
-                {'itensestoque':itensestoque, 'itensperdidoextraviado':itensperdidoextraviado, 'erro':'Não foi possível excluir o item'}
-            )
+        if 'item' in request.POST: # Verifica se o botão de 'submit' foi do formulário de deleção
+            try:
+                item = get_object_or_404(Item, pk=request.POST['item'])
+                itemestoque = Estoque.objects.get(item_id=item.id)
+                itemestoque.delete()
+                item.delete()
+                return render(request, 'management/menuestoque.html',
+                    {'itensestoque':itensestoque, 'itensperdidoextraviado':itensperdidoextraviado, 'confirmacao':'Item excluído com sucesso!'}
+                )
+            except ValueError:
+                return render(request, 'management/menuestoque.html',
+                    {'itensestoque':itensestoque, 'itensperdidoextraviado':itensperdidoextraviado, 'erro':'Não foi possível excluir o item'}
+                )
+        elif 'nomeNovo' in request.POST: # Verifica se o botão de 'submit' foi do formulário de edição
+            try:
+                item = Item.objects.get(nome=request.POST['nomeAntigo'])
+                item.nome = request.POST['nomeNovo']
+                item.save()
+                return render(request, 'management/menuestoque.html',
+                    {'itensestoque':itensestoque, 'itensperdidoextraviado':itensperdidoextraviado, 'confirmacao':'Item editado com sucesso!'}
+                )
+            except ValueError:
+                return render(request, 'management/menuestoque.html',
+                    {'itensestoque':itensestoque, 'itensperdidoextraviado':itensperdidoextraviado, 'erro':'Não foi possível editar o item'}
+                )
 
 def adicionarestoque(request):
     itens = Item.objects.all()

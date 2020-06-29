@@ -28,7 +28,9 @@
   </head>
   <body>
     <nav class="navbar navbar-expand-lg bg-dark navbar-dark py-3" id="main-nav">
-      <a href="{% url 'home' %}" class="nav-link ml-4"><h4>LogControle</h4></a>
+      <a href="{% url 'home' %}" class="ml-5">
+        <img src="../../static/management/Logo.png" alt="Logo LogControle" style="max-height: 60px;">
+      </a>
       <button
         class="navbar-toggler"
         data-toggle="collapse"
@@ -60,7 +62,7 @@
 
 
           <li class="nav-item dropdown ml-4 mr-5">
-            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false">OLÁ ROSANGELA</a>
+            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false">OLÁ, <span style="text-transform: uppercase;">{{ user.username }}</span></a>
             <div class="dropdown-menu">
               <a href="#" class="dropdown-item">CONFIGURAÇÕES</a>
               <form  method="POST">
