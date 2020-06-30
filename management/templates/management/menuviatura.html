@@ -25,7 +25,7 @@
       <div class="row  mt-4">
         <div class="col-lg-12">
           {% if viaturas %}
-            <div class="table-resposive">
+            <div class="table-resposive" id="tabela-colaboracao">
               <table class="table table-hover">
                 <thead class="thead-dark">
                   <tr>
@@ -45,12 +45,67 @@
                         <div class="dropdown">
                           <a href="#" class="nav-link dropdown-toggle btn btn-outline-primary mx-auto" style="max-width: 100px" data-toggle="dropdown" aria-expanded="false">Opções</a>
                           <div class="dropdown-menu">
-                            <a href="#" class="dropdown-item"><i class="fas fa-pencil-alt"></i> Editar</a>
-                            <a href="#" class="dropdown-item"><i class="fas fa-trash"></i> Deletar</a>
+                            <a href="#" class="dropdown-item" data-toggle="modal" data-target="#editar-viatura-modal-{{ viatura.numero }}"><i class="fas fa-pencil-alt"></i> Editar</a>
+                            <a href="#" class="dropdown-item" data-toggle="modal" data-target="#excluir-viatura-modal-{{ viatura.numero }}"><i class="fas fa-trash"></i> Deletar</a>
                           </div>
                         </div>
                       </th>
                     </tr>
+
+                    <!-- Modal para a edição da viatura -->
+                    <div class="modal fade text-dark" id="editar-viatura-modal-{{ viatura.numero }}">
+                      <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title">Editar viatura {{ viatura.numero }}</h5>
+                            <button class="close" data-dismiss="modal">&times;</button>
+                          </div>
+                          <div class="modal-body">
+                            <form method="POST" id="editar-form">
+                              {% csrf_token %}
+                              <div class="form-group">
+                                <label for="numero">Número</label>
+                                <input type="text" name="numeroAntigo" class="d-none" value="{{ viatura.numero }}">
+                                <input type="text" class="form-control" name="numero" id="numero" value="{{ viatura.numero }}">
+                              </div>
+                              <div class="form-group">
+                                <label for="placa">Placa</label>
+                                <input type="text" name="placa" id="placa" class="form-control" value="{{ viatura.placa }}">
+                              </div>
+                              <div class="d-flex justify-content-end">
+                                <button class="btn btn-danger mr-3" data-dismiss="modal">Cancelar</button>
+                                <button type="submit" class="btn btn-primary">Salvar</button>
+                              </div>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Modal para a deleção da viatura -->
+                    <div class="modal fade text-dark" id="excluir-viatura-modal-{{ viatura.numero }}">
+                      <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title">Atenção!</h5>
+                            <button class="close" data-dismiss="modal">&times;</button>
+                          </div>
+                          <div class="modal-body text-center">
+                            <p class="mb-0">Você tem certeza que quer deletar a viatura {{ viatura.numero }}</p>
+                          </div>
+                          <div class="modal-footer">
+                            <div class="d-flex justify-content-end">
+                              <a href="#" class="btn btn-danger mr-3">Não</a>
+                              <form method="POST">
+                                {% csrf_token %}
+                                <input type="text" class="d-none" name="viatura" value="{{ viatura.id }}">
+                                <button type="submit" class="btn btn-primary">Sim</button>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   {% endfor %}
                 </tbody>
               </table>

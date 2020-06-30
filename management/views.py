@@ -90,7 +90,25 @@ def editaragente(request, pk_agente):
 # VIATURAS
 def menuviatura(request):
     viaturas = Viatura.objects.all()
-    return render(request, 'management/menuviatura.html', {'viaturas':viaturas})
+    if request.method == 'GET':
+        return render(request, 'management/menuviatura.html', {'viaturas':viaturas})
+    else:
+        if 'viatura' in request.POST:
+            try:
+                viatura = get_object_or_404(Viatura, pk=request.POST['viatura'])
+                viatura.delete()
+                return render(request, 'management/menuviatura.html', {'viaturas':viaturas, 'confirmacao':'Viatura deletado com sucesso'})
+            except ValueError:
+                return render(request, 'management/menuviatura.html', {'viaturas':viaturas, 'erro':'Não foi possível deletar a viatura'})
+        elif 'numero' in request.POST:
+            try:
+                viatura = Viatura.objects.get(numero=request.POST['numeroAntigo'])
+                viatura.numero = request.POST['numero']
+                viatura.placa = request.POST['placa']
+                viatura.save()
+                return render(request, 'management/menuviatura.html', {'viaturas':viaturas, 'confirmacao':'Viatura editada com sucesso'})
+            except ValueError:
+                return render(request, 'management/menuviatura.html', {'viaturas':viaturas, 'erro':'Não foi possível editar a viatura'})
 
 def cadastrarviatura(request):
     if request.method == 'GET':
