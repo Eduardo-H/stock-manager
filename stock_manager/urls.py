@@ -20,7 +20,8 @@ from management import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
-    path('criar-alocacao/', views.criaralocacao, name='criaralocacao'),
+    path('alocacao/', views.menualocacao, name='menualocacao'),
+    path('alocacao/criar-alocacao/', views.criaralocacao, name='criaralocacao'),
     path('alocacoa/<int:pk_alocacao>/detalhes', views.detalhealocacao, name='detalhealocacao'),
     path('agente/', views.menuagente, name='menuagente'),
     path('agente/cadastrar-agente/', views.cadastraragente, name='cadastraragente'),

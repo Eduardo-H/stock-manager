@@ -45,7 +45,7 @@ class Alocacao(models.Model):
     cadastrador = models.ForeignKey(User, on_delete=models.PROTECT)
 
     def __str__(self):
-        return 'Alocação feita no dia' + self.data + ' em ' + self.local
+        return ('Alocação feita no dia {} em {}' .format(self.data, self.local))
 
 class AlocacaoAgente(models.Model):
     alocacao = models.ForeignKey(Alocacao, on_delete=models.PROTECT)

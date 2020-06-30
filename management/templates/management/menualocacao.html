@@ -1,0 +1,55 @@
+{% extends 'management/base.html' %}
+
+{% block content %}
+  <section class="py-5">
+    <div class="container">
+      <h1 class="display-4 text-center mb-5">Alocações</h1>
+      <div class="row justify-content-center">
+        <div class="col-lg-3">
+          <a href="#" class="btn btn-primary btn-block"><i class="fas fa-plus mr-2"></i> CADASTRAR ALOCAÇÃO</a>
+        </div>
+        <div class="col-lg-3">
+          <a href="#" class="btn btn-success btn-block"><i class="fas fa-search mr-2"></i> PROCURAR POR TIPO</a>
+        </div>
+        <div class="col-lg-3">
+          <a href="#" class="btn btn-warning btn-block"><i class="fas fa-list mr-2"></i> ALOCAÇÕES EM ABERTO</a>
+        </div>
+      </div>
+
+      <div class="row justify-content-center mt-5">
+        <div class="col-lg-12">
+          {% if alocacoes %}
+            <div class="table-responsive" id="tabela-colaboracao">
+              <table class="table table-hover">
+                <thead class="thead-dark">
+                  <tr>
+                    <th scope="col" class="text-center">#</th>
+                    <th scope="col" class="text-center">Data</th>
+                    <th scope="col" class="text-center">Endereço</th>
+                    <th scope="col" class="text-center">Item</th>
+                    <th scope="col" class="text-center">Quantidade</th>
+                    <th scope="col" class="text-center"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for alocacao in alocacoes %}
+                    <tr>
+                      <th scope="row" class="text-center py-4">{{ alocacao.id }}</th>
+                      <th scope="row" class="text-center py-4">{{ alocacao.data|date:'d/m/Y' }}</th>
+                      <th scope="row" class="text-center py-4">{{ alocacao.local }}</th>
+                      <th scope="row" class="text-center py-4">{{ alocacao.item }}</th>
+                      <th scope="row" class="text-center py-4">{{ alocacao.quantidade }}</th>
+                      <th scope="row" class="text-center py-3"><a href="#" class="btn btn-outline-primary">Detalhes</a></th>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          {% else %}
+            <h2 class="text-center">Nenhuma alocação cadastrada</h2>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

@@ -8,6 +8,9 @@ def home(request):
     return render(request, 'management/home.html', {'dados':dados})
 
 # ALOCAÇÃO
+def menualocacao(request):
+    alocacoes = Alocacao.objects.all().order_by('-id')
+    return render(request, 'management/menualocacao.html', {'alocacoes':alocacoes})
 
 def criaralocacao(request):
     itens = Item.objects.all()
