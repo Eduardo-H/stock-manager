@@ -92,6 +92,34 @@ def menuviatura(request):
     viaturas = Viatura.objects.all()
     return render(request, 'management/menuviatura.html', {'viaturas':viaturas})
 
+def cadastrarviatura(request):
+    if request.method == 'GET':
+        return render(request, 'management/cadastrarviatura.html', {'formulario':FormViatura()})
+    else:
+        numero = request.POST['numero']
+        placa = request.POST['placa']
+        print(numero)
+        numero = Viatura.objects.filter(numero=numero)
+        print(numero)
+        if not numero:
+            if len(placa) == 7:
+                placa = Viatura.objects.filter(placa=placa)
+                print(placa)
+                if not placa:
+                    try:
+                        formulario = FormViatura(request.POST)
+                        formulario.save()
+                        return redirect('menuviatura')
+                    except ValueError:
+                        return render(request, 'management/cadastrarviatura.html', {'formulario':FormViatura(), 'erro':'Não foi possível cadastrar a viatura'})
+                else:
+                    return render(request, 'management/cadastrarviatura.html', {'formulario':FormViatura(), 'erroPlaca':'Essa placa já foi cadastrada'})
+            else:
+                return render(request, 'management/cadastrarviatura.html', {'formulario':FormViatura(), 'erroPlaca':'A placa deve ter 7 caracteres, sem simbolos'})
+        else:
+            return render(request, 'management/cadastrarviatura.html', {'formulario':FormViatura(), 'erroNumero':'Viatura existente com este número'})
+
+
 # ESTOQUE
 def menuestoque(request):
     itensestoque = Estoque.objects.all()

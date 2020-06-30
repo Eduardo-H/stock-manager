@@ -12,16 +12,6 @@ class FormAlocacao(ModelForm):
         input_formats=('%d/%m/%Y', )
     )
 
-class FormAgente(ModelForm):
-    class Meta:
-        model = Agente
-        fields = ['nome', 'datanascimento', 'sexo', 'gritodeguerra']
-
-    datanascimento = forms.DateField(
-        widget=forms.DateInput(format='%d/%m/%Y'),
-        input_formats=('%d/%m/%Y', )
-    )
-
 class FormRecolhimento(ModelForm):
     class Meta:
         model = Recolhimento
@@ -36,3 +26,18 @@ class FormItem(ModelForm):
     class Meta:
         model = Item
         fields = ['nome']
+
+class FormAgente(ModelForm):
+    class Meta:
+        model = Agente
+        fields = ['nome', 'datanascimento', 'sexo', 'gritodeguerra']
+
+    datanascimento = forms.DateField(
+        widget=forms.DateInput(format='%d/%m/%Y'),
+        input_formats=('%d/%m/%Y', )
+    )
+
+class FormViatura(ModelForm):
+    class Meta:
+        model = Viatura
+        fields = ['numero', 'placa']
