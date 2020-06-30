@@ -6,6 +6,9 @@ class Viatura(models.Model):
     numero = models.IntegerField()
     placa = models.CharField(max_length=7)
 
+    def __str__(self):
+        return self.numero
+
 class Item(models.Model):
     nome = models.CharField(max_length=100)
 
@@ -40,12 +43,15 @@ class Alocacao(models.Model):
     quantidade = models.IntegerField()
     turno = models.CharField(max_length=10, choices=TURNO_CHOICES)
     viatura = models.ForeignKey(Viatura, on_delete=models.PROTECT, blank=True)
-    local = models.CharField(max_length=250)
+    rua = models.CharField(max_length=200)
+    numero = models.CharField(max_length=10)
+    bairro = models.CharField(max_length=25)
+    complemento = models.CharField(max_length=25, blank=True)
     motivo = models.CharField(max_length=100, blank=True)
     cadastrador = models.ForeignKey(User, on_delete=models.PROTECT)
 
     def __str__(self):
-        return ('Alocação feita no dia {} em {}' .format(self.data, self.local))
+        return 'Alocação feita no dia {0} em {1}'.format(self.data, self.rua)
 
 class AlocacaoAgente(models.Model):
     alocacao = models.ForeignKey(Alocacao, on_delete=models.PROTECT)

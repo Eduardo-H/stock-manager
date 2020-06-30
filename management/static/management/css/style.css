@@ -7,12 +7,42 @@ body::-webkit-scrollbar {
 }
 
 body::-webkit-scrollbar-track {
-  background: #B1B1B1;
+  background: #343a40;
 }
 
 body::-webkit-scrollbar-thumb {
+  background: #bdbdbd;
+  border-radius: 40px;
+}
+
+#icon {
+  transition: 0.3s;
+}
+
+#icon:hover {
+  color: #797979;
+}
+
+#viatura::-webkit-scrollbar,
+#agente-1::-webkit-scrollbar {
+  width: 5px;
+}
+
+#viatura::-webkit-scrollbar-track,
+#agente-1::-webkit-scrollbar-track {
   background: #4F4F4F;
   border-radius: 40px;
+}
+
+#viatura::-webkit-scrollbar-thumb,
+#agente-1::-webkit-scrollbar-thumb {
+  background: #bdbdbd;
+  border-radius: 40px;
+}
+
+#select-option:hover {
+  background: #248eff;
+  color: #fff;
 }
 
 #add-agent {
@@ -28,7 +58,7 @@ body::-webkit-scrollbar-thumb {
 
 #tabela-colaboracao {
   height: 500px;
-  overflow: auto;
+  overflow-y: scroll;
   overflow-x: hidden;
 }
 
@@ -37,17 +67,13 @@ body::-webkit-scrollbar-thumb {
 }
 
 #tabela-colaboracao::-webkit-scrollbar-track {
-  background: #B1B1B1;
-  border-radius: 40px;
+  background: #343a40;
+  border-top-right-radius: 40px;
+  border-bottom-right-radius: 40px;
+  border-bottom-left-radius: 40px;
 }
 
 #tabela-colaboracao::-webkit-scrollbar-thumb {
-  background: #4F4F4F;
+  background: #bdbdbd;
   border-radius: 40px;
-}
-
-
-#mensagem-confirmacao {
-  position: absolute;
-  top: 40%;
 }

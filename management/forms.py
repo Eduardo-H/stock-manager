@@ -5,7 +5,7 @@ from .models import *
 class FormAlocacao(ModelForm):
     class Meta:
         model = Alocacao
-        fields = ['data', 'horario', 'item', 'quantidade', 'turno', 'local', 'motivo']
+        fields = ['data', 'horario', 'item', 'quantidade', 'turno', 'rua', 'numero', 'bairro', 'complemento', 'motivo']
 
     data = forms.DateField(
         widget=forms.DateInput(format='%d/%m/%Y'),

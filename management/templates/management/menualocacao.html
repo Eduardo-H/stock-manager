@@ -6,7 +6,7 @@
       <h1 class="display-4 text-center mb-5">Alocações</h1>
       <div class="row justify-content-center">
         <div class="col-lg-3">
-          <a href="#" class="btn btn-primary btn-block"><i class="fas fa-plus mr-2"></i> CADASTRAR ALOCAÇÃO</a>
+          <a href="{% url 'criaralocacao' %}" class="btn btn-primary btn-block"><i class="fas fa-plus mr-2"></i> CADASTRAR ALOCAÇÃO</a>
         </div>
         <div class="col-lg-3">
           <a href="#" class="btn btn-success btn-block"><i class="fas fa-search mr-2"></i> PROCURAR POR TIPO</a>
@@ -36,7 +36,7 @@
                     <tr>
                       <th scope="row" class="text-center py-4">{{ alocacao.id }}</th>
                       <th scope="row" class="text-center py-4">{{ alocacao.data|date:'d/m/Y' }}</th>
-                      <th scope="row" class="text-center py-4">{{ alocacao.local }}</th>
+                      <th scope="row" class="text-center py-4">{{ alocacao.rua }}</th>
                       <th scope="row" class="text-center py-4">{{ alocacao.item }}</th>
                       <th scope="row" class="text-center py-4">{{ alocacao.quantidade }}</th>
                       <th scope="row" class="text-center py-3"><a href="#" class="btn btn-outline-primary">Detalhes</a></th>

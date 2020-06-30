@@ -119,13 +119,10 @@ def cadastrarviatura(request):
     else:
         numero = request.POST['numero']
         placa = request.POST['placa']
-        print(numero)
         numero = Viatura.objects.filter(numero=numero)
-        print(numero)
         if not numero:
             if len(placa) == 7:
                 placa = Viatura.objects.filter(placa=placa)
-                print(placa)
                 if not placa:
                     try:
                         formulario = FormViatura(request.POST)
