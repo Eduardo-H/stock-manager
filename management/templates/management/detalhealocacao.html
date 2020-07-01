@@ -1,0 +1,115 @@
+{% extends 'management/base.html' %}
+
+{% block content %}
+  <section class="py-5">
+    <div class="container">
+      <h1 class="display-4 text-center mb-5">Detalhes Alocação</h1>
+      <div class="row justify-content-center">
+        <div class="col-lg-6">
+          {% if confirmacao %}
+            <div class="alert alert-success text-center">
+              <h3 class="mb-0">{{ confirmacao }}</h3>
+            </div>
+          {% elif erro %}
+          <div class="alert alert-danger text-center">
+            <h3 class="mb-0">{{ erro }}</h3>
+          </div>
+          {% endif %}
+          <h2>Dados</h2>
+          <div class="alert alert-secondary">
+            <p><strong>Data:</strong> {{ alocacao.data|date:'d/m/Y' }}</p>
+            <p><strong>Horário:</strong> {{ alocacao.horario|date:'H:i' }}</p>
+            <p><strong>Local:</strong> {{ alocacao.rua }}, {{ alocacao.numero }}</p>
+            <p><strong>Bairro:</strong> {{ alocacao.bairro }}</p>
+            {% if alocacao.complemento %}
+              <p><strong>Complemento:</strong> {{ alocacao.complemento }}</p>
+            {% endif %}
+            <p><strong>Status:</strong> {{ alocacao.status }}</p>
+            <p class="mb-0"><strong>Cadastrador:</strong> <span style="text-transform: capitalize;">{{ alocacao.cadastrador }}</span></p>
+          </div>
+
+          <h2>Item</h2>
+          <div class="alert alert-secondary">
+            <p><strong>Item:</strong> {{ alocacao.item.nome }}</p>
+            <p class="mb-0"><strong>Quantidade:</strong> {{ alocacao.quantidade }}</p>
+          </div>
+
+          <h2>Agente{{ agentes.count|pluralize }}</h2>
+          <div class="alert alert-secondary">
+            {% for agente in agentes %}
+              <p><strong>Grito de Guerra:</strong> {{ agente.agente.gritodeguerra }}</p>
+            {% endfor %}
+          </div>
+
+          {% if alocacao.viatura %}
+            <h2>Viatura</h2>
+            <div class="alert alert-secondary">
+              <p><strong>Número:</strong> {{ alocacao.viatura.numero }}</p>
+              <p class="mb-0"><strong>Placa:</strong> {{ alocacao.viatura.placa }}</p>
+            </div>
+          {% endif %}
+
+          <div class="d-flex">
+            <a href="{% url 'menualocacao' %}" class="btn btn-outline-primary mt-3 mx-auto"><i class="fas fa-arrow-left"></i> Voltar</a>
+            {% if alocacao.status == 'Aberto' %}
+              <a href="#" class="btn btn-outline-warning mt-3 mx-auto"><i class="fas fa-pencil-alt"></i> Editar</a>
+              <a href="#" data-toggle="modal" data-target="#desativar-alocacao" class="btn btn-outline-danger mt-3 mx-auto" id="btn-desativar"><i class="fas fa-times-circle"></i> Desativar</a>
+            {% elif alocacao.status == 'Desativado' %}
+              <a href="#" data-toggle="modal" data-target="#ativar-alocacao" class="btn btn-outline-success mt-3 mx-auto" id="btn-ativar"><i class="fas fa-check"></i> Ativar</a>
+            {% endif %}
+          </div>
+
+          <!-- Modal para a desativação da alocação -->
+          <div class="modal fade text-dark" id="desativar-alocacao">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Atenção!</h5>
+                  <button class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body text-center">
+                  <p class="mb-0">Você tem certeza que quer desativar a alocação?</p>
+                </div>
+                <div class="modal-footer">
+                  <div class="d-flex justify-content-end">
+                    <a href="#" data-dismiss="modal" class="btn btn-danger mr-3">Não</a>
+                    <form method="POST">
+                      {% csrf_token %}
+                      <input type="text" class="d-none" name="alocacaoDesativar" value="{{ alocacao.id }}">
+                      <button type="submit" class="btn btn-primary">Sim</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Modal para a ativação da alocação -->
+          <div class="modal fade text-dark" id="ativar-alocacao">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Atenção!</h5>
+                  <button class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body text-center">
+                  <p class="mb-0">Você tem certeza que quer reativar a alocação?</p>
+                </div>
+                <div class="modal-footer">
+                  <div class="d-flex justify-content-end">
+                    <a href="#" data-dismiss="modal" class="btn btn-danger mr-3">Não</a>
+                    <form method="POST">
+                      {% csrf_token %}
+                      <input type="text" class="d-none" name="alocacaoAtivar" value="{{ alocacao.id }}">
+                      <button type="submit" class="btn btn-primary">Sim</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

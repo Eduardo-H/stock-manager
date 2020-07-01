@@ -49,10 +49,17 @@
                       {% if alocacaorecolhimento.alocacao %}
                         <span style="text-transform: capitalize;">{{ alocacaorecolhimento.alocacao.cadastrador }}</span>
                       {% elif alocacaorecolhimento.recolhimento %}
-                        <span style="text-transform: capitalize;">{{ alocacaorecolhimento.recolhimento.cadastrador }}</span>
+                        <span >{{ alocacaorecolhimento.recolhimento.cadastrador }}</span>
                       {% endif %}
                     </th>
-                    <th class="text-center py-3"><a href="#" class="btn btn-outline-primary">Detalhes</a></th>
+                    <th class="text-center py-3"><a
+                      {% if alocacaorecolhimento.alocacao %}
+                        href="{% url 'detalhealocacao' alocacaorecolhimento.alocacao_id %}"
+                      {% elif alocacaorecolhimento.recolhimento %}
+                        href="#"
+                      {% endif %}
+                      class="btn btn-outline-primary">Detalhes</a>
+                    </th>
                   </tr>
                 {% endfor %}
               </tbody>

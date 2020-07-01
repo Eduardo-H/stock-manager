@@ -5,7 +5,7 @@ from .forms import *
 
 # Create your views here.
 def home(request):
-    alocacoesrecolhimentos = AlocacaoRecolhimento.objects.all()[:50]
+    alocacoesrecolhimentos = AlocacaoRecolhimento.objects.all().order_by('-id')[:50]
     return render(request, 'management/home.html', {'alocacoesrecolhimentos':alocacoesrecolhimentos})
 
 # ALOCAÇÃO
@@ -119,9 +119,25 @@ def salvaralocacao(formulario, viatura, agente1, agente2, cadastrador):
         agenteAlocacao2.save()
 
 def detalhealocacao(request, pk_alocacao):
+    alocacao = get_object_or_404(Alocacao, pk=pk_alocacao)
+    agentes = AlocacaoAgente.objects.filter(alocacao_id=pk_alocacao)
     if request.method == 'GET':
-        alocacao = get_object_or_404(Alocacao, pk=pk_alocacao)
-        return render(request, 'management/detalhealocacao.html', {'alocacao':alocacao})
+        return render(request, 'management/detalhealocacao.html', {'alocacao':alocacao, 'agentes':agentes})
+    else:
+        try:
+            if 'alocacaoDesativar' in request.POST:
+                alocacao = get_object_or_404(Alocacao, pk=request.POST['alocacaoDesativar'])
+                alocacao.status = 'Desativado'
+                alocacao.save()
+                return render(request, 'management/detalhealocacao.html', {'alocacao':alocacao, 'agentes':agentes, 'confirmacao':'Alocação desativada com sucesso!'})
+            elif 'alocacaoAtivar' in request.POST:
+                alocacao = get_object_or_404(Alocacao, pk=request.POST['alocacaoAtivar'])
+                alocacao.status = 'Aberto'
+                alocacao.save()
+                return render(request, 'management/detalhealocacao.html', {'alocacao':alocacao, 'agentes':agentes, 'confirmacao':'Alocação reativada com sucesso!'})
+
+        except ValueError:
+            return render(request, 'management/detalhealocacao.html', {'alocacao':alocacao, 'agentes':agentes, 'erro':'Não foi possível desativar a alocação'})
 
 # AGENTES
 def menuagente(request):

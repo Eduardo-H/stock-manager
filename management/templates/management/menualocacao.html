@@ -45,11 +45,11 @@
                           <i class="fas fa-circle text-warning"></i> {{ alocacao.status }}
                         {% elif alocacao.status == 'Fechado' %}
                           <i class="fas fa-circle text-success"></i> {{ alocacao.status }}
-                        {% elif alocacao.status == 'Dasativado' %}
+                        {% elif alocacao.status == 'Desativado' %}
                           <i class="fas fa-circle text-danger"></i> {{ alocacao.status }}
                         {% endif %}
                       </th>
-                      <th scope="row" class="text-center py-3"><a href="#" class="btn btn-outline-primary">Detalhes</a></th>
+                      <th scope="row" class="text-center py-3"><a href="{% url 'detalhealocacao' alocacao.id %}" class="btn btn-outline-primary">Detalhes</a></th>
                     </tr>
                   {% endfor %}
                 </tbody>
