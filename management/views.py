@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.models import User
 from .models import *
 from .forms import *
 
@@ -22,25 +23,87 @@ def criaralocacao(request):
                 {'formulario':FormAlocacao(), 'itens':itens, 'viaturas':viaturas, 'agentes':agentes}
             )
     else:
-        try:
-            formulario = FormAlocacao(request.POST)
-            agente1 = request.POST['agente-1']
-            agente2 = request.POST['agente-2']
+        agente1 = request.POST['agente-1'] # Recebe o ID do primeiro agente, e do segundo, se houver
+        agente2 = request.POST['agente-2']
+        agente1 = get_object_or_404(Agente, pk=agente1) # Recebe o objeto 'Agente 1'
+        if 'viaturaId' in request.POST: # Verifica se o método de seleção de viatura é do tipo SELECT
+            if request.POST['viaturaId'] != '-': # Verifica se o usuário selecionou uma opção diferente da padrão ('-')
+                viatura = get_object_or_404(Viatura, pk=request.POST['viaturaId']) # Recebe o objeto 'Viatura'
+                if viatura is not None: # Verifica se foi retornado um objeto
+                    try:
+                        formulario = FormAlocacao(request.POST)
+                        salvaralocacao(formulario, viatura, agente1, agente2, request.POST['cadastrador']) # Função para a persistência de dados
 
-            print(agente1)
+                        return redirect('menualocacao')
+                    except ValueError:
+                        return render(request, 'management/criaralocacao.html',
+                                {'formulario':FormAlocacao(), 'itens':itens, 'viaturas':viaturas, 'agentes':agentes, 'erro':'Não foi possível cadastrar a alocação'}
+                            )
+            elif request.POST['viaturaId'] == '-': # Se o usuário não selecionou uma opção difente da padrão
+                try:
+                    formulario = FormAlocacao(request.POST)
+                    viatura = None # Atribui o valor None para que na função abaixo não seja feita a persistência da viatura na alocação
+                    salvaralocacao(formulario, viatura, agente1, agente2, request.POST['cadastrador'])
 
-            if agente2 is not None:
-                print(agente2)
-        except ValueError:
-            return render(request, 'management/criaralocacao.html',
-                    {'formulario':FormAlocacao(), 'itens':itens, 'viaturas':viaturas, 'agentes':agentes, 'erro':'Não foi possível cadastrar a alocação'}
-                )
+                    return redirect('menualocacao')
+                except ValueError:
+                    return render(request, 'management/criaralocacao.html',
+                            {'formulario':FormAlocacao(), 'itens':itens, 'viaturas':viaturas, 'agentes':agentes, 'erro':'Não foi possível cadastrar a alocação'}
+                        )
+        elif 'viaturaNumero' in request.POST: # Verifica se o método de seleção de viatura é do tipo INPUT
+            viatura = Viatura.objects.get(numero=request.POST['viaturaNumero']) # Recebe o objeto 'Viatura' de acordo com o número provido
+            if viatura is not None: # Verifica se foi retornado um objeto
+                try:
+                    formulario = FormAlocacao(request.POST)
+                    salvaralocacao(formulario, viatura, agente1, agente2, request.POST['cadastrador'])
+
+                    return redirect('menualocacao')
+                except ValueError:
+                    return render(request, 'management/criaralocacao.html',
+                            {'formulario':FormAlocacao(), 'itens':itens, 'viaturas':viaturas, 'agentes':agentes, 'erroViatura':'Viatura inexistente'}
+                        )
+            else:
+                try:
+                    formulario = FormAlocacao(request.POST)
+                    viatura = None
+                    salvaralocacao(formulario, viatura, agente1, agente2, request.POST['cadastrador'])
+
+                    return redirect('menualocacao')
+                except ValueError:
+                    return render(request, 'management/criaralocacao.html',
+                            {'formulario':FormAlocacao(), 'itens':itens, 'viaturas':viaturas, 'agentes':agentes, 'erro':'Não foi possível cadastrar a alocação'}
+                        )
+"""
+FUNÇÃO PARA A PERSISTÊNCIA DE UMA ALOCAÇÃO NO BANCO DE DADOS
+"""
+def salvaralocacao(formulario, viatura, agente1, agente2, cadastrador):
+    alocacao = formulario.save(commit=False)
+    if viatura is not None:
+        alocacao.viatura = viatura
+
+
+    alocacao.cadastrador = get_object_or_404(User, pk=cadastrador)
+    alocacao.save()
+
+    alocacaoAgente = alocacao.id
+    alocacaoAgente = get_object_or_404(Alocacao, pk=alocacaoAgente)
+
+    agenteAlocacao1 = AlocacaoAgente()
+    agenteAlocacao1.alocacao = alocacaoAgente
+    agenteAlocacao1.agente = agente1
+    agenteAlocacao1.save()
+
+    if agente2 != '-':
+        agente2 = get_object_or_404(Agente, pk=agente2)
+        agenteAlocacao2 = AlocacaoAgente()
+        agenteAlocacao2.alocacao = alocacaoAgente
+        agenteAlocacao2.agente = agente2
+        agenteAlocacao2.save()
 
 def detalhealocacao(request, pk_alocacao):
     if request.method == 'GET':
         alocacao = get_object_or_404(Alocacao, pk=pk_alocacao)
         return render(request, 'management/detalhealocacao.html', {'alocacao':alocacao})
-
 
 # AGENTES
 def menuagente(request):

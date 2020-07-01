@@ -58,7 +58,7 @@ body::-webkit-scrollbar-thumb {
 
 #tabela-colaboracao {
   height: 500px;
-  overflow-y: scroll;
+  overflow: auto;
   overflow-x: hidden;
 }
 

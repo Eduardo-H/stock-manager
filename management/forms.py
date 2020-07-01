@@ -12,6 +12,7 @@ class FormAlocacao(ModelForm):
         input_formats=('%d/%m/%Y', )
     )
 
+
 class FormRecolhimento(ModelForm):
     class Meta:
         model = Recolhimento

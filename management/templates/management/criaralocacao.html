@@ -6,6 +6,12 @@
       <h1 class="display-4 text-center mb-5">Cadastrar Alocação</h1>
       <div class="row justify-content-center">
         <div class="col-lg-8">
+          {% if erro %}
+            <div class="alert alert-danger text-center">
+              <h3 class="mb-0">{{ erro  }}</h3>
+            </div>
+          {% endif %}
+
           <form method="POST" autocomplete="off">
             {% csrf_token %}
 
@@ -19,7 +25,7 @@
               <div class="col-lg-4 ml-3">
                 <div class="form-group d-inline">
                   <label for="horario">Horário</label>
-                  <input type="time" name="horario" id="horario" class="form-control" required>
+                  <input type="text" name="horario" id="horario" class="form-control" required>
                 </div>
               </div>
             </div>
@@ -51,16 +57,23 @@
                 </select>
               </div>
 
-              <div class="col-lg-4 ml-3" {% if viaturas.count > 5 %} id="select-viatura" {% endif %}>
-                <label for="viatura">Viatura</label>
-                <select class="form-control" name="viatura"
-                  {% if viaturas.count > 5 %}id="viatura" onfocus='this.size=5;' onblur='this.size=1;' onchange='this.size=1; this.blur();'{% endif %}>
-                    <option value="None" id="select-option">-</option>
-                    {% for viatura in viaturas %}
-                      <option value="{{ item.viatura }}" {% if viaturas.count > 5 %} id="select-option" {% endif %}>{{ viatura.numero }}</option>
-                    {% endfor %}
-                </select>
-              </div>
+              {% if viaturas.count <= 20 %}
+                <div class="col-lg-4 ml-3" {% if viaturas.count > 5 %} id="select-viatura" {% endif %}>
+                  <label for="viatura">Viatura</label>
+                  <select class="form-control" name="viaturaId"
+                    {% if viaturas.count > 5 %}id="viatura" onfocus='this.size=5;' onblur='this.size=1;' onchange='this.size=1; this.blur();'{% endif %}>
+                      <option value="-" selected>-</option>
+                      {% for viatura in viaturas %}
+                        <option value="{{ viatura.id }}" {% if viaturas.count > 5 %} id="select-option" {% endif %}>{{ viatura.numero }}</option>
+                      {% endfor %}
+                  </select>
+                </div>
+              {% else %}
+                <div class="col-lg-4 ml-3">
+                  <label for="viatura">Viatura</label>
+                  <input type="text" name="viaturaNumero" class="form-control" placeholder="Digite o número da viatura">
+                </div>
+              {% endif %}
             </div>
 
             <div class="d-flex justify-content-center">
@@ -113,6 +126,7 @@
               <div class="d-none" id="agente-2">
                 <label for="agente">Agente</label>
                 <select class="form-control" name="agente-2">
+                  <option value="-">-</option>
                   {% for agente in agentes %}
                     <option value="{{ agente.id }}">{{ agente.gritodeguerra }}</option>
                   {% endfor %}
@@ -123,6 +137,8 @@
             <div class="d-flex justify-content-end">
               <a href="#" id="add-agent"><i class="fas fa-plus fa-2x" id="icon"></i></a>
             </div>
+
+            <input type="text" class="d-none" name="cadastrador" value="{{ user.id }}">
 
             <div class="col-lg-9 mx-auto">
               <button type="submit" class="btn btn-primary btn-block mt-4">CADASTRAR</button>
