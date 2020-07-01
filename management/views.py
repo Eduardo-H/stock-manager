@@ -5,8 +5,8 @@ from .forms import *
 
 # Create your views here.
 def home(request):
-    dados = AlocacaoRecolhimento.objects.all()
-    return render(request, 'management/home.html', {'dados':dados})
+    alocacoesrecolhimentos = AlocacaoRecolhimento.objects.all()[:50]
+    return render(request, 'management/home.html', {'alocacoesrecolhimentos':alocacoesrecolhimentos})
 
 # ALOCAÇÃO
 def menualocacao(request):
@@ -15,8 +15,8 @@ def menualocacao(request):
 
 def criaralocacao(request):
     itens = Item.objects.all()
-    viaturas = Viatura.objects.all()
-    agentes = Agente.objects.all()
+    viaturas = Viatura.objects.all().order_by('numero')
+    agentes = Agente.objects.all().order_by('nome')
 
     if request.method == 'GET':
         return render(request, 'management/criaralocacao.html',
@@ -26,53 +26,63 @@ def criaralocacao(request):
         agente1 = request.POST['agente-1'] # Recebe o ID do primeiro agente, e do segundo, se houver
         agente2 = request.POST['agente-2']
         agente1 = get_object_or_404(Agente, pk=agente1) # Recebe o objeto 'Agente 1'
-        if 'viaturaId' in request.POST: # Verifica se o método de seleção de viatura é do tipo SELECT
-            if request.POST['viaturaId'] != '-': # Verifica se o usuário selecionou uma opção diferente da padrão ('-')
-                viatura = get_object_or_404(Viatura, pk=request.POST['viaturaId']) # Recebe o objeto 'Viatura'
-                if viatura is not None: # Verifica se foi retornado um objeto
+
+        quantidade = request.POST['quantidade'] # Recebe a quantidade do item informada
+        estoque = Estoque.objects.get(item=request.POST['item']) # Recebe o item no estoque escolhido
+        disponibilidade = estoque.quantidade - int(quantidade) # Calcula a quantidade disponível no estoque com a informada
+
+        if disponibilidade >= 0: # Verifica se a quantidade é valida
+            if 'viaturaId' in request.POST: # Verifica se o método de seleção de viatura é do tipo SELECT
+                if request.POST['viaturaId'] != '-': # Verifica se o usuário selecionou uma opção diferente da padrão ('-')
+                    viatura = get_object_or_404(Viatura, pk=request.POST['viaturaId']) # Recebe o objeto 'Viatura'
+                    if viatura is not None: # Verifica se foi retornado um objeto
+                        try:
+                            formulario = FormAlocacao(request.POST)
+                            salvaralocacao(formulario, viatura, agente1, agente2, request.POST['cadastrador']) # Função para a persistência de dados
+
+                            return redirect('menualocacao')
+                        except ValueError:
+                            return render(request, 'management/criaralocacao.html',
+                                    {'formulario':FormAlocacao(), 'itens':itens, 'viaturas':viaturas, 'agentes':agentes, 'erro':'Não foi possível cadastrar a alocação'}
+                                )
+                elif request.POST['viaturaId'] == '-': # Se o usuário não selecionou uma opção difente da padrão
                     try:
                         formulario = FormAlocacao(request.POST)
-                        salvaralocacao(formulario, viatura, agente1, agente2, request.POST['cadastrador']) # Função para a persistência de dados
+                        viatura = None # Atribui o valor None para que na função abaixo não seja feita a persistência da viatura na alocação
+                        salvaralocacao(formulario, viatura, agente1, agente2, request.POST['cadastrador'])
 
                         return redirect('menualocacao')
                     except ValueError:
                         return render(request, 'management/criaralocacao.html',
                                 {'formulario':FormAlocacao(), 'itens':itens, 'viaturas':viaturas, 'agentes':agentes, 'erro':'Não foi possível cadastrar a alocação'}
                             )
-            elif request.POST['viaturaId'] == '-': # Se o usuário não selecionou uma opção difente da padrão
-                try:
-                    formulario = FormAlocacao(request.POST)
-                    viatura = None # Atribui o valor None para que na função abaixo não seja feita a persistência da viatura na alocação
-                    salvaralocacao(formulario, viatura, agente1, agente2, request.POST['cadastrador'])
+            elif 'viaturaNumero' in request.POST: # Verifica se o método de seleção de viatura é do tipo INPUT
+                viatura = Viatura.objects.get(numero=request.POST['viaturaNumero']) # Recebe o objeto 'Viatura' de acordo com o número provido
+                if viatura is not None: # Verifica se foi retornado um objeto
+                    try:
+                        formulario = FormAlocacao(request.POST)
+                        salvaralocacao(formulario, viatura, agente1, agente2, request.POST['cadastrador'])
 
-                    return redirect('menualocacao')
-                except ValueError:
-                    return render(request, 'management/criaralocacao.html',
-                            {'formulario':FormAlocacao(), 'itens':itens, 'viaturas':viaturas, 'agentes':agentes, 'erro':'Não foi possível cadastrar a alocação'}
-                        )
-        elif 'viaturaNumero' in request.POST: # Verifica se o método de seleção de viatura é do tipo INPUT
-            viatura = Viatura.objects.get(numero=request.POST['viaturaNumero']) # Recebe o objeto 'Viatura' de acordo com o número provido
-            if viatura is not None: # Verifica se foi retornado um objeto
-                try:
-                    formulario = FormAlocacao(request.POST)
-                    salvaralocacao(formulario, viatura, agente1, agente2, request.POST['cadastrador'])
+                        return redirect('menualocacao')
+                    except ValueError:
+                        return render(request, 'management/criaralocacao.html',
+                                {'formulario':FormAlocacao(), 'itens':itens, 'viaturas':viaturas, 'agentes':agentes, 'erroViatura':'Viatura inexistente'}
+                            )
+                else:
+                    try:
+                        formulario = FormAlocacao(request.POST)
+                        viatura = None
+                        salvaralocacao(formulario, viatura, agente1, agente2, request.POST['cadastrador'])
 
-                    return redirect('menualocacao')
-                except ValueError:
-                    return render(request, 'management/criaralocacao.html',
-                            {'formulario':FormAlocacao(), 'itens':itens, 'viaturas':viaturas, 'agentes':agentes, 'erroViatura':'Viatura inexistente'}
-                        )
-            else:
-                try:
-                    formulario = FormAlocacao(request.POST)
-                    viatura = None
-                    salvaralocacao(formulario, viatura, agente1, agente2, request.POST['cadastrador'])
-
-                    return redirect('menualocacao')
-                except ValueError:
-                    return render(request, 'management/criaralocacao.html',
-                            {'formulario':FormAlocacao(), 'itens':itens, 'viaturas':viaturas, 'agentes':agentes, 'erro':'Não foi possível cadastrar a alocação'}
-                        )
+                        return redirect('menualocacao')
+                    except ValueError:
+                        return render(request, 'management/criaralocacao.html',
+                                {'formulario':FormAlocacao(), 'itens':itens, 'viaturas':viaturas, 'agentes':agentes, 'erro':'Não foi possível cadastrar a alocação'}
+                            )
+        else:
+            return render(request, 'management/criaralocacao.html',
+                    {'formulario':FormAlocacao(), 'itens':itens, 'viaturas':viaturas, 'agentes':agentes, 'erroQuantidade':'Número superior ao estoque'}
+                )
 """
 FUNÇÃO PARA A PERSISTÊNCIA DE UMA ALOCAÇÃO NO BANCO DE DADOS
 """
@@ -81,9 +91,17 @@ def salvaralocacao(formulario, viatura, agente1, agente2, cadastrador):
     if viatura is not None:
         alocacao.viatura = viatura
 
-
     alocacao.cadastrador = get_object_or_404(User, pk=cadastrador)
+    alocacao.status = 'Aberto'
     alocacao.save()
+
+    estoque = Estoque.objects.get(item=alocacao.item)
+    estoque.quantidade -= int(alocacao.quantidade)
+    estoque.save()
+
+    alocacaoRecolhimento = AlocacaoRecolhimento()
+    alocacaoRecolhimento.alocacao = alocacao
+    alocacaoRecolhimento.save()
 
     alocacaoAgente = alocacao.id
     alocacaoAgente = get_object_or_404(Alocacao, pk=alocacaoAgente)

@@ -25,7 +25,7 @@
               <div class="col-lg-4 ml-3">
                 <div class="form-group d-inline">
                   <label for="horario">Horário</label>
-                  <input type="text" name="horario" id="horario" class="form-control" required>
+                  <input type="time" name="horario" id="horario" class="form-control" required>
                 </div>
               </div>
             </div>
@@ -42,7 +42,14 @@
               </div>
               <div class="col-lg-4 ml-3">
                 <label for="quantidade">Quantidade</label>
-                <input type="number" name="quantidade" id="quantidade" class="form-control" required>
+                {% if erroQuantidade %}
+                  <input type="number" name="quantidade" id="quantidade" class="form-control is-invalid" min="1" required>
+                  <div class="invalid-feedback">
+                    {{ erroQuantidade }}
+                  </div>
+                {% else %}
+                  <input type="number" name="quantidade" id="quantidade" class="form-control" min="1" required>
+                {% endif %}
               </div>
             </div>
 
@@ -71,7 +78,14 @@
               {% else %}
                 <div class="col-lg-4 ml-3">
                   <label for="viatura">Viatura</label>
-                  <input type="text" name="viaturaNumero" class="form-control" placeholder="Digite o número da viatura">
+                  {% if erroViatura %}
+                    <input type="text" name="viaturaNumero" class="form-control is-invalid" placeholder="Digite o número da viatura">
+                    <div class="invalid-feedback">
+                      {{ erroViatura }}
+                    </div>
+                  {% else %}
+                    <input type="text" name="viaturaNumero" class="form-control" placeholder="Digite o número da viatura">
+                  {% endif %}
                 </div>
               {% endif %}
             </div>

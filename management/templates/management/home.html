@@ -12,6 +12,57 @@
           <a href="#" class="btn btn-primary btn-block"><i class="fas fa-clipboard-check mb-2 fa-3x"></i> <p class="mb-0">CADASTRAR RECOLHIMENTO</p></a>
         </div>
       </div>
+
+      <div class="row justify-content-center mt-4">
+        <div class="col-lg-12">
+          {% if alocacoesrecolhimentos %}
+          <div class="table-responsive" id="tabela-colaboracao">
+            <table class="table table-hover">
+              <thead class="thead-dark">
+                <tr>
+                  <th scope="row" class="text-center">#</th>
+                  <th scope="row" class="text-center">Tipo</th>
+                  <th scope="row" class="text-center">Data</th>
+                  <th scope="row" class="text-center">Cadatrador</th>
+                  <th scope="row" class="text-center"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for alocacaorecolhimento in alocacoesrecolhimentos %}
+                  <tr>
+                    <th scope="col" class="text-center py-4">{{ alocacaorecolhimento.id }}</th>
+                    <th class="text-center py-4">
+                      {% if alocacaorecolhimento.alocacao %}
+                        Alocação
+                      {% elif alocacaorecolhimento.recolhimento %}
+                        Recolhimento
+                      {% endif %}
+                    </th>
+                    <th class="text-center py-4">
+                      {% if alocacaorecolhimento.alocacao %}
+                        {{ alocacaorecolhimento.alocacao.data|date:'d/m/Y' }}
+                      {% elif alocacaorecolhimento.recolhimento %}
+                        {{ alocacaorecolhimento.recolhimento.data|date:'d/m/Y' }}
+                      {% endif %}
+                    </th>
+                    <th class="text-center py-4">
+                      {% if alocacaorecolhimento.alocacao %}
+                        <span style="text-transform: capitalize;">{{ alocacaorecolhimento.alocacao.cadastrador }}</span>
+                      {% elif alocacaorecolhimento.recolhimento %}
+                        <span style="text-transform: capitalize;">{{ alocacaorecolhimento.recolhimento.cadastrador }}</span>
+                      {% endif %}
+                    </th>
+                    <th class="text-center py-3"><a href="#" class="btn btn-outline-primary">Detalhes</a></th>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% else %}
+            <h2 class="text-center mt-3">Sem dados ainda</h2>
+          {% endif %}
+        </div>
+      </div>
     </div>
   </section>
 {% endblock %}

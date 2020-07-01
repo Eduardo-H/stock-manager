@@ -28,6 +28,7 @@
                     <th scope="col" class="text-center">Endereço</th>
                     <th scope="col" class="text-center">Item</th>
                     <th scope="col" class="text-center">Quantidade</th>
+                    <th scope="col" class="text-center">Status</th>
                     <th scope="col" class="text-center"></th>
                   </tr>
                 </thead>
@@ -39,6 +40,15 @@
                       <th scope="row" class="text-center py-4">{{ alocacao.rua }}</th>
                       <th scope="row" class="text-center py-4">{{ alocacao.item }}</th>
                       <th scope="row" class="text-center py-4">{{ alocacao.quantidade }}</th>
+                      <th scope="row" class="text-center py-4">
+                        {% if alocacao.status == 'Aberto' %}
+                          <i class="fas fa-circle text-warning"></i> {{ alocacao.status }}
+                        {% elif alocacao.status == 'Fechado' %}
+                          <i class="fas fa-circle text-success"></i> {{ alocacao.status }}
+                        {% elif alocacao.status == 'Dasativado' %}
+                          <i class="fas fa-circle text-danger"></i> {{ alocacao.status }}
+                        {% endif %}
+                      </th>
                       <th scope="row" class="text-center py-3"><a href="#" class="btn btn-outline-primary">Detalhes</a></th>
                     </tr>
                   {% endfor %}

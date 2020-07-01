@@ -17,10 +17,10 @@
             <div class="form-group">
               <label for="numero">Número</label>
               {% if erroNumero %}
-              <input type="text" class="form-control is-invalid" id="numero" name="numero" placeholder="Digite o número da viatura" required>
-              <div class="invalid-feedback">
-                {{ erroNumero }}
-              </div>
+                <input type="text" class="form-control is-invalid" id="numero" name="numero" placeholder="Digite o número da viatura" required>
+                <div class="invalid-feedback">
+                  {{ erroNumero }}
+                </div>
               {% else %}
                 <input type="text" class="form-control" id="numero" name="numero" placeholder="Digite o número da viatura" required>
               {% endif %}
