@@ -1,0 +1,25 @@
+{% extends 'management/base.html' %}
+
+{% block content %}
+  <section class="py-5">
+    <div class="container">
+      <h1 class="display-4 text-center mb-5">Recolhimentos</h1>
+      <div class="row justify-content-center">
+        <div class="col-lg-4">
+          <a href="{% url 'alocacoesabertas' %}" class="btn btn-primary btn-block rounded-pill"><i class="fas fa-plus mr-2"></i> CADASTRAR RECOLHIMENTO</a>
+        </div>
+        <div class="col-lg-3">
+          <a href="#" class="btn btn-success btn-block rounded-pill"><i class="fas fa-search mr-2"></i> PROCURAR POR TIPO</a>
+        </div>
+      </div>
+
+      <div class="row justify-content-center mt-4">
+        {% if recolhimentos %}
+          <h3>Existem recolhimentos</h3>
+        {% else %}
+          <h2 class="text-center text-secondary">Nenhum recolhimento cadastrado</h2>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+{% endblock %}

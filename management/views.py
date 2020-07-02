@@ -244,7 +244,13 @@ def paginador(lista_resultados):
 
     return alocacoes
 
+#################
+# RECOLHIMENTOS #
+#################
 
+def menurecolhimento(request):
+    recolhimentos = Recolhimento.objects.all().order_by('-id')
+    return render(request, 'management/menurecolhimento.html')
 
 ###########
 # AGENTES #

@@ -25,6 +25,7 @@ urlpatterns = [
     path('alocacao/<int:pk_alocacao>/detalhes', views.detalhealocacao, name='detalhealocacao'),
     path('alocacao/procurar-por-tipo/', views.procurarportipo, name='procurarportipo'),
     path('alocacao/alocacoes-em-aberto', views.alocacoesabertas, name='alocacoesabertas'),
+    path('recolhimento/', views.menurecolhimento, name='menurecolhimento'),
     path('agente/', views.menuagente, name='menuagente'),
     path('agente/cadastrar-agente/', views.cadastraragente, name='cadastraragente'),
     path('agente/<int:pk_agente>/detalhes/', views.detalheagente, name='detalheagente'),
