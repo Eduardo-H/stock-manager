@@ -3,13 +3,15 @@ from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from .models import *
 from .forms import *
+import datetime
 
-# Create your views here.
 def home(request):
     alocacoesrecolhimentos = AlocacaoRecolhimento.objects.all().order_by('-id')[:50]
     return render(request, 'management/home.html', {'alocacoesrecolhimentos':alocacoesrecolhimentos})
 
-# ALOCAÇÃO
+#############
+# ALOCAÇÕES #
+#############
 def menualocacao(request):
     alocacoes = Alocacao.objects.all().order_by('-id')
     return render(request, 'management/menualocacao.html', {'alocacoes':alocacoes})
@@ -142,7 +144,6 @@ def detalhealocacao(request, pk_alocacao):
 
 def alocacoesabertas(request):
     lista_alocacoes = Alocacao.objects.filter(status='Aberto')
-    print(lista_alocacoes)
     paginator = Paginator(lista_alocacoes, 6)
     try:
         page = int(request.GET.get('page', '1'))
@@ -156,7 +157,98 @@ def alocacoesabertas(request):
 
     return render(request, 'management/alocacoesabertas.html', {'alocacoes':alocacoes})
 
-# AGENTES
+def procurarportipo(request):
+    if 'pesquisa' in request.GET:
+        tipo = request.GET.get('pesquisa')
+        valor = request.GET.get('valor')
+
+        if tipo == 'data':
+            # Mudando o formato da data de 'DD/MM/AAAA' para 'DD/MM/AA'
+            if len(valor) == 10:
+                data_valida = valor[:8]
+                dia, mes, ano = data_valida.split('/')
+                valido = True
+                try:
+                    datetime.datetime(int(ano),int(mes),int(dia))
+                except ValueError:
+                    valido = False
+            else:
+                return render(request, 'management/procurarportipo.html', {'resultado':'nenhum'})
+
+            # Mudando o formato da data de 'DD/MM/AAAA' para 'AAAA-MM-DD'
+            data = valor[6:] + '-'
+            data += valor[3:5] + '-'
+            data += valor[:2]
+
+            if len(data) == 10 and data[4] == '-' and data[7] == '-':
+                # O IF abaixo basicamente verifica se a data informada é inválida
+                if not valido:
+                    return render(request, 'management/procurarportipo.html', {'resultado':'nenhum'})
+                else:
+                    alocacoes = Alocacao.objects.filter(data=data).order_by('-data')
+                    if alocacoes:
+                        alocacoes = paginador(alocacoes)
+                        return render(request, 'management/procurarportipo.html', {'alocacoes':alocacoes, 'resultado':'data'})
+                    else:
+                        return render(request, 'management/procurarportipo.html', {'resultado':'nenhum'})
+            else:
+                return render(request, 'management/procurarportipo.html', {'resultado':'nenhum'})
+        elif tipo == 'item':
+            item = Item.objects.filter(nome=valor)
+            if item:
+                item = Item.objects.get(nome=valor)
+                alocacoes = Alocacao.objects.filter(item_id=item.id).order_by('-id')
+                alocacoes = paginador(alocacoes)
+                return render(request, 'management/procurarportipo.html', {'alocacoes':alocacoes, 'resultado':'item'})
+            else:
+                return render(request, 'management/procurarportipo.html', {'resultado':'nenhum'})
+        elif tipo == 'agente':
+            agente = Agente.objects.filter(gritodeguerra=valor)
+            if agente:
+                agente = Agente.objects.get(gritodeguerra=valor)
+                alocacoes = AlocacaoAgente.objects.filter(agente_id=agente.id).order_by('-id')
+                alocacoes = paginador(alocacoes)
+                return render(request, 'management/procurarportipo.html', {'alocacoes':alocacoes, 'resultado':'agente'})
+            else:
+                return render(request, 'management/procurarportipo.html', {'resultado':'nenhum'})
+        elif tipo == 'viatura':
+            if valor.isdigit():
+                viatura = Viatura.objects.filter(numero=valor)
+                if viatura:
+                    viatura = Viatura.objects.get(numero=valor)
+                    alocacoes = Alocacao.objects.filter(viatura_id=viatura.id).order_by('-id')
+                    alocacoes = paginador(alocacoes)
+                    return render(request, 'management/procurarportipo.html', {'alocacoes':alocacoes, 'resultado':'viatura'})
+                else:
+                    return render(request, 'management/procurarportipo.html', {'resultado':'nenhum'})
+            else:
+                return render(request, 'management/procurarportipo.html', {'resultado':'nenhum'})
+    else:
+        return render(request, 'management/procurarportipo.html', {'dica':'Selecione o tipo desejado e coloque o valor que procura'})
+
+
+"""
+FUNÇÃO PARA A PÁGINAÇÃO
+"""
+def paginador(lista_resultados):
+    paginator = Paginator(lista_resultados, 6)
+    try:
+        page = int(request.GET.get('page', '1'))
+    except:
+        page = 1
+
+    try:
+        alocacoes = paginator.page(page)
+    except(EmptyPage, InvalidPage):
+        alocacoes = paginator.page(paginator.num_pages)
+
+    return alocacoes
+
+
+
+###########
+# AGENTES #
+###########
 def menuagente(request):
     agentes = Agente.objects.all()
     return render(request, 'management/menuagente.html', {'agentes':agentes})
@@ -204,7 +296,9 @@ def editaragente(request, pk_agente):
                 {'agente':agente, 'formulario':formulario, 'erro':'Não foi possível editar o agente'}
             )
 
-# VIATURAS
+############
+# VIATURAS #
+############
 def menuviatura(request):
     viaturas = Viatura.objects.all()
     if request.method == 'GET':
@@ -251,8 +345,9 @@ def cadastrarviatura(request):
         else:
             return render(request, 'management/cadastrarviatura.html', {'formulario':FormViatura(), 'erroNumero':'Viatura existente com este número'})
 
-
-# ESTOQUE
+###########
+# ESTOQUE #
+###########
 def menuestoque(request):
     itensestoque = Estoque.objects.all()
     itensperdidoextraviado = ItemPerdidoExtraviado.objects.all()

@@ -23,6 +23,7 @@ urlpatterns = [
     path('alocacao/', views.menualocacao, name='menualocacao'),
     path('alocacao/criar-alocacao/', views.criaralocacao, name='criaralocacao'),
     path('alocacao/<int:pk_alocacao>/detalhes', views.detalhealocacao, name='detalhealocacao'),
+    path('alocacao/procurar-por-tipo/', views.procurarportipo, name='procurarportipo'),
     path('alocacao/alocacoes-em-aberto', views.alocacoesabertas, name='alocacoesabertas'),
     path('agente/', views.menuagente, name='menuagente'),
     path('agente/cadastrar-agente/', views.cadastraragente, name='cadastraragente'),

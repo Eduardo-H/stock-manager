@@ -6,20 +6,20 @@
       <h1 class="display-4 text-center mb-5">Alocações</h1>
       <div class="row justify-content-center">
         <div class="col-lg-3">
-          <a href="{% url 'criaralocacao' %}" class="btn btn-primary btn-block"><i class="fas fa-plus mr-2"></i> CADASTRAR ALOCAÇÃO</a>
+          <a href="{% url 'criaralocacao' %}" class="btn btn-primary btn-block rounded-pill"><i class="fas fa-plus mr-2"></i> CADASTRAR ALOCAÇÃO</a>
         </div>
         <div class="col-lg-3">
-          <a href="#" class="btn btn-success btn-block"><i class="fas fa-search mr-2"></i> PROCURAR POR TIPO</a>
+          <a href="{% url 'procurarportipo' %}" class="btn btn-success btn-block rounded-pill"><i class="fas fa-search mr-2"></i> PROCURAR POR TIPO</a>
         </div>
         <div class="col-lg-3">
-          <a href="{% url 'alocacoesabertas' %}" class="btn btn-warning btn-block"><i class="fas fa-list mr-2"></i> ALOCAÇÕES EM ABERTO</a>
+          <a href="{% url 'alocacoesabertas' %}" class="btn btn-warning btn-block rounded-pill"><i class="fas fa-list mr-2"></i> ALOCAÇÕES EM ABERTO</a>
         </div>
       </div>
 
       <div class="row justify-content-center mt-5">
         <div class="col-lg-12">
           {% if alocacoes %}
-            <div class="table-responsive" id="tabela-colaboracao">
+            <div class="table-responsive " id="tabela-colaboracao">
               <table class="table table-hover">
                 <thead class="thead-dark">
                   <tr>

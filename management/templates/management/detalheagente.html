@@ -27,9 +27,9 @@
           </div>
 
           <div class="d-flex">
-            <a href="{% url 'menuagente' %}" class="btn btn-outline-primary mt-2 mx-auto"><i class="fas fa-arrow-left"></i> Voltar</a>
-            <a href="{% url 'editaragente' agente.id %}" class="btn btn-outline-warning mt-2 mx-auto"><i class="fas fa-pencil-alt"></i> Editar</a>
-            <button href="#" data-toggle="modal" data-target="#agenteModal" id="btn-deletar" class="btn btn-outline-danger mt-2 mx-auto"><i class="fas fa-trash"></i> Deletar</button>
+            <a href="{% url 'menuagente' %}" class="btn btn-outline-primary rounded-pill mt-2 mx-auto"><i class="fas fa-arrow-left"></i> Voltar</a>
+            <a href="{% url 'editaragente' agente.id %}" class="btn btn-outline-warning rounded-pill mt-2 mx-auto"><i class="fas fa-pencil-alt"></i> Editar</a>
+            <button href="#" data-toggle="modal" data-target="#agenteModal" id="btn-deletar" class="btn btn-outline-danger rounded-pill mt-2 mx-auto"><i class="fas fa-trash"></i> Deletar</button>
           </div>
         </div>
       </div>
@@ -37,7 +37,7 @@
   </section>
 
   <div class="modal fade text-dark" id="agenteModal">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">Atenção!</h5>

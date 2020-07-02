@@ -61,6 +61,18 @@ body::-webkit-scrollbar-thumb {
   top: 92%;
 }
 
+#input-pesquisa {
+  border-top-left-radius: 3px !important;
+}
+
+#input-pesquisa:focus {
+  outline: none !important;
+}
+
+#btn-pesquisa {
+  border-top-right-radius: 3px !important;
+}
+
 #tabela-colaboracao {
   height: 500px;
   overflow: auto;
