@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
+from django.core.paginator import Paginator
 from .models import *
 from .forms import *
 
@@ -138,6 +139,22 @@ def detalhealocacao(request, pk_alocacao):
 
         except ValueError:
             return render(request, 'management/detalhealocacao.html', {'alocacao':alocacao, 'agentes':agentes, 'erro':'Não foi possível desativar a alocação'})
+
+def alocacoesabertas(request):
+    lista_alocacoes = Alocacao.objects.filter(status='Aberto')
+    print(lista_alocacoes)
+    paginator = Paginator(lista_alocacoes, 6)
+    try:
+        page = int(request.GET.get('page', '1'))
+    except:
+        page = 1
+
+    try:
+        alocacoes = paginator.page(page)
+    except(EmptyPage, InvalidPage):
+        alocacoes = paginator.page(paginator.num_pages)
+
+    return render(request, 'management/alocacoesabertas.html', {'alocacoes':alocacoes})
 
 # AGENTES
 def menuagente(request):

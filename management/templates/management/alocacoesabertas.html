@@ -1,0 +1,79 @@
+{% extends 'management/base.html' %}
+
+{% block content %}
+  <section class="pt-5">
+    <div class="container">
+      <h1 class="display-4 text-center mb-5">Alocações em Aberto</h1>
+      <div class="row justify-content-center">
+          <div class="col-lg-3">
+            <a href="{% url 'menualocacao' %}" class="btn btn-primary btn-block"><i class="fas fa-home mr-2"></i> MENU DE ALOCAÇÕES</a>
+          </div>
+          <div class="col-lg-3">
+            <a href="{% url 'criaralocacao' %}" class="btn btn-success btn-block"><i class="fas fa-plus mr-2"></i> CADASTRAR ALOCAÇÃO</a>
+          </div>
+          <div class="col-lg-3">
+            <a href="#" class="btn btn-warning btn-block"><i class="fas fa-search mr-2"></i> PROCURAR POR TIPO</a>
+          </div>
+      </div>
+      <div class="row justify-content-center mt-4">
+        {% if alocacoes %}
+          {% for alocacao in alocacoes.object_list %}
+            <div class="col-lg-4">
+              <div class="card mb-4">
+                <div class="card-body">
+                  <p><span class="mr-3"><strong>Data:</strong> {{ alocacao.data|date:'d/m/Y' }}</span> <span><strong>Horário:</strong> {{ alocacao.horario|date:'H:i' }}</span></p>
+                  <p><strong>Local:</strong> {{ alocacao.rua|striptags|truncatechars:27 }}, {{ alocacao.numero }}</p>
+                  <p><span class="mr-3"><strong>Item:</strong> {{ alocacao.item.nome }}</span> <span><strong>Quantidade:</strong> {{ alocacao.quantidade }}</span></p>
+                  <p class="mb-0"><strong>Motivo:</strong> {{ alocacao.motivo|striptags|truncatechars:27 }}</p>
+                </div>
+                <div class="card-footer text-center">
+                  <a href="{% url 'detalhealocacao' alocacao.id %}" class="btn btn-outline-primary mr-3">Detalhes</a>
+                  <a href="#" class="btn btn-outline-success">Recolher</a>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <h3 class="text-center">Nenhuma alocação em aberto</h3>
+        {% endif %}
+      </div>
+
+
+      <div class="row justify-content-end">
+        <nav id="paginador">
+          <ul class="pagination mr-3">
+            {% if alocacoes.has_previous %}
+              <li class="page-item">
+                <a href="?page={{ alocacoes.previous_page_number }}" class="page-link">Retornar</a>
+              </li>
+            {% else %}
+            <li class="page-item disabled">
+              <a href="#" class="page-link">Anterior</a>
+            </li>
+            {% endif %}
+            {% for pg in alocacoes.paginator.page_range %}
+              {% if alocacoes.number == pg %}
+                <li class="page-item active">
+                  <a href="?page={{ pg }}" class="page-link">{{ pg }}</a>
+                </li>
+              {% else %}
+              <li class="page-item">
+                <a href="?page={{ pg }}" class="page-link">{{ pg }}</a>
+              </li>
+              {% endif %}
+            {% endfor %}
+            {% if alocacoes.has_next %}
+              <li class="page-item">
+                <a href="?page={{ alocacoes.next_page_number }}" class="page-link">Próximo</a>
+              </li>
+            {% else %}
+            <li class="page-item disabled">
+              <a href="#" class="page-link">Próximo</a>
+            </li>
+            {% endif %}
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </section>
+{% endblock %}
