@@ -36,7 +36,7 @@
                     <th scope="row" class="text-center py-4">{{ recolhimento.horario|date:'H:i' }}</th>
                     <th scope="row" class="text-center py-4">{{ recolhimento.alocacao.item }}</th>
                     <th scope="row" class="text-center py-4"><span style="text-transform: capitalize;">{{ recolhimento.cadastrador }}</span></th>
-                    <th scope="row" class="text-center py-3"><a href="#" class="btn btn-outline-primary">Detalhes</a></th>
+                    <th scope="row" class="text-center py-3"><a href="{% url 'detalherecolhimento' recolhimento.id %}" class="btn btn-outline-primary">Detalhes</a></th>
                   </tr>
                 {% endfor %}
               </tbody>

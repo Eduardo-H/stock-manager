@@ -429,6 +429,25 @@ def salvarrecolhimento(formulario, alocacao, viatura, agente1, agente2, cadastra
         agenteRecolhimento2.agente = agente2
         agenteRecolhimento2.save()
 
+def detalherecolhimento(request, pk_recolhimento):
+    recolhimento = get_object_or_404(Recolhimento, pk=pk_recolhimento)
+    agenterecolhimento = RecolhimentoAgente.objects.filter(recolhimento_id=recolhimento.id)
+    agentealocacao = AlocacaoAgente.objects.filter(alocacao_id=recolhimento.alocacao_id)
+    perdas = ItemPerdidoExtraviado.objects.filter(alocacao_id=recolhimento.alocacao_id)
+
+    if perdas is not None:
+        total = int(0)
+        for perda in perdas:
+            total += perda.quantidade
+        return render(request, 'management/detalherecolhimento.html',
+                {'recolhimento':recolhimento, 'agenterecolhimento':agenterecolhimento, 'agentealocacao':agentealocacao, 'perdas':total}
+            )
+    else:
+        return render(request, 'management/detalherecolhimento.html',
+                {'recolhimento':recolhimento, 'agenterecolhimento':agenterecolhimento, 'agentealocacao':agentealocacao}
+            )
+
+
 ###########
 # AGENTES #
 ###########

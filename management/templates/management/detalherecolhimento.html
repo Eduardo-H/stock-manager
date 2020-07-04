@@ -1,0 +1,99 @@
+{% extends 'management/base.html' %}
+
+{% block content %}
+  <section class="py-5">
+    <div class="container">
+      <h1 class="display-4 text-center mb-5">Detalhes Recolhimento</h1>
+      <div class="row justify-content-center">
+        <div class="col-lg-12">
+          <div class="d-flex justify-content-center">
+            <div class="col-lg-5">
+              <div class="d-flex">
+                <h2 class="mb-1">Alocação</h2>
+                <a href="{% url 'detalhealocacao' recolhimento.alocacao.id %}" class="btn btn-sm btn-outline-primary ml-auto mb-3">Ver alocação completa</a>
+              </div>
+
+              <div class="alert alert-secondary">
+                <p>
+                  <span class="mr-2"><strong>Data:</strong> {{ recolhimento.alocacao.data|date:'d/m/Y' }}</span>
+                  <span><strong>Horário:</strong> {{ recolhimento.alocacao.horario|date:'H:i' }}</span>
+                </p>
+                <p>
+                  <span class="mr-2"><strong>Local:</strong> {{ recolhimento.alocacao.rua|striptags|truncatechars:20 }}, {{ recolhimento.alocacao.numero }}</span>
+                  <span><strong>Bairro:</strong> {{ recolhimento.alocacao.bairro }}</span>
+                </p>
+                <p><span class="mr-2"><strong>Item:</strong> {{ recolhimento.alocacao.item.nome }}</span> <span><strong>Quantidade:</strong> {{ recolhimento.alocacao.quantidade }}</span></p>
+                <p><strong>Motivo:</strong> {{ recolhimento.alocacao.motivo|striptags|truncatechars:27 }}</p>
+                <p class="mb-0"><span class="mr-2"><strong>Agente{{ agentealocacao.count|pluralize }}:</strong>
+                    {% for agente in agentealocacao %}
+                      {% if agente %}
+                        {{ agente.agente.gritodeguerra }} e
+                      {% else %}
+                        {{ agente.agente.gritodeguerra }}
+                      {% endif %}
+                    {% endfor %}
+                  </span>
+                  <span>
+                    {% if alocacao.viatura %}
+                      <strong>Viatura:</strong> {{ recolhimento.alocacao.viatura.numero }}
+                    {% endif %}
+                  </span>
+                </p>
+              </div>
+            </div>
+
+            <div class="col-lg-5">
+              <h2>Recolhimento</h2>
+              <div class="alert alert-secondary">
+                <p>
+                  <span class="mr-2"><strong>Data:</strong> {{ recolhimento.data|date:'d/m/Y' }}</span>
+                  <span><strong>Horário</strong> {{ recolhimento.horario|date:'H:i' }}</span>
+                </p>
+                <p><span class="mr-2"><strong>Item:</strong> {{ recolhimento.alocacao.item.nome }}</span></p>
+                <p><strong>Quantidade:</strong> {{ recolhimento.quantidade }}</p>
+                <p><strong>Turno:</strong> {{ recolhimento.turno }}</p>
+                <p class="mb-0"><strong>Cadastrador:</strong> <span style="text-transform: capitalize;">{{ recolhimento.cadastrador }}</span></p>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-center">
+            <div class="col-lg-5">
+              <h2>Agente{{ agenterecolhimento.count|pluralize }}</h2>
+              <div class="alert alert-secondary">
+                {% for agente in agenterecolhimento %}
+                  <p><strong>Grito de Guerra:</strong> {{ agente.agente.gritodeguerra }}</p>
+                {% endfor %}
+              </div>
+            </div>
+            {% if recolhimento.viatura %}
+              <div class="col-lg-5">
+                <h2>Viatura</h2>
+                <div class="alert alert-secondary">
+                  <p><strong>Número:</strong> {{ recolhimento.viatura.numero }}</p>
+                  <p class="mb-0"><strong>Placa:</strong> {{ recolhimento.viatura.placa }}</p>
+                </div>
+              </div>
+            {% endif %}
+          </div>
+
+          {% if perdas %}
+            <div class="d-flex justify-content-center">
+              <div class="col-lg-10">
+                <h2>Itens Perdidos/Extraviados</h2>
+                <div class="alert alert-warning">
+                  <p><strong>Item:</strong> {{ recolhimento.alocacao.item.nome }}</p>
+                  <p class="mb-0"><strong>Quantidade:</strong> {{ perdas }}</p>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+
+          <div class="d-flex">
+            <a href="{% url 'menurecolhimento' %}" class="btn btn-outline-primary rounded-pill mx-auto mt-3"><i class="fas fa-arrow-left"></i> Voltar</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
