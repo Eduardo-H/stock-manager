@@ -11,33 +11,25 @@
             <div class="input-group">
               <input type="text" name="valor" class="form-control rounded-0" id="input-pesquisa" placeholder="Coloque o valor">
               <div class="input-group-append">
-                <button type="submit" class="btn btn-secondary rounded-0" id="btn-pesquisa"><i class="fas fa-search"></i></button>
+                <button type="submit" class="btn btn-primary rounded-0" id="btn-pesquisa"><i class="fas fa-search"></i></button>
               </div>
             </div>
-            <div class="input-group bg-primary text-white py-1 rounded-bottom">
-              <div class="form-check mr-3 ml-auto">
-                <label class="form-check-label">
-                  <input type="radio" class="form-check-input" name="pesquisa" value="data">
-                  Data
-                </label>
+            <div class="input-group bg-secondary text-white py-2 rounded-bottom">
+              <div class="custom-control custom-radio mr-3 ml-auto">
+                <input type="radio" class="custom-control-input" name="pesquisa" id="data" value="data">
+                <label class="custom-control-label" for="data">Data</label>
               </div>
-              <div class="form-check mr-3 ml-2">
-                <label class="form-check-label">
-                  <input type="radio" class="form-check-input" name="pesquisa" value="item">
-                  Item
-                </label>
+              <div class="custom-control custom-radio mr-3">
+                <input type="radio" class="custom-control-input" name="pesquisa" id="item" value="item">
+                <label class="custom-control-label" for="item">Item</label>
               </div>
-              <div class="form-check mr-3">
-                <label class="form-check-label">
-                  <input type="radio" class="form-check-input" name="pesquisa" value="agente">
-                  Agente
-                </label>
+              <div class="custom-control custom-radio mr-3">
+                <input type="radio" class="custom-control-input" name="pesquisa" id="agente" value="agente">
+                <label class="custom-control-label" for="agente">Agente</label>
               </div>
-              <div class="form-check mr-auto">
-                <label class="form-check-label">
-                  <input type="radio" class="form-check-input" name="pesquisa" value="viatura">
-                  Viatura
-                </label>
+              <div class="custom-control custom-radio mr-auto">
+                <input type="radio" class="custom-control-input" name="pesquisa" id="viatura" value="viatura">
+                <label class="custom-control-label" for="viatura">Viatura</label>
               </div>
             </div>
           </form>
@@ -71,7 +63,7 @@
                   <div class="card-footer text-center">
                     <a href="{% url 'detalhealocacao' alocacao.alocacao.id %}" class="btn btn-outline-primary mr-3">Detalhes</a>
                     {% if alocacao.alocacao.status == 'Aberto' %}
-                      <a href="#" class="btn btn-outline-success">Recolher</a>
+                      <a href="{% url 'cadastrarrecolhimento' alocacao.alocacao.id %}" class="btn btn-outline-success">Recolher</a>
                     {% endif %}
                   </div>
                 </div>
@@ -91,7 +83,7 @@
                   <div class="card-footer text-center">
                     <a href="{% url 'detalhealocacao' alocacao.id %}" class="btn btn-outline-primary {% if alocacao.status == 'Aberto' %} mr-3 {% endif %}">Detalhes</a>
                     {% if alocacao.status == 'Aberto' %}
-                      <a href="#" class="btn btn-outline-success">Recolher</a>
+                      <a href="{% url 'cadastrarrecolhimento' alocacao.id %}" class="btn btn-outline-success">Recolher</a>
                     {% endif %}
                   </div>
                 </div>

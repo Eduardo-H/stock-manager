@@ -33,8 +33,12 @@
             <div class="d-flex justify-content-center mb-3">
               <div class="col-lg-4 mr-3">
                 <label for="item">Item</label>
-                <select class="form-control" name="item" {% if itens.count > 5 %}onfocus='this.size=5;' id="item"{% endif %}
-                  onblur='this.size=1;' onchange='this.size=1; this.blur();' required>
+                <select class="form-control" name="item"
+                  {% if itens.count > 5 %}
+                    onfocus='this.size=5;' id="item" onblur='this.size=1;' onchange='this.size=1; this.blur();'
+                  {% endif %}
+                  required
+                >
                     {% for item in itens %}
                       <option value="{{ item.id }}">{{ item.nome }}</option>
                     {% endfor %}
@@ -129,7 +133,11 @@
 
             <div class="col-lg-9 mx-auto mb-3" id="agente-1">
               <label for="agente-1">Agente</label>
-              <select class="form-control" name="agente-1" {% if agentes.count > 5 %} id="agente-1" onfocus='this.size=5;' onblur='this.size=1;' onchange='this.size=1; this.blur();' {% endif %}>
+              <select class="form-control" name="agente-1"
+                {% if agentes.count > 5 %}
+                  id="agente-1" onfocus='this.size=5;' onblur='this.size=1;' onchange='this.size=1; this.blur();'
+                {% endif %}
+              >
                 {% for agente in agentes %}
                   <option value="{{ agente.id }}" {% if agentes.count > 5 %} id="select-option" {% endif %}>{{ agente.gritodeguerra }}</option>
                 {% endfor %}
@@ -139,10 +147,14 @@
             <div class="col-lg-9 mx-auto mb-3">
               <div class="d-none" id="agente-2">
                 <label for="agente">Agente</label>
-                <select class="form-control" name="agente-2">
+                <select class="form-control" name="agente-2"
+                  {% if agentes.count > 5 %}
+                    id="agente-1" onfocus='this.size=5;' onblur='this.size=1;' onchange='this.size=1; this.blur();'
+                  {% endif %}
+                >
                   <option value="-">-</option>
                   {% for agente in agentes %}
-                    <option value="{{ agente.id }}">{{ agente.gritodeguerra }}</option>
+                    <option value="{{ agente.id }}" {% if agentes.count > 5 %} id="select-option" {% endif %}>{{ agente.gritodeguerra }}</option>
                   {% endfor %}
                 </select>
               </div>
@@ -155,7 +167,11 @@
             <input type="text" class="d-none" name="cadastrador" value="{{ user.id }}">
 
             <div class="col-lg-9 mx-auto">
-              <button type="submit" class="btn btn-primary btn-block mt-4">CADASTRAR</button>
+              <div class="d-flex justify-content-end">
+                <a href="{% url 'menualocacao' %}" class="btn btn-danger mt-4 mr-3">Cancelar</a>
+                <button type="submit" class="btn btn-primary mt-4">Cadastrar</button>
+              </div>
+
             </div>
 
           </form>

@@ -28,7 +28,7 @@
                 </div>
                 <div class="card-footer text-center">
                   <a href="{% url 'detalhealocacao' alocacao.id %}" class="btn btn-outline-primary mr-3">Detalhes</a>
-                  <a href="#" class="btn btn-outline-success">Recolher</a>
+                  <a href="{% url 'cadastrarrecolhimento' alocacao.id %}" class="btn btn-outline-success">Recolher</a>
                 </div>
               </div>
             </div>

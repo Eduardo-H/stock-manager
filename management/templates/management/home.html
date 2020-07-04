@@ -9,7 +9,7 @@
           <a href="{% url 'criaralocacao' %}" class="btn btn-danger btn-block rounded-pill"><i class="fas fa-clipboard mb-2 fa-3x"></i> <p class="mb-0 my-auto">CADASTRAR ALOCAÇÃO</p></a>
         </div>
         <div class="col-lg-4">
-          <a href="#" class="btn btn-primary btn-block rounded-pill"><i class="fas fa-clipboard-check mb-2 fa-3x"></i> <p class="mb-0">CADASTRAR RECOLHIMENTO</p></a>
+          <a href="{% url 'alocacoesabertas' %}" class="btn btn-primary btn-block rounded-pill"><i class="fas fa-clipboard-check mb-2 fa-3x"></i> <p class="mb-0">CADASTRAR RECOLHIMENTO</p></a>
         </div>
       </div>
 
@@ -49,7 +49,7 @@
                       {% if alocacaorecolhimento.alocacao %}
                         <span style="text-transform: capitalize;">{{ alocacaorecolhimento.alocacao.cadastrador }}</span>
                       {% elif alocacaorecolhimento.recolhimento %}
-                        <span >{{ alocacaorecolhimento.recolhimento.cadastrador }}</span>
+                        <span style="text-transform: capitalize;">{{ alocacaorecolhimento.recolhimento.cadastrador }}</span>
                       {% endif %}
                     </th>
                     <th class="text-center py-3"><a

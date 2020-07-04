@@ -162,7 +162,7 @@ def procurarportipo(request):
         tipo = request.GET.get('pesquisa')
         valor = request.GET.get('valor')
 
-        if tipo == 'data':
+        if tipo == 'data': # Verifica se a opção de busca foi 'Data'
             # Mudando o formato da data de 'DD/MM/AAAA' para 'DD/MM/AA'
             if len(valor) == 10:
                 data_valida = valor[:8]
@@ -175,10 +175,7 @@ def procurarportipo(request):
             else:
                 return render(request, 'management/procurarportipo.html', {'resultado':'nenhum'})
 
-            # Mudando o formato da data de 'DD/MM/AAAA' para 'AAAA-MM-DD'
-            data = valor[6:] + '-'
-            data += valor[3:5] + '-'
-            data += valor[:2]
+            data = mudarformato(valor)
 
             if len(data) == 10 and data[4] == '-' and data[7] == '-':
                 # O IF abaixo basicamente verifica se a data informada é inválida
@@ -193,16 +190,16 @@ def procurarportipo(request):
                         return render(request, 'management/procurarportipo.html', {'resultado':'nenhum'})
             else:
                 return render(request, 'management/procurarportipo.html', {'resultado':'nenhum'})
-        elif tipo == 'item':
+        elif tipo == 'item': # Verifica se a opção de busca foi 'Item'
             item = Item.objects.filter(nome=valor)
-            if item:
+            if item: # Verifica se exite itens com o nome informado
                 item = Item.objects.get(nome=valor)
                 alocacoes = Alocacao.objects.filter(item_id=item.id).order_by('-id')
                 alocacoes = paginador(alocacoes)
                 return render(request, 'management/procurarportipo.html', {'alocacoes':alocacoes, 'resultado':'item'})
             else:
                 return render(request, 'management/procurarportipo.html', {'resultado':'nenhum'})
-        elif tipo == 'agente':
+        elif tipo == 'agente': # Verifica se a opção de busca foi 'Agente'
             agente = Agente.objects.filter(gritodeguerra=valor)
             if agente:
                 agente = Agente.objects.get(gritodeguerra=valor)
@@ -211,7 +208,7 @@ def procurarportipo(request):
                 return render(request, 'management/procurarportipo.html', {'alocacoes':alocacoes, 'resultado':'agente'})
             else:
                 return render(request, 'management/procurarportipo.html', {'resultado':'nenhum'})
-        elif tipo == 'viatura':
+        elif tipo == 'viatura': # Verifica se a opção de busca foi 'Viatura'
             if valor.isdigit():
                 viatura = Viatura.objects.filter(numero=valor)
                 if viatura:
@@ -231,7 +228,7 @@ def procurarportipo(request):
 FUNÇÃO PARA A PÁGINAÇÃO
 """
 def paginador(lista_resultados):
-    paginator = Paginator(lista_resultados, 6)
+    paginator = Paginator(lista_resultados, 6) # Retorna 6 resultados para cada página
     try:
         page = int(request.GET.get('page', '1'))
     except:
@@ -244,13 +241,193 @@ def paginador(lista_resultados):
 
     return alocacoes
 
+"""
+FUNÇÃO PARA MUDAR O FORMATO DA DATA
+"""
+def mudarformato(valor):
+    # Mudando o formato da data de 'DD/MM/AAAA' para 'AAAA-MM-DD'
+    data = valor[6:] + '-'
+    data += valor[3:5] + '-'
+    data += valor[:2]
+
+    return data
+
+
 #################
 # RECOLHIMENTOS #
 #################
 
 def menurecolhimento(request):
     recolhimentos = Recolhimento.objects.all().order_by('-id')
-    return render(request, 'management/menurecolhimento.html')
+    return render(request, 'management/menurecolhimento.html', {'recolhimentos':recolhimentos})
+
+def cadastrarrecolhimento(request, pk_alocacao):
+    alocacao = get_object_or_404(Alocacao, pk=pk_alocacao)
+    agentealocacao = AlocacaoAgente.objects.filter(alocacao_id=pk_alocacao) # Busca o(s) agente(s) relacionado(s) à alocação
+    agentes = Agente.objects.all().order_by('nome') # Busca os agentes cadastrados no sistema
+    viaturas = Viatura.objects.all().order_by('numero')
+    quantidadeperdida = ItemPerdidoExtraviado.objects.filter(alocacao_id=alocacao.id) # Buscando os cadastros de perda/extravio com o ID da alocação
+
+    if request.method == 'GET':
+        if quantidadeperdida: # Se tiver algum resultado de itens perdidos/extraviados
+            numero = int(0)
+            for cadastro in quantidadeperdida:
+                numero += cadastro.quantidade
+
+            nova_quantidade = alocacao.quantidade - numero
+            return render(request, 'management/cadastrarrecolhimento.html',
+                    {'formulario':FormRecolhimento(), 'alocacao':alocacao, 'agentes':agentes, 'agentealocacao':agentealocacao, 'viaturas':viaturas, 'quantidadeperdida':nova_quantidade}
+                )
+        else:
+            return render(request, 'management/cadastrarrecolhimento.html',
+                    {'formulario':FormRecolhimento(), 'alocacao':alocacao, 'agentes':agentes, 'agentealocacao':agentealocacao, 'viaturas':viaturas}
+                )
+    else:
+        # Se o formulário enviado foi o de itens perdidos/extraviados
+        if 'quantidade-perdida' in request.POST:
+            quantidade = request.POST['quantidade-perdida'] # Recebe a quantidade do item perdido/extraviado
+
+            if quantidadeperdida is not None: # Verifica se existe cadatro de perda/extravio na atual alocação
+                nova_quantidade = alocacao.quantidade
+                for cadastro in quantidadeperdida: # Vai lendo a quantidade cadastrada e vai subtraindo com o total
+                    nova_quantidade -= cadastro.quantidade
+
+            nova_quantidade -= int(quantidade) # Subtrai a quantitade disponível para cadastrar
+
+            data = mudarformato(request.POST['data-perda'])
+
+            perda = ItemPerdidoExtraviado() # Criando e salvando o cadastro da perda/extravio
+            perda.data = data
+            perda.horario = request.POST['horario-perda']
+            perda.alocacao = alocacao
+            perda.quantidade = int(quantidade)
+            perda.save()
+
+            return render(request, 'management/cadastrarrecolhimento.html',
+                    {'formulario':FormRecolhimento(), 'alocacao':alocacao, 'agentes':agentes, 'agentealocacao':agentealocacao, 'viaturas':viaturas, 'novaquantidade':nova_quantidade}
+                )
+        # Se o formulário enviado foi o de cadastração de recolhimento
+        else:
+            agente1 = request.POST['agente-1'] # Recebe o ID do primeiro agente, e do segundo, se houver
+            agente2 = request.POST['agente-2']
+            agente1 = get_object_or_404(Agente, pk=agente1) # Recebe o objeto 'Agente 1'
+            quantidade = request.POST['quantidade'] # Recebe a quantidade do item informada
+
+            perdas = ItemPerdidoExtraviado.objects.filter(alocacao_id=alocacao.id)
+
+            # Verifica se existe cadatro de perda/extravio na atual alocação, se exisitir diminui o valor aceitavel para cadastro do recolhimento
+            if perdas:
+                total = int(0)
+                for perda in perdas:
+                    total -= int(perda.quantidade)
+                if int(quantidade) < total:
+                    return render(request, 'management/cadastrarrecolhimento.html',
+                            {'formulario':FormRecolhimento(), 'alocacao':alocacao, 'agentes':agentes, \
+                                'agentealocacao':agentealocacao, 'viaturas':viaturas, 'erroNumero':'Valor incorreto, se necessário, cadastre uma perda/extravio'
+                            }
+                        )
+            # Se não houver, verifica se a quantidade digitada é igual a disponível para cadastrar
+            else:
+                if int(quantidade) < alocacao.quantidade:
+                    return render(request, 'management/cadastrarrecolhimento.html',
+                            {'formulario':FormRecolhimento(), 'alocacao':alocacao, 'agentes':agentes, \
+                                'agentealocacao':agentealocacao, 'viaturas':viaturas, 'erroNumero':'Valor incorreto, se necessário, cadastre uma perda/extravio'
+                            }
+                        )
+
+            if 'viaturaId' in request.POST:
+                if request.POST['viaturaId'] != '-':
+                    viatura = get_object_or_404(Viatura, pk=request.POST['viaturaId'])
+                    if viatura is not None: # Verifica se foi retornado um objeto
+                        try:
+                            formulario = FormRecolhimento(request.POST)
+                            salvarrecolhimento(formulario, alocacao, viatura, agente1, agente2, request.POST['cadastrador']) # Função para a persistência de dados
+
+                            return redirect('menurecolhimento')
+                        except ValueError:
+                            return render(request, 'management/cadastrarrecolhimento.html',
+                                    {'formulario':FormRecolhimento(), 'alocacao':alocacao, 'agentes':agentes, \
+                                        'agentealocacao':agentealocacao, 'viaturas':viaturas, 'erro':'Não foi possível cadastrar o recolhimento'
+                                    }
+                                )
+                elif request.POST['viaturaId'] == '-':
+                    try:
+                        formulario = FormRecolhimento(request.POST)
+                        viatura = None # Atribui o valor None para que na função abaixo não seja feita a persistência da viatura na alocação
+                        salvarrecolhimento(formulario, alocacao, viatura, agente1, agente2, request.POST['cadastrador'])
+
+                        return redirect('menurecolhimento')
+                    except ValueError:
+                        return render(request, 'management/cadastrarrecolhimento.html',
+                                {'formulario':FormRecolhimento(), 'alocacao':alocacao, 'agentes':agentes, \
+                                    'agentealocacao':agentealocacao, 'viaturas':viaturas, 'erro':'Não foi possível cadastrar o recolhimento'
+                                }
+                            )
+            elif 'viaturaNumero' in request.POST:
+                viatura = Viatura.objects.get(numero=request.POST['viaturaNumero']) # Recebe o objeto 'Viatura' de acordo com o número provido
+                if viatura is not None: # Verifica se foi retornado um objeto
+                    try:
+                        formulario = FormRecolhimento(request.POST)
+                        salvarrecolhimento(formulario, alocacao, viatura, agente1, agente2, request.POST['cadastrador'])
+
+                        return redirect('menurecolhimento')
+                    except ValueError:
+                        return render(request, 'management/cadastrarrecolhimento.html',
+                                {'formulario':FormRecolhimento(), 'alocacao':alocacao, 'agentes':agentes, \
+                                    'agentealocacao':agentealocacao, 'viaturas':viaturas, 'erroViatura':'Viatura inexistente'
+                                }
+                            )
+                else:
+                    try:
+                        formulario = FormRecolhimento(request.POST)
+                        viatura = None
+                        salvarrecolhimento(formulario, alocacao, viatura, agente1, agente2, request.POST['cadastrador'])
+
+                        return redirect('menurecolhimento')
+                    except ValueError:
+                        return render(request, 'management/cadastrarrecolhimento.html',
+                                {'formulario':FormRecolhimento(), 'alocacao':alocacao, 'agentes':agentes, \
+                                    'agentealocacao':agentealocacao, 'viaturas':viaturas, 'erro':'Não foi possível cadastrar o recolhimento'
+                                }
+                            )
+
+"""
+FUNÇÃO PARA A PERSISTÊNCIA DE UM RECOLHIMENTO NO BANCO DE DADOS
+"""
+def salvarrecolhimento(formulario, alocacao, viatura, agente1, agente2, cadastrador):
+    recolhimento = formulario.save(commit=False)
+    if viatura is not None:
+        recolhimento.viatura = viatura
+    recolhimento.alocacao = alocacao
+    recolhimento.cadastrador = get_object_or_404(User, pk=cadastrador)
+    recolhimento.save()
+
+    alocacao = Alocacao.objects.get(id=alocacao.id)
+    alocacao.status = 'Fechado'
+    alocacao.save()
+
+    estoque = Estoque.objects.get(item=alocacao.item)
+    estoque.quantidade += int(recolhimento.quantidade)
+    estoque.save()
+
+    alocacaoRecolhimento = AlocacaoRecolhimento()
+    alocacaoRecolhimento.recolhimento = recolhimento
+    alocacaoRecolhimento.save()
+
+    recolhimentoAgente = recolhimento.id
+    recolhimentoAgente = get_object_or_404(Recolhimento, pk=recolhimentoAgente)
+
+    agenteRecolhimento1 = RecolhimentoAgente()
+    agenteRecolhimento1.recolhimento = recolhimentoAgente
+    agenteRecolhimento1.agente = agente1
+    agenteRecolhimento1.save()
+
+    if agente2 != '-':
+        agente2 = get_object_or_404(Agente, pk=agente2)
+        agenteRecolhimento2 = RecolhimentoAgente()
+        agenteRecolhimento2.recolhimento = recolhimentoAgente
+        agenteRecolhimento2.agente = agente2
+        agenteRecolhimento2.save()
 
 ###########
 # AGENTES #

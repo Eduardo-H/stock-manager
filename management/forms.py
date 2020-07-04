@@ -16,7 +16,7 @@ class FormAlocacao(ModelForm):
 class FormRecolhimento(ModelForm):
     class Meta:
         model = Recolhimento
-        fields = ['data', 'horario', 'alocacao']
+        fields = ['data', 'horario', 'quantidade', 'turno']
 
     data = forms.DateField(
         widget=forms.DateInput(format='%d/%m/%Y'),

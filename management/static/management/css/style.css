@@ -1,7 +1,9 @@
 body {
   font-family: 'Roboto', Arial;
 }
-
+/*--------------*/
+/* Scroll Bars */
+/*-------------*/
 body::-webkit-scrollbar {
   width: 10px;
 }
@@ -13,14 +15,6 @@ body::-webkit-scrollbar-track {
 body::-webkit-scrollbar-thumb {
   background: #bdbdbd;
   border-radius: 40px;
-}
-
-#icon {
-  transition: 0.3s;
-}
-
-#icon:hover {
-  color: #797979;
 }
 
 #viatura::-webkit-scrollbar,
@@ -38,39 +32,6 @@ body::-webkit-scrollbar-thumb {
 #agente-1::-webkit-scrollbar-thumb {
   background: #bdbdbd;
   border-radius: 40px;
-}
-
-#select-option:hover {
-  background: #248eff;
-  color: #fff;
-}
-
-#add-agent {
-  margin-right: 110px;
-  decoration: none;
-  color: #333;
-  transition: 0.2s;
-}
-
-#my-modal {
-  top: 30%;
-}
-
-#paginador {
-  position: fixed;
-  top: 92%;
-}
-
-#input-pesquisa {
-  border-top-left-radius: 3px !important;
-}
-
-#input-pesquisa:focus {
-  outline: none !important;
-}
-
-#btn-pesquisa {
-  border-top-right-radius: 3px !important;
 }
 
 #tabela-colaboracao {
@@ -92,4 +53,50 @@ body::-webkit-scrollbar-thumb {
 #tabela-colaboracao::-webkit-scrollbar-thumb {
   background: #bdbdbd;
   border-radius: 40px;
+}
+/*-----------------*/
+/* Demais estilos */
+/*---------------*/
+#icon {
+  transition: 0.3s;
+}
+
+#icon:hover {
+  color: #797979;
+}
+
+#add-agent {
+  margin-right: 15%;
+  decoration: none;
+  color: #333;
+  transition: 0.2s;
+}
+
+#add-agent-recolhimento {
+  margin-right: 18%;
+  decoration: none;
+  color: #333;
+  transition: 0.2s;
+}
+
+#select-option:hover {
+  background: #248eff;
+  color: #fff;
+}
+
+#my-modal {
+  top: 30%;
+}
+
+#paginador {
+  position: fixed;
+  top: 92%;
+}
+
+#input-pesquisa {
+  border-top-left-radius: 3px !important;
+}
+
+#btn-pesquisa {
+  border-top-right-radius: 3px !important;
 }

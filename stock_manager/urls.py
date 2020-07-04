@@ -18,7 +18,6 @@ from django.urls import path
 from management import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
     path('', views.home, name='home'),
     path('alocacao/', views.menualocacao, name='menualocacao'),
     path('alocacao/criar-alocacao/', views.criaralocacao, name='criaralocacao'),
@@ -26,6 +25,7 @@ urlpatterns = [
     path('alocacao/procurar-por-tipo/', views.procurarportipo, name='procurarportipo'),
     path('alocacao/alocacoes-em-aberto', views.alocacoesabertas, name='alocacoesabertas'),
     path('recolhimento/', views.menurecolhimento, name='menurecolhimento'),
+    path('recolhimento/<int:pk_alocacao>/cadastar/', views.cadastrarrecolhimento, name='cadastrarrecolhimento'),
     path('agente/', views.menuagente, name='menuagente'),
     path('agente/cadastrar-agente/', views.cadastraragente, name='cadastraragente'),
     path('agente/<int:pk_agente>/detalhes/', views.detalheagente, name='detalheagente'),
@@ -36,4 +36,6 @@ urlpatterns = [
     path('estoque/adicionar-ao-estoque/', views.adicionarestoque, name='adicionarestoque'),
     path('estoque/cadastrar-item/', views.cadastraritem, name="cadastraritem"),
     path('estoque/<int:pk_item>/editar', views.editaritem, name="editaritem"),
+
+    path('admin/', admin.site.urls),
 ]

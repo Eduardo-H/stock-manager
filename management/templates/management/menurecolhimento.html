@@ -15,7 +15,33 @@
 
       <div class="row justify-content-center mt-4">
         {% if recolhimentos %}
-          <h3>Existem recolhimentos</h3>
+          <div class="table-responsive" id="tabela-colaboracao">
+            <table class="table table-hover">
+              <thead class="thead-dark">
+                <tr>
+                  <th scope="col" class="text-center">#</th>
+                  <th scope="col" class="text-center">Data</th>
+                  <th scope="col" class="text-center">Horário</th>
+                  <th scope="col" class="text-center">Item</th>
+                  <th scope="col" class="text-center">Cadastrador</th>
+                  <th scope="col" class="text-center"></th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {% for recolhimento in recolhimentos %}
+                  <tr>
+                    <th scope="row" class="text-center py-4">{{ recolhimento.id }}</th>
+                    <th scope="row" class="text-center py-4">{{ recolhimento.data|date:'d/m/Y' }}</th>
+                    <th scope="row" class="text-center py-4">{{ recolhimento.horario|date:'H:i' }}</th>
+                    <th scope="row" class="text-center py-4">{{ recolhimento.alocacao.item }}</th>
+                    <th scope="row" class="text-center py-4"><span style="text-transform: capitalize;">{{ recolhimento.cadastrador }}</span></th>
+                    <th scope="row" class="text-center py-3"><a href="#" class="btn btn-outline-primary">Detalhes</a></th>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
         {% else %}
           <h2 class="text-center text-secondary">Nenhum recolhimento cadastrado</h2>
         {% endif %}

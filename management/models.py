@@ -56,8 +56,9 @@ class Alocacao(models.Model):
     motivo = models.CharField(max_length=100, blank=True)
     cadastrador = models.ForeignKey(User, on_delete=models.PROTECT)
     status = models.CharField(max_length=11, choices=STATUS_CHOICES, default='Fechado')
+
     def __str__(self):
-        return 'Alocação feita no dia {0} em {1}'.format(self.data, self.rua)
+        return 'Alocação feita no dia {} em {}'.format(self.data, self.rua)
 
 class AlocacaoAgente(models.Model):
     alocacao = models.ForeignKey(Alocacao, on_delete=models.PROTECT)
@@ -67,14 +68,30 @@ class AlocacaoAgente(models.Model):
         return 'Agente: {}, Data: {}, Local: {}'.format(self.agente.gritodeguerra, self.alocacao.data, self.alocacao.rua)
 
 class Recolhimento(models.Model):
+    TURNO_CHOICES = (
+        ('Manhã', 'Manhã'),
+        ('Tarde', 'Tarde'),
+        ('Noite', 'Noite'),
+        ('Madrugada', 'Madrugada')
+    )
+
     data = models.DateField()
     horario = models.TimeField()
+    quantidade = models.IntegerField()
     alocacao = models.ForeignKey(Alocacao, on_delete=models.PROTECT)
+    viatura = models.ForeignKey(Viatura, on_delete=models.PROTECT, blank=True, null=True)
+    turno = models.CharField(max_length=10, choices=TURNO_CHOICES)
     cadastrador = models.ForeignKey(User, on_delete=models.PROTECT)
+
+    def __str__(self):
+        return 'Recolhimento feito no dia {}. Alocação do dia {} em {}'.format(self.data, self.alocacao.rua, self.alocacao.rua)
 
 class RecolhimentoAgente(models.Model):
     recolhimento = models.ForeignKey(Recolhimento, on_delete=models.PROTECT)
     agente = models.ForeignKey(Agente, on_delete=models.PROTECT)
+
+    def __str__(self):
+        return 'Agente: {}, Data: {}'.format(self.agente.gritodeguerra, self.recolhimento.data)
 
 class AlocacaoRecolhimento(models.Model):
     alocacao = models.ForeignKey(Alocacao, on_delete=models.PROTECT, blank=True, null=True)
