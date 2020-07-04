@@ -235,11 +235,11 @@ def paginador(lista_resultados):
         page = 1
 
     try:
-        alocacoes = paginator.page(page)
+        resultado = paginator.page(page)
     except(EmptyPage, InvalidPage):
-        alocacoes = paginator.page(paginator.num_pages)
+        resultado = paginator.page(paginator.num_pages)
 
-    return alocacoes
+    return resultado
 
 """
 FUNÇÃO PARA MUDAR O FORMATO DA DATA
@@ -452,8 +452,18 @@ def detalherecolhimento(request, pk_recolhimento):
 # AGENTES #
 ###########
 def menuagente(request):
-    agentes = Agente.objects.all()
-    return render(request, 'management/menuagente.html', {'agentes':agentes})
+    if 'procura_agente' in request.GET:
+        agentes = Agente.objects.filter(gritodeguerra__contains=request.GET.get('procura_agente'))
+        print(agentes)
+        if agentes is not None:
+            print('Entrouuuuuuuuuuu')
+            agentes = paginador(agentes)
+            return render(request, 'management/procuraragente.html', {'agentes':agentes})
+        else:
+            return render(request, 'management/procuraragente.html')
+    else:
+        agentes = Agente.objects.all()
+        return render(request, 'management/menuagente.html', {'agentes':agentes})
 
 def cadastraragente(request):
     if request.method == 'GET':
@@ -497,6 +507,9 @@ def editaragente(request, pk_agente):
             return render(request, 'management/editaragente.html',
                 {'agente':agente, 'formulario':formulario, 'erro':'Não foi possível editar o agente'}
             )
+
+
+
 
 ############
 # VIATURAS #
@@ -574,6 +587,11 @@ def menuestoque(request):
                 item = Item.objects.get(nome=request.POST['nomeAntigo'])
                 item.nome = request.POST['nomeNovo']
                 item.save()
+
+                estoque = Estoque.objects.get(item_id=item.id)
+                estoque.quantidade = int(request.POST['quantidade'])
+                estoque.save()
+
                 return render(request, 'management/menuestoque.html',
                     {'itensestoque':itensestoque, 'itensperdidoextraviado':itensperdidoextraviado, 'confirmacao':'Item editado com sucesso!'}
                 )
@@ -614,8 +632,3 @@ def cadastraritem(request):
             return redirect('menuestoque')
         except ValueError:
             return render(request, 'management/cadastraritem.html', {'formulario':FormItem(), 'erro':'Não foi possível adicionar o item'})
-
-def editaritem(request, pk_item):
-    item = get_object_or_404(Item, pk=pk_item)
-    if request.method == 'GET':
-        return render(request, 'management/editaritem.html', {'item':item})
