@@ -645,4 +645,5 @@ def cadastraritem(request):
             return render(request, 'management/cadastraritem.html', {'formulario':FormItem(), 'erro':'Não foi possível adicionar o item'})
 
 def menuitemperdido(request):
-    return render(request, 'management/adicionarestoque.html', {'itens':itens})
+    itensperdidos = ItemPerdidoExtraviado.objects.all().order_by('-id')
+    return render(request, 'management/menuitemperdido.html', {'itensperdidos':itensperdidos})
