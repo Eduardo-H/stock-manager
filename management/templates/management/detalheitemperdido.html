@@ -1,0 +1,45 @@
+{% extends 'management/base.html' %}
+
+{% block content %}
+  <section class="py-5">
+    <div class="container">
+      <h1 class="display-4 text-center mb-5">Detalhes Item Perdido/Extraviado</h1>
+      <div class="row justify-content-center">
+        <div class="col-lg-6">
+          <h2>Dados</h2>
+          <div class="alert alert-secondary mb-4">
+            <p><strong>Data:</strong> {{ perda_extravio.data|date:'d/m/Y' }}</p>
+            <p><strong>Horário:</strong> {{ perda_extravio.horario|date:'H:i' }}</p>
+            <p><strong>Item:</strong> {{ perda_extravio.alocacao.item.nome }}</p>
+            <p class="mb-0"><strong>Quantidade perdida/extraviada:</strong> {{ perda_extravio.quantidade }}</p>
+          </div>
+
+          <div class="d-flex">
+            <h2 class="mb-1">Alocação</h2>
+            <a href="{% url 'detalhealocacao' perda_extravio.alocacao.id %}" class="btn btn-sm btn-outline-primary ml-auto mb-3">Ver alocação completa</a>
+          </div>
+
+          <div class="alert alert-secondary">
+            <p>
+              <span class="mr-2"><strong>Data:</strong> {{ perda_extravio.alocacao.data|date:'d/m/Y' }}</span>
+              <span><strong>Horário:</strong> {{ perda_extravio.alocacao.horario|date:'H:i' }}</span>
+            </p>
+            <p>
+              <span class="mr-2"><strong>Local:</strong> {{ perda_extravio.alocacao.rua }}, {{ perda_extravio.alocacao.numero }}</span>
+              <span><strong>Bairro:</strong> {{ perda_extravio.alocacao.bairro }}</span>
+            </p>
+            <p>
+              <span class="mr-2"><strong>Item:</strong> {{ perda_extravio.alocacao.item.nome }}</span>
+              <span><strong>Quantidade:</strong> {{ perda_extravio.alocacao.quantidade }}</span>
+            </p>
+            <p class="mb-0"><strong>Motivo:</strong> {{ perda_extravio.alocacao.motivo }}</p>
+          </div>
+
+          <div class="d-flex justify-content-center">
+            <a href="{% url 'menuitemperdido' %}" class="btn btn-outline-primary rounded-pill mt-3 mx-auto"><i class="fas fa-arrow-left"></i> Voltar</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

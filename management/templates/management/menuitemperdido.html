@@ -34,7 +34,7 @@
                   <th scope="row" class="text-center py-4">{{ itemperdido.horario|date:'H:i' }}</th>
                   <th scope="row" class="text-center py-4">{{ itemperdido.alocacao.item.nome }}</th>
                   <th scope="row" class="text-center py-4">{{ itemperdido.quantidade }}</th>
-                  <th scope="row" class="text-center py-3"><a href="#" class="btn btn-outline-primary">Detalhes</a></th>
+                  <th scope="row" class="text-center py-3"><a href="{% url 'detalheitemperdido' itemperdido.id %}" class="btn btn-outline-primary">Detalhes</a></th>
                 </tr>
               {% endfor %}
             </tbody>

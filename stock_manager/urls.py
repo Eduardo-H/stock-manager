@@ -38,6 +38,7 @@ urlpatterns = [
     path('estoque/adicionar-ao-estoque/', views.adicionarestoque, name='adicionarestoque'),
     path('estoque/cadastrar-item/', views.cadastraritem, name="cadastraritem"),
     path('estoque/itens-perdidos-extraviados/', views.menuitemperdido, name="menuitemperdido"),
+    path('estoque/itens-perdidos-extraviados/<int:pk_perda_extravio>/detalhes', views.detalheitemperdido, name="detalheitemperdido"),
 
     path('admin/', admin.site.urls),
 ]

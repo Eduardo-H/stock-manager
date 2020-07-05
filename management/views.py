@@ -647,3 +647,7 @@ def cadastraritem(request):
 def menuitemperdido(request):
     itensperdidos = ItemPerdidoExtraviado.objects.all().order_by('-id')
     return render(request, 'management/menuitemperdido.html', {'itensperdidos':itensperdidos})
+
+def detalheitemperdido(request, pk_perda_extravio):
+    perda_extravio = get_object_or_404(ItemPerdidoExtraviado, pk=pk_perda_extravio)
+    return render(request, 'management/detalheitemperdido.html', {'perda_extravio':perda_extravio})
