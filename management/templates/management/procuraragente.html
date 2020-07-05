@@ -3,7 +3,7 @@
 {% block content %}
   <section class="py-5">
     <div class="container">
-      <h1 class="display-4 text-center mb-5">Procurar Agente</h1>
+      <h1 class="display-4 text-center mb-4">Procurar Agente</h1>
       <div class="row justify-content-center">
         <div class="col-lg-3 mx-auto">
           <a href="{% url 'menuagente' %}" class="btn btn-primary btn-block py-2 mb-4 rounded-pill"><i class="fas fa-home"></i> MENU DE AGENTES</a>
@@ -25,67 +25,63 @@
         </div>
       </div>
 
-      <div class="row mt-4">
+      <div class="row">
         {% if agentes %}
-          {% for agente in agentes %}
-            <div class="col-lg-4">
-              <div class="card mb-4">
-                <div class="card-header bg-dark text-white text-center">
-                  <h4 class="mb-0">{{ agente.gritodeguerra }}</h4>
-                </div>
-                <div class="card-body">
-                  <p><strong>Nome:</strong> {{ agente.nome|striptags|truncatechars:27 }}</p>
-                  <p><strong>Data de Nascimento:</strong> {{ agente.datanascimento|date:'d/m/Y' }}</p>
-                  <p class="mb-0"><strong>Sexo:</strong> {{ agente.sexo }}</p>
-                </div>
-                <div class="card-footer text-center">
-                  <a href="{% url 'detalheagente' agente.id %}" class="btn btn-outline-primary">Detalhes</a>
+          {% if agentes.count <= 6 %}
+            {% for agente in agentes %}
+              <div class="col-lg-4">
+                <div class="card mb-4">
+                  <div class="card-header bg-dark text-white text-center">
+                    <h4 class="mb-0">{{ agente.gritodeguerra }}</h4>
+                  </div>
+                  <div class="card-body">
+                    <p><strong>Nome:</strong> {{ agente.nome|striptags|truncatechars:27 }}</p>
+                    <p><strong>Data de Nascimento:</strong> {{ agente.datanascimento|date:'d/m/Y' }}</p>
+                    <p class="mb-0"><strong>Sexo:</strong> {{ agente.sexo }}</p>
+                  </div>
+                  <div class="card-footer text-center">
+                    <a href="{% url 'detalheagente' agente.id %}" class="btn btn-outline-primary">Detalhes</a>
+                  </div>
                 </div>
               </div>
+            {% endfor %}
+          {% else %}
+            <div class="col-lg-12">
+              <div class="table-responsive" id="tabela-colaboracao">
+                <table class="table table-hover">
+                  <thead class="thead-dark">
+                    <tr>
+                      <th scope="col" class="text-center">#</th>
+                      <th scope="col" class="text-center">Grito de Guerra</th>
+                      <th scope="col" class="text-center">Nome</th>
+                      <th scope="col" class="text-center">Sexo</th>
+                      <th scope="col" class="text-center">Data de Nascimento</th>
+                      <th scope="col" class="text-center"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for agente in agentes %}
+                      <tr>
+                        <th scope="row" class="text-center py-4">{{ agente.id }}</th>
+                        <th scope="row" class="text-center py-4">{{ agente.gritodeguerra }}</th>
+                        <th scope="row" class="text-center py-4">{{ agente.nome|striptags|truncatechars:27 }}</th>
+                        <th scope="row" class="text-center py-4">{{ agente.sexo }}</th>
+                        <th scope="row" class="text-center py-4">{{ agente.datanascimento|date:'d/m/Y' }}</th>
+                        <th scope="row" class="text-center py-3"><a href="{% url 'detalheagente' agente.id %}" class="btn btn-outline-primary">Detalhes</a></th>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
             </div>
-          {% endfor %}
+          {% endif %}
+        {% elif dica %}
+          <h3 class="mx-auto text-secondary">{{ dica }}</h3>
         {% else %}
           <h2 class="mx-auto text-secondary">Nenhum resultado encontrado</h2>
         {% endif %}
       </div>
 
-      {% if agentes %}
-        <div class="row justify-content-end">
-          <nav id="paginador">
-            <ul class="pagination mr-3">
-              {% if agentes.has_previous %}
-                <li class="page-item">
-                  <a href="?page={{ agentes.previous_page_number }}" class="page-link">Retornar</a>
-                </li>
-              {% else %}
-              <li class="page-item disabled">
-                <a href="#" class="page-link">Anterior</a>
-              </li>
-              {% endif %}
-              {% for pg in agentes.paginator.page_range %}
-                {% if agentes.number == pg %}
-                  <li class="page-item active">
-                    <a href="?page={{ pg }}" class="page-link">{{ pg }}</a>
-                  </li>
-                {% else %}
-                <li class="page-item">
-                  <a href="?page={{ pg }}" class="page-link">{{ pg }}</a>
-                </li>
-                {% endif %}
-              {% endfor %}
-              {% if agentes.has_next %}
-                <li class="page-item">
-                  <a href="?page={{ agentes.next_page_number }}" class="page-link">Próximo</a>
-                </li>
-              {% else %}
-              <li class="page-item disabled">
-                <a href="#" class="page-link">Próximo</a>
-              </li>
-              {% endif %}
-            </ul>
-          </nav>
-        </div>
-      {% endif %}
 
     </div>
   </section>

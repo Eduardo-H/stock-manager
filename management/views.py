@@ -452,18 +452,8 @@ def detalherecolhimento(request, pk_recolhimento):
 # AGENTES #
 ###########
 def menuagente(request):
-    if 'procura_agente' in request.GET:
-        agentes = Agente.objects.filter(gritodeguerra__contains=request.GET.get('procura_agente'))
-        print(agentes)
-        if agentes is not None:
-            print('Entrouuuuuuuuuuu')
-            agentes = paginador(agentes)
-            return render(request, 'management/procuraragente.html', {'agentes':agentes})
-        else:
-            return render(request, 'management/procuraragente.html')
-    else:
-        agentes = Agente.objects.all()
-        return render(request, 'management/menuagente.html', {'agentes':agentes})
+    agentes = Agente.objects.all()
+    return render(request, 'management/menuagente.html', {'agentes':agentes})
 
 def cadastraragente(request):
     if request.method == 'GET':
@@ -508,7 +498,16 @@ def editaragente(request, pk_agente):
                 {'agente':agente, 'formulario':formulario, 'erro':'Não foi possível editar o agente'}
             )
 
+def procuraragente(request):
+    if 'procura_agente' in request.GET:
+        agentes = Agente.objects.filter(gritodeguerra__contains=request.GET.get('procura_agente'))
 
+        if agentes:
+            return render(request, 'management/procuraragente.html', {'agentes':agentes})
+        else:
+            return render(request, 'management/procuraragente.html')
+    else:
+        return render(request, 'management/procuraragente.html', {'dica':'Digite o Grito de Guerra do agente que você procura'})
 
 
 ############
@@ -566,21 +565,33 @@ def cadastrarviatura(request):
 def menuestoque(request):
     itensestoque = Estoque.objects.all()
     itensperdidoextraviado = ItemPerdidoExtraviado.objects.all()
+    total_perdido_extraviado = int(0)
+    for item in itensperdidoextraviado:
+        total_perdido_extraviado += int(item.quantidade)
+
+    print(total_perdido_extraviado)
     if request.method == 'GET':
-        return render(request, 'management/menuestoque.html', {'itensestoque':itensestoque, 'itensperdidoextraviado':itensperdidoextraviado})
+        return render(request, 'management/menuestoque.html', {'itensestoque':itensestoque, 'totalperdido':total_perdido_extraviado})
     else:
         if 'item' in request.POST: # Verifica se o botão de 'submit' foi do formulário de deleção
             try:
                 item = get_object_or_404(Item, pk=request.POST['item'])
-                itemestoque = Estoque.objects.get(item_id=item.id)
-                itemestoque.delete()
-                item.delete()
-                return render(request, 'management/menuestoque.html',
-                    {'itensestoque':itensestoque, 'itensperdidoextraviado':itensperdidoextraviado, 'confirmacao':'Item excluído com sucesso!'}
-                )
+                alocacao = Alocacao.objects.filter(item_id=item.id)
+
+                if not alocacao:
+                    itemestoque = Estoque.objects.get(item_id=item.id)
+                    itemestoque.delete()
+                    item.delete()
+                    return render(request, 'management/menuestoque.html',
+                        {'itensestoque':itensestoque, 'totalperdido':total_perdido_extraviado, 'confirmacao':'Item excluído com sucesso!'}
+                    )
+                else:
+                    return render(request, 'management/menuestoque.html',
+                        {'itensestoque':itensestoque, 'totalperdido':total_perdido_extraviado, 'erro':'Este item não pode ser excluído porque está relacionado a uma ou mais alocações'}
+                    )
             except ValueError:
                 return render(request, 'management/menuestoque.html',
-                    {'itensestoque':itensestoque, 'itensperdidoextraviado':itensperdidoextraviado, 'erro':'Não foi possível excluir o item'}
+                    {'itensestoque':itensestoque, 'totalperdido':total_perdido_extraviado, 'erro':'Não foi possível excluir o item'}
                 )
         elif 'nomeNovo' in request.POST: # Verifica se o botão de 'submit' foi do formulário de edição
             try:
@@ -632,3 +643,6 @@ def cadastraritem(request):
             return redirect('menuestoque')
         except ValueError:
             return render(request, 'management/cadastraritem.html', {'formulario':FormItem(), 'erro':'Não foi possível adicionar o item'})
+
+def menuitemperdido(request):
+    return render(request, 'management/adicionarestoque.html', {'itens':itens})

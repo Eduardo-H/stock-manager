@@ -5,20 +5,11 @@
     <div class="container">
       <h1 class="display-4 text-center mb-5">Agentes</h1>
       <div class="row mb-4">
-        <div class="col-lg-3 mx-auto">
+        <div class="col-lg-3 ml-auto mr-5">
           <a href="{% url 'cadastraragente' %}" class="btn btn-primary btn-block py-2 mb-4 rounded-pill"><i class="fas fa-plus mr-2"></i> ADICIONAR NOVO AGENTE</a>
         </div>
-        <div class="col-lg-6 ml-auto">
-          <form method="GET" autocomplete="off">
-            <div class="form-group">
-              <div class="input-group">
-                <input type="text" name="procura_agente" class="form-control" placeholder="Procure um agente">
-                <div class="input-group-append">
-                  <button type="submit" class="btn btn-outline-secondary"><i class="fas fa-search"></i></button>
-                </div>
-              </div>
-            </div>
-          </form>
+        <div class="col-lg-3 mr-auto ml-5">
+          <a href="{% url 'procuraragente' %}" class="btn btn-success btn-block py-2 mb-4 rounded-pill"><i class="fas fa-search"></i> PROCURAR AGENTE</a>
         </div>
       </div>
 

@@ -31,11 +31,13 @@ urlpatterns = [
     path('agente/cadastrar-agente/', views.cadastraragente, name='cadastraragente'),
     path('agente/<int:pk_agente>/detalhes/', views.detalheagente, name='detalheagente'),
     path('agente/<int:pk_agente>/editar/', views.editaragente, name='editaragente'),
+    path('agente/procurar-agente/', views.procuraragente, name='procuraragente'),
     path('viatura/', views.menuviatura, name='menuviatura'),
     path('viatura/cadastrar-viatura/', views.cadastrarviatura, name='cadastrarviatura'),
     path('estoque/', views.menuestoque, name='menuestoque'),
     path('estoque/adicionar-ao-estoque/', views.adicionarestoque, name='adicionarestoque'),
     path('estoque/cadastrar-item/', views.cadastraritem, name="cadastraritem"),
+    path('estoque/itens-perdidos-extraviados/', views.menuitemperdido, name="menuitemperdido"),
 
     path('admin/', admin.site.urls),
 ]
