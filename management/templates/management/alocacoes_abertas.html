@@ -6,13 +6,13 @@
       <h1 class="display-4 text-center mb-5">Alocações em Aberto</h1>
       <div class="row justify-content-center">
           <div class="col-lg-3">
-            <a href="{% url 'menualocacao' %}" class="btn btn-primary btn-block rounded-pill"><i class="fas fa-home mr-2"></i> MENU DE ALOCAÇÕES</a>
+            <a href="{% url 'menu_alocacao' %}" class="btn btn-primary btn-block rounded-pill"><i class="fas fa-home mr-2"></i> MENU DE ALOCAÇÕES</a>
           </div>
           <div class="col-lg-3">
-            <a href="{% url 'criaralocacao' %}" class="btn btn-success btn-block rounded-pill"><i class="fas fa-plus mr-2"></i> CADASTRAR ALOCAÇÃO</a>
+            <a href="{% url 'criar_alocacao' %}" class="btn btn-success btn-block rounded-pill"><i class="fas fa-plus mr-2"></i> CADASTRAR ALOCAÇÃO</a>
           </div>
           <div class="col-lg-3">
-            <a href="{% url 'procurarportipo' %}" class="btn btn-warning btn-block rounded-pill"><i class="fas fa-search mr-2"></i> PROCURAR POR TIPO</a>
+            <a href="{% url 'procurar_por_tipo_alocacao' %}" class="btn btn-warning btn-block rounded-pill"><i class="fas fa-search mr-2"></i> PROCURAR POR TIPO</a>
           </div>
       </div>
       <div class="row justify-content-center mt-4">
@@ -27,8 +27,8 @@
                   <p class="mb-0"><strong>Motivo:</strong> {{ alocacao.motivo|striptags|truncatechars:27 }}</p>
                 </div>
                 <div class="card-footer text-center">
-                  <a href="{% url 'detalhealocacao' alocacao.id %}" class="btn btn-outline-primary mr-3">Detalhes</a>
-                  <a href="{% url 'cadastrarrecolhimento' alocacao.id %}" class="btn btn-outline-success">Recolher</a>
+                  <a href="{% url 'detalhe_alocacao' alocacao.id %}" class="btn btn-outline-primary mr-3">Detalhes</a>
+                  <a href="{% url 'cadastrar_recolhimento' alocacao.id %}" class="btn btn-outline-success">Recolher</a>
                 </div>
               </div>
             </div>

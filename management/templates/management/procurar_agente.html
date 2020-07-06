@@ -6,10 +6,10 @@
       <h1 class="display-4 text-center mb-4">Procurar Agente</h1>
       <div class="row justify-content-center">
         <div class="col-lg-3 mx-auto">
-          <a href="{% url 'menuagente' %}" class="btn btn-primary btn-block py-2 mb-4 rounded-pill"><i class="fas fa-home"></i> MENU DE AGENTES</a>
+          <a href="{% url 'menu_agente' %}" class="btn btn-primary btn-block py-2 mb-4 rounded-pill"><i class="fas fa-home"></i> MENU DE AGENTES</a>
         </div>
         <div class="col-lg-3 mx-auto">
-          <a href="{% url 'cadastraragente' %}" class="btn btn-success btn-block py-2 mb-4 rounded-pill"><i class="fas fa-plus mr-2"></i> ADICIONAR NOVO AGENTE</a>
+          <a href="{% url 'cadastrar_agente' %}" class="btn btn-success btn-block py-2 mb-4 rounded-pill"><i class="fas fa-plus mr-2"></i> ADICIONAR NOVO AGENTE</a>
         </div>
         <div class="col-lg-6 ml-auto">
           <form method="GET" autocomplete="off">
@@ -40,7 +40,7 @@
                     <p class="mb-0"><strong>Sexo:</strong> {{ agente.sexo }}</p>
                   </div>
                   <div class="card-footer text-center">
-                    <a href="{% url 'detalheagente' agente.id %}" class="btn btn-outline-primary">Detalhes</a>
+                    <a href="{% url 'detalhe_agente' agente.id %}" class="btn btn-outline-primary">Detalhes</a>
                   </div>
                 </div>
               </div>
@@ -67,7 +67,7 @@
                         <th scope="row" class="text-center py-4">{{ agente.nome|striptags|truncatechars:27 }}</th>
                         <th scope="row" class="text-center py-4">{{ agente.sexo }}</th>
                         <th scope="row" class="text-center py-4">{{ agente.datanascimento|date:'d/m/Y' }}</th>
-                        <th scope="row" class="text-center py-3"><a href="{% url 'detalheagente' agente.id %}" class="btn btn-outline-primary">Detalhes</a></th>
+                        <th scope="row" class="text-center py-3"><a href="{% url 'detalhe_agente' agente.id %}" class="btn btn-outline-primary">Detalhes</a></th>
                       </tr>
                     {% endfor %}
                   </tbody>

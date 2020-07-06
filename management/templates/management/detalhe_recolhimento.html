@@ -10,7 +10,7 @@
             <div class="col-lg-5">
               <div class="d-flex">
                 <h2 class="mb-1">Alocação</h2>
-                <a href="{% url 'detalhealocacao' recolhimento.alocacao.id %}" class="btn btn-sm btn-outline-primary ml-auto mb-3">Ver alocação completa</a>
+                <a href="{% url 'detalhe_alocacao' recolhimento.alocacao.id %}" class="btn btn-sm btn-outline-primary ml-auto mb-3">Ver alocação completa</a>
               </div>
 
               <div class="alert alert-secondary">
@@ -90,7 +90,7 @@
           {% endif %}
 
           <div class="d-flex">
-            <a href="{% url 'menurecolhimento' %}" class="btn btn-outline-primary rounded-pill mx-auto mt-3"><i class="fas fa-arrow-left"></i> Voltar</a>
+            <a href="{% url 'menu_recolhimento' %}" class="btn btn-outline-primary rounded-pill mx-auto mt-3"><i class="fas fa-arrow-left"></i> Voltar</a>
           </div>
         </div>
       </div>

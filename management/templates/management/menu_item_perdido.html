@@ -6,7 +6,7 @@
       <h1 class="display-4 text-center mb-5">Itens Perdidos/Extraviados</h1>
       <div class="row justify-content-center">
         <div class="col-lg-4">
-          <a href="{% url 'menuestoque' %}" class="btn btn-primary btn-block rounded-pill"><i class="fas fa-home mr-2"></i> MENU ESTOQUE</a>
+          <a href="{% url 'menu_estoque' %}" class="btn btn-primary btn-block rounded-pill"><i class="fas fa-home mr-2"></i> MENU ESTOQUE</a>
         </div>
         <div class="col-lg-4">
           <a href="#" class="btn btn-success btn-block rounded-pill"><i class="fas fa-plus mr-2"></i> CADASTRAR PERDA/EXTRAVIO</a>
@@ -34,7 +34,7 @@
                   <th scope="row" class="text-center py-4">{{ itemperdido.horario|date:'H:i' }}</th>
                   <th scope="row" class="text-center py-4">{{ itemperdido.alocacao.item.nome }}</th>
                   <th scope="row" class="text-center py-4">{{ itemperdido.quantidade }}</th>
-                  <th scope="row" class="text-center py-3"><a href="{% url 'detalheitemperdido' itemperdido.id %}" class="btn btn-outline-primary">Detalhes</a></th>
+                  <th scope="row" class="text-center py-3"><a href="{% url 'detalhe_item_perdido' itemperdido.id %}" class="btn btn-outline-primary">Detalhes</a></th>
                 </tr>
               {% endfor %}
             </tbody>

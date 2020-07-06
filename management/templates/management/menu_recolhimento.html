@@ -6,10 +6,10 @@
       <h1 class="display-4 text-center mb-5">Recolhimentos</h1>
       <div class="row justify-content-center">
         <div class="col-lg-4">
-          <a href="{% url 'alocacoesabertas' %}" class="btn btn-primary btn-block rounded-pill"><i class="fas fa-plus mr-2"></i> CADASTRAR RECOLHIMENTO</a>
+          <a href="{% url 'alocacoes_abertas' %}" class="btn btn-primary btn-block rounded-pill"><i class="fas fa-plus mr-2"></i> CADASTRAR RECOLHIMENTO</a>
         </div>
         <div class="col-lg-3">
-          <a href="#" class="btn btn-success btn-block rounded-pill"><i class="fas fa-search mr-2"></i> PROCURAR POR TIPO</a>
+          <a href="{% url 'procurar_por_tipo_recolhimento' %}" class="btn btn-success btn-block rounded-pill"><i class="fas fa-search mr-2"></i> PROCURAR POR TIPO</a>
         </div>
       </div>
 
@@ -36,7 +36,7 @@
                     <th scope="row" class="text-center py-4">{{ recolhimento.horario|date:'H:i' }}</th>
                     <th scope="row" class="text-center py-4">{{ recolhimento.alocacao.item }}</th>
                     <th scope="row" class="text-center py-4"><span style="text-transform: capitalize;">{{ recolhimento.cadastrador }}</span></th>
-                    <th scope="row" class="text-center py-3"><a href="{% url 'detalherecolhimento' recolhimento.id %}" class="btn btn-outline-primary">Detalhes</a></th>
+                    <th scope="row" class="text-center py-3"><a href="{% url 'detalhe_recolhimento' recolhimento.id %}" class="btn btn-outline-primary">Detalhes</a></th>
                   </tr>
                 {% endfor %}
               </tbody>

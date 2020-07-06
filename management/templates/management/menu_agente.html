@@ -6,10 +6,10 @@
       <h1 class="display-4 text-center mb-5">Agentes</h1>
       <div class="row mb-4">
         <div class="col-lg-3 ml-auto mr-5">
-          <a href="{% url 'cadastraragente' %}" class="btn btn-primary btn-block py-2 mb-4 rounded-pill"><i class="fas fa-plus mr-2"></i> ADICIONAR NOVO AGENTE</a>
+          <a href="{% url 'cadastrar_agente' %}" class="btn btn-primary btn-block py-2 mb-4 rounded-pill"><i class="fas fa-plus mr-2"></i> ADICIONAR NOVO AGENTE</a>
         </div>
         <div class="col-lg-3 mr-auto ml-5">
-          <a href="{% url 'procuraragente' %}" class="btn btn-success btn-block py-2 mb-4 rounded-pill"><i class="fas fa-search"></i> PROCURAR AGENTE</a>
+          <a href="{% url 'procurar_agente' %}" class="btn btn-success btn-block py-2 mb-4 rounded-pill"><i class="fas fa-search"></i> PROCURAR AGENTE</a>
         </div>
       </div>
 
@@ -32,7 +32,7 @@
                       <th scope="row" class="text-center py-4">{{ agente.id }}</th>
                       <th class="text-center py-4">{{ agente.gritodeguerra }}</th>
                       <th class="text-center py-4">{{ agente.sexo }}</th>
-                      <th class="text-center py-3"><a href="{% url 'detalheagente' agente.id %}" class="btn btn-outline-primary">Detalhes</a></th>
+                      <th class="text-center py-3"><a href="{% url 'detalhe_agente' agente.id %}" class="btn btn-outline-primary">Detalhes</a></th>
                     </tr>
                   {% endfor %}
                 </tbody>

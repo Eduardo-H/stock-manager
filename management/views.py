@@ -444,7 +444,66 @@ def detalhe_recolhimento(request, pk_recolhimento):
             )
 
 def procurar_por_tipo_recolhimento(request):
+    if 'pesquisa' in request.GET:
+        tipo = request.GET.get('pesquisa')
+        valor = request.GET.get('valor')
 
+        if tipo == 'data': # Verifica se a opção de busca foi 'Data'
+            # Mudando o formato da data de 'DD/MM/AAAA' para 'DD/MM/AA'
+            if len(valor) == 10:
+                data_valida = valor[:8]
+                dia, mes, ano = data_valida.split('/')
+                valido = True
+                try:
+                    datetime.datetime(int(ano),int(mes),int(dia))
+                except ValueError:
+                    valido = False
+            else:
+                return render(request, 'management/procurar_por_tipo_recolhimento.html', {'resultado':'nenhum'})
+
+            data = mudarformato(valor)
+
+            if len(data) == 10 and data[4] == '-' and data[7] == '-':
+                # O IF abaixo basicamente verifica se a data informada é inválida
+                if not valido:
+                    return render(request, 'management/procurar_por_tipo_recolhimento.html', {'resultado':'nenhum'})
+                else:
+                    recolhimentos = Recolhimento.objects.filter(data=data).order_by('-data')
+                    if recolhimentos:
+                        return render(request, 'management/procurar_por_tipo_recolhimento.html', {'recolhimentos':recolhimentos, 'resultado':'data'})
+                    else:
+                        return render(request, 'management/procurar_por_tipo_recolhimento.html', {'resultado':'nenhum'})
+            else:
+                return render(request, 'management/procurar_por_tipo_recolhimento.html', {'resultado':'nenhum'})
+        elif tipo == 'item': # Verifica se a opção de busca foi 'Item'
+            item = Item.objects.filter(nome=valor)
+            if item: # Verifica se exite itens com o nome informado
+                item = Item.objects.get(nome=valor)
+                recolhimentos = Recolhimento.objects.filter(alocacao__item_id=item.id).order_by('-id') # Alocação dunder item_id acessa o atribuito Item de Alocação
+                return render(request, 'management/procurar_por_tipo_recolhimento.html', {'recolhimentos':recolhimentos, 'resultado':'item'})
+            else:
+                return render(request, 'management/procurar_por_tipo_recolhimento.html', {'resultado':'nenhum'})
+        elif tipo == 'agente': # Verifica se a opção de busca foi 'Agente'
+            agente = Agente.objects.filter(gritodeguerra=valor)
+            if agente:
+                agente = Agente.objects.get(gritodeguerra=valor)
+                recolhimentos = RecolhimentoAgente.objects.filter(agente_id=agente.id).order_by('-id')
+                return render(request, 'management/procurar_por_tipo_recolhimento.html', {'recolhimentos':recolhimentos, 'resultado':'agente'})
+            else:
+                return render(request, 'management/procurar_por_tipo_recolhimento.html', {'resultado':'nenhum'})
+        elif tipo == 'viatura': # Verifica se a opção de busca foi 'Viatura'
+            if valor.isdigit():
+                viatura = Viatura.objects.filter(numero=valor)
+                if viatura:
+                    viatura = Viatura.objects.get(numero=valor)
+                    recolhimentos = Recolhimento.objects.filter(viatura_id=viatura.id).order_by('-id')
+                    return render(request, 'management/procurar_por_tipo_recolhimento.html', {'recolhimentos':recolhimentos, 'resultado':'viatura'})
+                else:
+                    return render(request, 'management/procurar_por_tipo_recolhimento.html', {'resultado':'nenhum'})
+            else:
+                return render(request, 'management/procurar_por_tipo_recolhimento.html', {'resultado':'nenhum'})
+    else:
+        return render(request, 'management/procurar_por_tipo_recolhimento.html', {'dica':'Selecione o tipo desejado e coloque o valor que procura'})
 
 ###########
 # AGENTES #

@@ -3,7 +3,7 @@
 {% block content %}
   <section class="pt-5">
     <div class="container">
-      <h1 class="display-4 text-center mb-4">Procurar Alocação por Tipo</h1>
+      <h1 class="display-4 text-center mb-4">Procurar Recolhimento por Tipo</h1>
       <div class="row justify-content-center">
         <div class="col-lg-6">
           <!-- Formulário para a pesquisa -->
@@ -44,29 +44,27 @@
         {% endif %}
 
         <!-- Display cards dos resultados -->
-        {% if alocacoes %}
+        {% if recolhimentos %}
           <!-- Método de mostrar é diferente dos demais devido o fato de seus dados serem armazendos em uma tabela diferente -->
           {% if resultado == 'agente' %}
             <!-- Verifica se o número de alocações encontradas é menor ou igual a 6, se for, as mostra como cards -->
-            {% if alocacoes.count <= 6 %}
-              {% for alocacao in alocacoes %}
+            {% if recolhimentos.count <= 6 %}
+              {% for recolhimento in recolhimentos %}
                 <div class="col-lg-4">
                   <div class="card mb-4">
                     <div class="card-body">
-                      <p><span class="mr-3">
-                        <strong>Data:</strong> {{ alocacao.alocacao.data|date:'d/m/Y' }}</span> <span><strong>Horário:</strong> {{ alocacao.alocacao.horario|date:'H:i' }}</span>
-                      </p>
-                      <p><strong>Local:</strong> {{ alocacao.alocacao.rua|striptags|truncatechars:27 }}, {{ alocacao.alocacao.numero }}</p>
                       <p>
-                        <span class="mr-3"><strong>Item:</strong> {{ alocacao.alocacao.item.nome }}</span> <span><strong>Quantidade:</strong> {{ alocacao.alocacao.quantidade }}</span>
+                        <span class="mr-3"><strong>Data:</strong> {{ recolhimento.recolhimento.data|date:'d/m/Y' }}</span>
+                        <span><strong>Horário:</strong> {{ recolhimento.recolhimento.horario|date:'H:i' }}</span>
                       </p>
-                      <p class="mb-0"><strong>Motivo:</strong> {{ alocacao.alocacao.motivo|striptags|truncatechars:27 }}</p>
+                      <p>
+                        <span class="mr-3"><strong>Item:</strong> {{ recolhimento.recolhimento.alocacao.item.nome }}</span>
+                        <span><strong>Quantidade:</strong> {{ recolhimento.recolhimento.quantidade }}</span>
+                      </p>
+                      <p class="mb-0"><strong>Cadastrador:</strong> <span style="text-transform: capitalize;">{{ recolhimento.recolhimento.cadastrador }}</span></p>
                     </div>
                     <div class="card-footer text-center">
-                      <a href="{% url 'detalhe_alocacao' alocacao.alocacao.id %}" class="btn btn-outline-primary mr-3">Detalhes</a>
-                      {% if alocacao.alocacao.status == 'Aberto' %}
-                        <a href="{% url 'cadastrar_recolhimento' alocacao.alocacao.id %}" class="btn btn-outline-success">Recolher</a>
-                      {% endif %}
+                      <a href="{% url 'detalhe_recolhimento' recolhimento.recolhimento.id %}" class="btn btn-outline-primary">Detalhes</a>
                     </div>
                   </div>
                 </div>
@@ -80,30 +78,23 @@
                       <th scope="col" class="text-center">#</th>
                       <th scope="col" class="text-center">Data</th>
                       <th scope="col" class="text-center">Horário</th>
-                      <th scope="col" class="text-center">Local</th>
                       <th scope="col" class="text-center">Item</th>
                       <th scope="col" class="text-center">Quantidade</th>
-                      <th scope="col" class="text-center">Motivo</th>
-                      <th scope="col" class="text-center">Ações</th>
+                      <th scope="col" class="text-center">Cadastrador</th>
+                      <th scope="col" class="text-center"></th>
                     </tr>
                   </thead>
                   <tbody>
-                    {% for alocacao in alocacoes %}
+                    {% for recolhimento in recolhimentos %}
                       <tr>
-                        <th scope="row" class="text-center py-4">{{ alocacao.alocacao.id }}</th>
-                        <th scope="row" class="text-center py-4">{{ alocacao.alocacao.data|date:'d/m/Y' }}</th>
-                        <th scope="row" class="text-center py-4">{{ alocacao.alocacao.horario|date:'H:i' }}</th>
-                        <th scope="row" class="text-center py-4">{{ alocacao.alocacao.rua|striptags|truncatechars:27 }}</th>
-                        <th scope="row" class="text-center py-4">{{ alocacao.alocacao.item.nome }}</th>
-                        <th scope="row" class="text-center py-4">{{ alocacao.alocacao.quantidade }}</th>
-                        <th scope="row" class="text-center py-4">{{ alocacao.alocacao.motivo|striptags|truncatechars:27 }}</th>
+                        <th scope="row" class="text-center py-4">{{ recolhimento.recolhimento.id }}</th>
+                        <th scope="row" class="text-center py-4">{{ recolhimento.recolhimento.data|date:'d/m/Y' }}</th>
+                        <th scope="row" class="text-center py-4">{{ recolhimento.recolhimento.horario|date:'H:i' }}</th>
+                        <th scope="row" class="text-center py-4">{{ recolhimento.recolhimento.alocacao.item.nome }}</th>
+                        <th scope="row" class="text-center py-4">{{ recolhimento.recolhimento.quantidade }}</th>
+                        <th scope="row" class="text-center py-4"><span style="text-transform: capitalize;">{{ recolhimento.recolhimento.cadastrador }}</span></th>
                         <th scope="row" class="text-center py-3">
-                          {% if alocacao.alocacao.status != 'Aberto' %}
-                            <a href="{% url 'detalhe_alocacao' alocacao.alocacao.id %}" class="btn btn-outline-primary">Detalhes</a>
-                          {% else %}
-                            <a href="{% url 'detalhe_alocacao' alocacao.alocacao.id %}" class="btn btn-outline-primary mr-3">Detalhes</a>
-                            <a href="{% url 'cadastrar_recolhimento' alocacao.alocacao.id %}" class="btn btn-outline-success">Recolher</a>
-                          {% endif %}
+                          <a href="{% url 'detalhe_recolhimento' recolhimento.recolhimento.id %}" class="btn btn-outline-primary">Detalhes</a>
                         </th>
                       </tr>
                     {% endfor %}
@@ -113,22 +104,24 @@
             {% endif %}
           {% else %}
             <!-- Verifica se o número de alocações encontradas é menor ou igual a 6, se for, as mostra como cards -->
-            {% if alocacoes.count <= 6 %}
+            {% if recolhimentos.count <= 6 %}
               <!-- Método de mostrar os resultados -->
-              {% for alocacao in alocacoes %}
+              {% for recolhimento in recolhimentos %}
                 <div class="col-lg-4">
                   <div class="card mb-4">
                     <div class="card-body">
-                      <p><span class="mr-3"><strong>Data:</strong> {{ alocacao.data|date:'d/m/Y' }}</span> <span><strong>Horário:</strong> {{ alocacao.horario|date:'H:i' }}</span></p>
-                      <p><strong>Local:</strong> {{ alocacao.rua|striptags|truncatechars:27 }}, {{ alocacao.numero }}</p>
-                      <p><span class="mr-3"><strong>Item:</strong> {{ alocacao.item.nome }}</span> <span><strong>Quantidade:</strong> {{ alocacao.quantidade }}</span></p>
-                      <p class="mb-0"><strong>Motivo:</strong> {{ alocacao.motivo|striptags|truncatechars:27 }}</p>
+                      <p>
+                        <span class="mr-3"><strong>Data:</strong> {{ recolhimento.data|date:'d/m/Y' }}</span>
+                        <span><strong>Horário:</strong> {{ recolhimento.horario|date:'H:i' }}</span>
+                      </p>
+                      <p>
+                        <span class="mr-3"><strong>Item:</strong> {{ recolhimento.alocacao.item.nome }}</span>
+                        <span><strong>Quantidade:</strong> {{ recolhimento.quantidade }}</span>
+                      </p>
+                      <p class="mb-0"><strong>Cadastrador:</strong> <span style="text-transform: capitalize;">{{ recolhimento.cadastrador }}</span></p>
                     </div>
                     <div class="card-footer text-center">
-                      <a href="{% url 'detalhe_alocacao' alocacao.id %}" class="btn btn-outline-primary {% if alocacao.status == 'Aberto' %} mr-3 {% endif %}">Detalhes</a>
-                      {% if alocacao.status == 'Aberto' %}
-                        <a href="{% url 'cadastrar_recolhimento' alocacao.id %}" class="btn btn-outline-success">Recolher</a>
-                      {% endif %}
+                      <a href="{% url 'detalhe_recolhimento' recolhimento.id %}" class="btn btn-outline-primary">Detalhes</a>
                     </div>
                   </div>
                 </div>
@@ -142,30 +135,23 @@
                     <th scope="col" class="text-center">#</th>
                     <th scope="col" class="text-center">Data</th>
                     <th scope="col" class="text-center">Horário</th>
-                    <th scope="col" class="text-center">Local</th>
                     <th scope="col" class="text-center">Item</th>
                     <th scope="col" class="text-center">Quantidade</th>
-                    <th scope="col" class="text-center">Motivo</th>
-                    <th scope="col" class="text-center">Ações</th>
+                    <th scope="col" class="text-center">Cadastrador</th>
+                    <th scope="col" class="text-center"></th>
                   </tr>
                 </thead>
                 <tbody>
-                  {% for alocacao in alocacoes %}
+                  {% for recolhimento in recolhimentos %}
                     <tr>
-                      <th scope="row" class="text-center py-4">{{ alocacao.id }}</th>
-                      <th scope="row" class="text-center py-4">{{ alocacao.data|date:'d/m/Y' }}</th>
-                      <th scope="row" class="text-center py-4">{{ alocacao.horario|date:'H:i' }}</th>
-                      <th scope="row" class="text-center py-4">{{ alocacao.rua|striptags|truncatechars:27 }}</th>
-                      <th scope="row" class="text-center py-4">{{ alocacao.item.nome }}</th>
-                      <th scope="row" class="text-center py-4">{{ alocacao.quantidade }}</th>
-                      <th scope="row" class="text-center py-4">{{ alocacao.motivo|striptags|truncatechars:27 }}</th>
+                      <th scope="row" class="text-center py-4">{{ recolhimento.id }}</th>
+                      <th scope="row" class="text-center py-4">{{ recolhimento.data|date:'d/m/Y' }}</th>
+                      <th scope="row" class="text-center py-4">{{ recolhimento.horario|date:'H:i' }}</th>
+                      <th scope="row" class="text-center py-4">{{ recolhimento.alocacao.item.nome }}</th>
+                      <th scope="row" class="text-center py-4">{{ recolhimento.quantidade }}</th>
+                      <th scope="row" class="text-center py-4"><span style="text-transform: capitalize;">{{ recolhimento.cadastrador }}</span></th>
                       <th scope="row" class="text-center py-3">
-                        {% if alocacao.status != 'Aberto' %}
-                          <a href="{% url 'detalhe_alocacao' alocacao.id %}" class="btn btn-outline-primary">Detalhes</a>
-                        {% else %}
-                          <a href="{% url 'detalhe_alocacao' alocacao.id %}" class="btn btn-outline-primary mr-3">Detalhes</a>
-                          <a href="{% url 'cadastrar_recolhimento' alocacao.id %}" class="btn btn-outline-success">Recolher</a>
-                        {% endif %}
+                        <a href="{% url 'detalhe_recolhimento' recolhimento.id %}" class="btn btn-outline-primary">Detalhes</a>
                       </th>
                     </tr>
                   {% endfor %}
