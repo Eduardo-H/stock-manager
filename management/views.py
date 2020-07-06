@@ -12,17 +12,17 @@ def home(request):
 #############
 # ALOCAÇÕES #
 #############
-def menualocacao(request):
+def menu_alocacao(request):
     alocacoes = Alocacao.objects.all().order_by('-id')
-    return render(request, 'management/menualocacao.html', {'alocacoes':alocacoes})
+    return render(request, 'management/menu_alocacao.html', {'alocacoes':alocacoes})
 
-def criaralocacao(request):
+def criar_alocacao(request):
     itens = Item.objects.all()
     viaturas = Viatura.objects.all().order_by('numero')
     agentes = Agente.objects.all().order_by('nome')
 
     if request.method == 'GET':
-        return render(request, 'management/criaralocacao.html',
+        return render(request, 'management/criar_alocacao.html',
                 {'formulario':FormAlocacao(), 'itens':itens, 'viaturas':viaturas, 'agentes':agentes}
             )
     else:
@@ -43,9 +43,9 @@ def criaralocacao(request):
                             formulario = FormAlocacao(request.POST)
                             salvaralocacao(formulario, viatura, agente1, agente2, request.POST['cadastrador']) # Função para a persistência de dados
 
-                            return redirect('menualocacao')
+                            return redirect('menu_alocacao')
                         except ValueError:
-                            return render(request, 'management/criaralocacao.html',
+                            return render(request, 'management/criar_alocacao.html',
                                     {'formulario':FormAlocacao(), 'itens':itens, 'viaturas':viaturas, 'agentes':agentes, 'erro':'Não foi possível cadastrar a alocação'}
                                 )
                 elif request.POST['viaturaId'] == '-': # Se o usuário não selecionou uma opção difente da padrão
@@ -54,9 +54,9 @@ def criaralocacao(request):
                         viatura = None # Atribui o valor None para que na função abaixo não seja feita a persistência da viatura na alocação
                         salvaralocacao(formulario, viatura, agente1, agente2, request.POST['cadastrador'])
 
-                        return redirect('menualocacao')
+                        return redirect('menu_alocacao')
                     except ValueError:
-                        return render(request, 'management/criaralocacao.html',
+                        return render(request, 'management/criar_alocacao.html',
                                 {'formulario':FormAlocacao(), 'itens':itens, 'viaturas':viaturas, 'agentes':agentes, 'erro':'Não foi possível cadastrar a alocação'}
                             )
             elif 'viaturaNumero' in request.POST: # Verifica se o método de seleção de viatura é do tipo INPUT
@@ -66,9 +66,9 @@ def criaralocacao(request):
                         formulario = FormAlocacao(request.POST)
                         salvaralocacao(formulario, viatura, agente1, agente2, request.POST['cadastrador'])
 
-                        return redirect('menualocacao')
+                        return redirect('menu_alocacao')
                     except ValueError:
-                        return render(request, 'management/criaralocacao.html',
+                        return render(request, 'management/criar_alocacao.html',
                                 {'formulario':FormAlocacao(), 'itens':itens, 'viaturas':viaturas, 'agentes':agentes, 'erroViatura':'Viatura inexistente'}
                             )
                 else:
@@ -77,13 +77,13 @@ def criaralocacao(request):
                         viatura = None
                         salvaralocacao(formulario, viatura, agente1, agente2, request.POST['cadastrador'])
 
-                        return redirect('menualocacao')
+                        return redirect('menu_alocacao')
                     except ValueError:
-                        return render(request, 'management/criaralocacao.html',
+                        return render(request, 'management/criar_alocacao.html',
                                 {'formulario':FormAlocacao(), 'itens':itens, 'viaturas':viaturas, 'agentes':agentes, 'erro':'Não foi possível cadastrar a alocação'}
                             )
         else:
-            return render(request, 'management/criaralocacao.html',
+            return render(request, 'management/criar_alocacao.html',
                     {'formulario':FormAlocacao(), 'itens':itens, 'viaturas':viaturas, 'agentes':agentes, 'erroQuantidade':'Número superior ao estoque'}
                 )
 """
@@ -121,28 +121,28 @@ def salvaralocacao(formulario, viatura, agente1, agente2, cadastrador):
         agenteAlocacao2.agente = agente2
         agenteAlocacao2.save()
 
-def detalhealocacao(request, pk_alocacao):
+def detalhe_alocacao(request, pk_alocacao):
     alocacao = get_object_or_404(Alocacao, pk=pk_alocacao)
     agentes = AlocacaoAgente.objects.filter(alocacao_id=pk_alocacao)
     if request.method == 'GET':
-        return render(request, 'management/detalhealocacao.html', {'alocacao':alocacao, 'agentes':agentes})
+        return render(request, 'management/detalhe_alocacao.html', {'alocacao':alocacao, 'agentes':agentes})
     else:
         try:
             if 'alocacaoDesativar' in request.POST:
                 alocacao = get_object_or_404(Alocacao, pk=request.POST['alocacaoDesativar'])
                 alocacao.status = 'Desativado'
                 alocacao.save()
-                return render(request, 'management/detalhealocacao.html', {'alocacao':alocacao, 'agentes':agentes, 'confirmacao':'Alocação desativada com sucesso!'})
+                return render(request, 'management/detalhe_alocacao.html', {'alocacao':alocacao, 'agentes':agentes, 'confirmacao':'Alocação desativada com sucesso!'})
             elif 'alocacaoAtivar' in request.POST:
                 alocacao = get_object_or_404(Alocacao, pk=request.POST['alocacaoAtivar'])
                 alocacao.status = 'Aberto'
                 alocacao.save()
-                return render(request, 'management/detalhealocacao.html', {'alocacao':alocacao, 'agentes':agentes, 'confirmacao':'Alocação reativada com sucesso!'})
+                return render(request, 'management/detalhe_alocacao.html', {'alocacao':alocacao, 'agentes':agentes, 'confirmacao':'Alocação reativada com sucesso!'})
 
         except ValueError:
-            return render(request, 'management/detalhealocacao.html', {'alocacao':alocacao, 'agentes':agentes, 'erro':'Não foi possível desativar a alocação'})
+            return render(request, 'management/detalhe_alocacao.html', {'alocacao':alocacao, 'agentes':agentes, 'erro':'Não foi possível desativar a alocação'})
 
-def alocacoesabertas(request):
+def alocacoes_abertas(request):
     lista_alocacoes = Alocacao.objects.filter(status='Aberto')
     paginator = Paginator(lista_alocacoes, 6)
     try:
@@ -155,9 +155,9 @@ def alocacoesabertas(request):
     except(EmptyPage, InvalidPage):
         alocacoes = paginator.page(paginator.num_pages)
 
-    return render(request, 'management/alocacoesabertas.html', {'alocacoes':alocacoes})
+    return render(request, 'management/alocacoes_abertas.html', {'alocacoes':alocacoes})
 
-def procurarportipo(request):
+def procurar_por_tipo_alocacao(request):
     if 'pesquisa' in request.GET:
         tipo = request.GET.get('pesquisa')
         valor = request.GET.get('valor')
@@ -173,51 +173,51 @@ def procurarportipo(request):
                 except ValueError:
                     valido = False
             else:
-                return render(request, 'management/procurarportipoalocacao.html', {'resultado':'nenhum'})
+                return render(request, 'management/procurar_por_tipo_alocacao.html', {'resultado':'nenhum'})
 
             data = mudarformato(valor)
 
             if len(data) == 10 and data[4] == '-' and data[7] == '-':
                 # O IF abaixo basicamente verifica se a data informada é inválida
                 if not valido:
-                    return render(request, 'management/procurarportipoalocacao.html', {'resultado':'nenhum'})
+                    return render(request, 'management/procurar_por_tipo_alocacao.html', {'resultado':'nenhum'})
                 else:
                     alocacoes = Alocacao.objects.filter(data=data).order_by('-data')
                     if alocacoes:
-                        return render(request, 'management/procurarportipoalocacao.html', {'alocacoes':alocacoes, 'resultado':'data'})
+                        return render(request, 'management/procurar_por_tipo_alocacao.html', {'alocacoes':alocacoes, 'resultado':'data'})
                     else:
-                        return render(request, 'management/procurarportipoalocacao.html', {'resultado':'nenhum'})
+                        return render(request, 'management/procurar_por_tipo_alocacao.html', {'resultado':'nenhum'})
             else:
-                return render(request, 'management/procurarportipoalocacao.html', {'resultado':'nenhum'})
+                return render(request, 'management/procurar_por_tipo_alocacao.html', {'resultado':'nenhum'})
         elif tipo == 'item': # Verifica se a opção de busca foi 'Item'
             item = Item.objects.filter(nome=valor)
             if item: # Verifica se exite itens com o nome informado
                 item = Item.objects.get(nome=valor)
                 alocacoes = Alocacao.objects.filter(item_id=item.id).order_by('-id')
-                return render(request, 'management/procurarportipoalocacao.html', {'alocacoes':alocacoes, 'resultado':'item'})
+                return render(request, 'management/procurar_por_tipo_alocacao.html', {'alocacoes':alocacoes, 'resultado':'item'})
             else:
-                return render(request, 'management/procurarportipoalocacao.html', {'resultado':'nenhum'})
+                return render(request, 'management/procurar_por_tipo_alocacao.html', {'resultado':'nenhum'})
         elif tipo == 'agente': # Verifica se a opção de busca foi 'Agente'
             agente = Agente.objects.filter(gritodeguerra=valor)
             if agente:
                 agente = Agente.objects.get(gritodeguerra=valor)
                 alocacoes = AlocacaoAgente.objects.filter(agente_id=agente.id).order_by('-id')
-                return render(request, 'management/procurarportipoalocacao.html', {'alocacoes':alocacoes, 'resultado':'agente'})
+                return render(request, 'management/procurar_por_tipo_alocacao.html', {'alocacoes':alocacoes, 'resultado':'agente'})
             else:
-                return render(request, 'management/procurarportipoalocacao.html', {'resultado':'nenhum'})
+                return render(request, 'management/procurar_por_tipo_alocacao.html', {'resultado':'nenhum'})
         elif tipo == 'viatura': # Verifica se a opção de busca foi 'Viatura'
             if valor.isdigit():
                 viatura = Viatura.objects.filter(numero=valor)
                 if viatura:
                     viatura = Viatura.objects.get(numero=valor)
                     alocacoes = Alocacao.objects.filter(viatura_id=viatura.id).order_by('-id')
-                    return render(request, 'management/procurarportipoalocacao.html', {'alocacoes':alocacoes, 'resultado':'viatura'})
+                    return render(request, 'management/procurar_por_tipo_alocacao.html', {'alocacoes':alocacoes, 'resultado':'viatura'})
                 else:
-                    return render(request, 'management/procurarportipoalocacao.html', {'resultado':'nenhum'})
+                    return render(request, 'management/procurar_por_tipo_alocacao.html', {'resultado':'nenhum'})
             else:
-                return render(request, 'management/procurarportipoalocacao.html', {'resultado':'nenhum'})
+                return render(request, 'management/procurar_por_tipo_alocacao.html', {'resultado':'nenhum'})
     else:
-        return render(request, 'management/procurarportipoalocacao.html', {'dica':'Selecione o tipo desejado e coloque o valor que procura'})
+        return render(request, 'management/procurar_por_tipo_alocacao.html', {'dica':'Selecione o tipo desejado e coloque o valor que procura'})
 
 
 """
@@ -253,11 +253,11 @@ def mudarformato(valor):
 # RECOLHIMENTOS #
 #################
 
-def menurecolhimento(request):
+def menu_recolhimento(request):
     recolhimentos = Recolhimento.objects.all().order_by('-id')
-    return render(request, 'management/menurecolhimento.html', {'recolhimentos':recolhimentos})
+    return render(request, 'management/menu_recolhimento.html', {'recolhimentos':recolhimentos})
 
-def cadastrarrecolhimento(request, pk_alocacao):
+def cadastrar_recolhimento(request, pk_alocacao):
     alocacao = get_object_or_404(Alocacao, pk=pk_alocacao)
     agentealocacao = AlocacaoAgente.objects.filter(alocacao_id=pk_alocacao) # Busca o(s) agente(s) relacionado(s) à alocação
     agentes = Agente.objects.all().order_by('nome') # Busca os agentes cadastrados no sistema
@@ -271,11 +271,11 @@ def cadastrarrecolhimento(request, pk_alocacao):
                 numero += cadastro.quantidade
 
             nova_quantidade = alocacao.quantidade - numero
-            return render(request, 'management/cadastrarrecolhimento.html',
+            return render(request, 'management/cadastrar_recolhimento.html',
                     {'formulario':FormRecolhimento(), 'alocacao':alocacao, 'agentes':agentes, 'agentealocacao':agentealocacao, 'viaturas':viaturas, 'quantidadeperdida':nova_quantidade}
                 )
         else:
-            return render(request, 'management/cadastrarrecolhimento.html',
+            return render(request, 'management/cadastrar_recolhimento.html',
                     {'formulario':FormRecolhimento(), 'alocacao':alocacao, 'agentes':agentes, 'agentealocacao':agentealocacao, 'viaturas':viaturas}
                 )
     else:
@@ -299,7 +299,7 @@ def cadastrarrecolhimento(request, pk_alocacao):
             perda.quantidade = int(quantidade)
             perda.save()
 
-            return render(request, 'management/cadastrarrecolhimento.html',
+            return render(request, 'management/cadastrar_recolhimento.html',
                     {'formulario':FormRecolhimento(), 'alocacao':alocacao, 'agentes':agentes, 'agentealocacao':agentealocacao, 'viaturas':viaturas, 'novaquantidade':nova_quantidade}
                 )
         # Se o formulário enviado foi o de cadastração de recolhimento
@@ -317,7 +317,7 @@ def cadastrarrecolhimento(request, pk_alocacao):
                 for perda in perdas:
                     total -= int(perda.quantidade)
                 if int(quantidade) < total:
-                    return render(request, 'management/cadastrarrecolhimento.html',
+                    return render(request, 'management/cadastrar_recolhimento.html',
                             {'formulario':FormRecolhimento(), 'alocacao':alocacao, 'agentes':agentes, \
                                 'agentealocacao':agentealocacao, 'viaturas':viaturas, 'erroNumero':'Valor incorreto, se necessário, cadastre uma perda/extravio'
                             }
@@ -325,7 +325,7 @@ def cadastrarrecolhimento(request, pk_alocacao):
             # Se não houver, verifica se a quantidade digitada é igual a disponível para cadastrar
             else:
                 if int(quantidade) < alocacao.quantidade:
-                    return render(request, 'management/cadastrarrecolhimento.html',
+                    return render(request, 'management/cadastrar_recolhimento.html',
                             {'formulario':FormRecolhimento(), 'alocacao':alocacao, 'agentes':agentes, \
                                 'agentealocacao':agentealocacao, 'viaturas':viaturas, 'erroNumero':'Valor incorreto, se necessário, cadastre uma perda/extravio'
                             }
@@ -339,9 +339,9 @@ def cadastrarrecolhimento(request, pk_alocacao):
                             formulario = FormRecolhimento(request.POST)
                             salvarrecolhimento(formulario, alocacao, viatura, agente1, agente2, request.POST['cadastrador']) # Função para a persistência de dados
 
-                            return redirect('menurecolhimento')
+                            return redirect('menu_recolhimento')
                         except ValueError:
-                            return render(request, 'management/cadastrarrecolhimento.html',
+                            return render(request, 'management/cadastrar_recolhimento.html',
                                     {'formulario':FormRecolhimento(), 'alocacao':alocacao, 'agentes':agentes, \
                                         'agentealocacao':agentealocacao, 'viaturas':viaturas, 'erro':'Não foi possível cadastrar o recolhimento'
                                     }
@@ -352,9 +352,9 @@ def cadastrarrecolhimento(request, pk_alocacao):
                         viatura = None # Atribui o valor None para que na função abaixo não seja feita a persistência da viatura na alocação
                         salvarrecolhimento(formulario, alocacao, viatura, agente1, agente2, request.POST['cadastrador'])
 
-                        return redirect('menurecolhimento')
+                        return redirect('menu_recolhimento')
                     except ValueError:
-                        return render(request, 'management/cadastrarrecolhimento.html',
+                        return render(request, 'management/cadastrar_recolhimento.html',
                                 {'formulario':FormRecolhimento(), 'alocacao':alocacao, 'agentes':agentes, \
                                     'agentealocacao':agentealocacao, 'viaturas':viaturas, 'erro':'Não foi possível cadastrar o recolhimento'
                                 }
@@ -366,9 +366,9 @@ def cadastrarrecolhimento(request, pk_alocacao):
                         formulario = FormRecolhimento(request.POST)
                         salvarrecolhimento(formulario, alocacao, viatura, agente1, agente2, request.POST['cadastrador'])
 
-                        return redirect('menurecolhimento')
+                        return redirect('menu_recolhimento')
                     except ValueError:
-                        return render(request, 'management/cadastrarrecolhimento.html',
+                        return render(request, 'management/cadastrar_recolhimento.html',
                                 {'formulario':FormRecolhimento(), 'alocacao':alocacao, 'agentes':agentes, \
                                     'agentealocacao':agentealocacao, 'viaturas':viaturas, 'erroViatura':'Viatura inexistente'
                                 }
@@ -379,9 +379,9 @@ def cadastrarrecolhimento(request, pk_alocacao):
                         viatura = None
                         salvarrecolhimento(formulario, alocacao, viatura, agente1, agente2, request.POST['cadastrador'])
 
-                        return redirect('menurecolhimento')
+                        return redirect('menu_recolhimento')
                     except ValueError:
-                        return render(request, 'management/cadastrarrecolhimento.html',
+                        return render(request, 'management/cadastrar_recolhimento.html',
                                 {'formulario':FormRecolhimento(), 'alocacao':alocacao, 'agentes':agentes, \
                                     'agentealocacao':agentealocacao, 'viaturas':viaturas, 'erro':'Não foi possível cadastrar o recolhimento'
                                 }
@@ -425,7 +425,7 @@ def salvarrecolhimento(formulario, alocacao, viatura, agente1, agente2, cadastra
         agenteRecolhimento2.agente = agente2
         agenteRecolhimento2.save()
 
-def detalherecolhimento(request, pk_recolhimento):
+def detalhe_recolhimento(request, pk_recolhimento):
     recolhimento = get_object_or_404(Recolhimento, pk=pk_recolhimento)
     agenterecolhimento = RecolhimentoAgente.objects.filter(recolhimento_id=recolhimento.id)
     agentealocacao = AlocacaoAgente.objects.filter(alocacao_id=recolhimento.alocacao_id)
@@ -435,105 +435,107 @@ def detalherecolhimento(request, pk_recolhimento):
         total = int(0)
         for perda in perdas:
             total += perda.quantidade
-        return render(request, 'management/detalherecolhimento.html',
+        return render(request, 'management/detalhe_recolhimento.html',
                 {'recolhimento':recolhimento, 'agenterecolhimento':agenterecolhimento, 'agentealocacao':agentealocacao, 'perdas':total}
             )
     else:
-        return render(request, 'management/detalherecolhimento.html',
+        return render(request, 'management/detalhe_recolhimento.html',
                 {'recolhimento':recolhimento, 'agenterecolhimento':agenterecolhimento, 'agentealocacao':agentealocacao}
             )
+
+def procurar_por_tipo_recolhimento(request):
 
 
 ###########
 # AGENTES #
 ###########
-def menuagente(request):
+def menu_agente(request):
     agentes = Agente.objects.all()
-    return render(request, 'management/menuagente.html', {'agentes':agentes})
+    return render(request, 'management/menu_agente.html', {'agentes':agentes})
 
-def cadastraragente(request):
+def cadastrar_agente(request):
     if request.method == 'GET':
         agente = Agente()
-        return render(request, 'management/cadastraragente.html', {'formulario':FormAgente(), 'agente':agente})
+        return render(request, 'management/cadastrar_agente.html', {'formulario':FormAgente(), 'agente':agente})
     else:
         try:
             formulario = FormAgente(request.POST)
             formulario.save()
-            return redirect('menuagente')
+            return redirect('menu_agente')
         except ValueError:
-            return render(request, 'management/cadastraragente.html', {'formulario':FormAgente(), 'erro':'Não foi possível cadastrar o agente'})
+            return render(request, 'management/cadastrar_agente.html', {'formulario':FormAgente(), 'erro':'Não foi possível cadastrar o agente'})
 
-def detalheagente(request, pk_agente):
+def detalhe_agente(request, pk_agente):
     agente = get_object_or_404(Agente, pk=pk_agente)
     alocacoes = AlocacaoAgente.objects.filter(agente_id=agente.id)
     recolhimentos = RecolhimentoAgente.objects.filter(agente_id=agente.id)
     if request.method == 'GET':
-        return render(request, 'management/detalheagente.html', {'agente':agente, 'alocacoes':alocacoes, 'recolhimentos':recolhimentos})
+        return render(request, 'management/detalhe_agente.html', {'agente':agente, 'alocacoes':alocacoes, 'recolhimentos':recolhimentos})
     else:
         try:
             agente = get_object_or_404(Agente, pk=request.POST['agente'])
             agente.delete()
-            return redirect('menuagente')
+            return redirect('menu_agente')
         except:
-            return render(request, 'management/detalheagente.html',
+            return render(request, 'management/detalhe_agente.html',
                 {'agente':agente, 'alocacoes':alocacoes, 'recolhimentos':recolhimentos, 'erro':'Não foi possível deletar este agente'}
             )
 
-def editaragente(request, pk_agente):
+def editar_agente(request, pk_agente):
     agente = get_object_or_404(Agente, pk=pk_agente)
     if request.method == 'GET':
         formulario = FormAgente(instance=agente)
-        return render(request, 'management/editaragente.html', {'agente':agente, 'formulario':formulario})
+        return render(request, 'management/editar_agente.html', {'agente':agente, 'formulario':formulario})
     else:
         try:
             formulario = FormAgente(request.POST, instance=agente)
             formulario.save()
-            return redirect('menuagente')
+            return redirect('menu_agente')
         except ValueError:
-            return render(request, 'management/editaragente.html',
+            return render(request, 'management/editar_agente.html',
                 {'agente':agente, 'formulario':formulario, 'erro':'Não foi possível editar o agente'}
             )
 
-def procuraragente(request):
+def procurar_agente(request):
     if 'procura_agente' in request.GET:
         agentes = Agente.objects.filter(gritodeguerra__contains=request.GET.get('procura_agente'))
 
         if agentes:
-            return render(request, 'management/procuraragente.html', {'agentes':agentes})
+            return render(request, 'management/procurar_agente.html', {'agentes':agentes})
         else:
-            return render(request, 'management/procuraragente.html')
+            return render(request, 'management/procurar_agente.html')
     else:
-        return render(request, 'management/procuraragente.html', {'dica':'Digite o Grito de Guerra do agente que você procura'})
+        return render(request, 'management/procurar_agente.html', {'dica':'Digite o Grito de Guerra do agente que você procura'})
 
 
 ############
 # VIATURAS #
 ############
-def menuviatura(request):
+def menu_viatura(request):
     viaturas = Viatura.objects.all()
     if request.method == 'GET':
-        return render(request, 'management/menuviatura.html', {'viaturas':viaturas})
+        return render(request, 'management/menu_viatura.html', {'viaturas':viaturas})
     else:
         if 'viatura' in request.POST:
             try:
                 viatura = get_object_or_404(Viatura, pk=request.POST['viatura'])
                 viatura.delete()
-                return render(request, 'management/menuviatura.html', {'viaturas':viaturas, 'confirmacao':'Viatura deletado com sucesso'})
+                return render(request, 'management/menu_viatura.html', {'viaturas':viaturas, 'confirmacao':'Viatura deletado com sucesso'})
             except ValueError:
-                return render(request, 'management/menuviatura.html', {'viaturas':viaturas, 'erro':'Não foi possível deletar a viatura'})
+                return render(request, 'management/menu_viatura.html', {'viaturas':viaturas, 'erro':'Não foi possível deletar a viatura'})
         elif 'numero' in request.POST:
             try:
                 viatura = Viatura.objects.get(numero=request.POST['numeroAntigo'])
                 viatura.numero = request.POST['numero']
                 viatura.placa = request.POST['placa']
                 viatura.save()
-                return render(request, 'management/menuviatura.html', {'viaturas':viaturas, 'confirmacao':'Viatura editada com sucesso'})
+                return render(request, 'management/menu_viatura.html', {'viaturas':viaturas, 'confirmacao':'Viatura editada com sucesso'})
             except ValueError:
-                return render(request, 'management/menuviatura.html', {'viaturas':viaturas, 'erro':'Não foi possível editar a viatura'})
+                return render(request, 'management/menu_viatura.html', {'viaturas':viaturas, 'erro':'Não foi possível editar a viatura'})
 
-def cadastrarviatura(request):
+def cadastrar_viatura(request):
     if request.method == 'GET':
-        return render(request, 'management/cadastrarviatura.html', {'formulario':FormViatura()})
+        return render(request, 'management/cadastrar_viatura.html', {'formulario':FormViatura()})
     else:
         numero = request.POST['numero']
         placa = request.POST['placa']
@@ -545,20 +547,20 @@ def cadastrarviatura(request):
                     try:
                         formulario = FormViatura(request.POST)
                         formulario.save()
-                        return redirect('menuviatura')
+                        return redirect('menu_viatura')
                     except ValueError:
-                        return render(request, 'management/cadastrarviatura.html', {'formulario':FormViatura(), 'erro':'Não foi possível cadastrar a viatura'})
+                        return render(request, 'management/cadastrar_viatura.html', {'formulario':FormViatura(), 'erro':'Não foi possível cadastrar a viatura'})
                 else:
-                    return render(request, 'management/cadastrarviatura.html', {'formulario':FormViatura(), 'erroPlaca':'Essa placa já foi cadastrada'})
+                    return render(request, 'management/cadastrar_viatura.html', {'formulario':FormViatura(), 'erroPlaca':'Essa placa já foi cadastrada'})
             else:
-                return render(request, 'management/cadastrarviatura.html', {'formulario':FormViatura(), 'erroPlaca':'A placa deve ter 7 caracteres, sem simbolos'})
+                return render(request, 'management/cadastrar_viatura.html', {'formulario':FormViatura(), 'erroPlaca':'A placa deve ter 7 caracteres, sem simbolos'})
         else:
-            return render(request, 'management/cadastrarviatura.html', {'formulario':FormViatura(), 'erroNumero':'Viatura existente com este número'})
+            return render(request, 'management/cadastrar_viatura.html', {'formulario':FormViatura(), 'erroNumero':'Viatura existente com este número'})
 
 ###########
 # ESTOQUE #
 ###########
-def menuestoque(request):
+def menu_estoque(request):
     itensestoque = Estoque.objects.all()
     itensperdidoextraviado = ItemPerdidoExtraviado.objects.all()
     total_perdido_extraviado = int(0)
@@ -567,7 +569,7 @@ def menuestoque(request):
 
     print(total_perdido_extraviado)
     if request.method == 'GET':
-        return render(request, 'management/menuestoque.html', {'itensestoque':itensestoque, 'totalperdido':total_perdido_extraviado})
+        return render(request, 'management/menu_estoque.html', {'itensestoque':itensestoque, 'totalperdido':total_perdido_extraviado})
     else:
         if 'item' in request.POST: # Verifica se o botão de 'submit' foi do formulário de deleção
             try:
@@ -578,15 +580,15 @@ def menuestoque(request):
                     itemestoque = Estoque.objects.get(item_id=item.id)
                     itemestoque.delete()
                     item.delete()
-                    return render(request, 'management/menuestoque.html',
+                    return render(request, 'management/menu_estoque.html',
                         {'itensestoque':itensestoque, 'totalperdido':total_perdido_extraviado, 'confirmacao':'Item excluído com sucesso!'}
                     )
                 else:
-                    return render(request, 'management/menuestoque.html',
+                    return render(request, 'management/menu_estoque.html',
                         {'itensestoque':itensestoque, 'totalperdido':total_perdido_extraviado, 'erro':'Este item não pode ser excluído porque está relacionado a uma ou mais alocações'}
                     )
             except ValueError:
-                return render(request, 'management/menuestoque.html',
+                return render(request, 'management/menu_estoque.html',
                     {'itensestoque':itensestoque, 'totalperdido':total_perdido_extraviado, 'erro':'Não foi possível excluir o item'}
                 )
         elif 'nomeNovo' in request.POST: # Verifica se o botão de 'submit' foi do formulário de edição
@@ -599,18 +601,18 @@ def menuestoque(request):
                 estoque.quantidade = int(request.POST['quantidade'])
                 estoque.save()
 
-                return render(request, 'management/menuestoque.html',
+                return render(request, 'management/menu_estoque.html',
                     {'itensestoque':itensestoque, 'itensperdidoextraviado':itensperdidoextraviado, 'confirmacao':'Item editado com sucesso!'}
                 )
             except ValueError:
-                return render(request, 'management/menuestoque.html',
+                return render(request, 'management/menu_estoque.html',
                     {'itensestoque':itensestoque, 'itensperdidoextraviado':itensperdidoextraviado, 'erro':'Não foi possível editar o item'}
                 )
 
-def adicionarestoque(request):
+def adicionar_estoque(request):
     itens = Item.objects.all()
     if request.method == 'GET':
-        return render(request, 'management/adicionarestoque.html', {'itens':itens})
+        return render(request, 'management/adicionar_estoque.html', {'itens':itens})
     else:
         try:
             estoque = Estoque.objects.get(item_id=request.POST['item'])
@@ -618,13 +620,13 @@ def adicionarestoque(request):
             quantidade = int(quantidade)
             estoque.quantidade += quantidade
             estoque.save()
-            return redirect('menuestoque')
+            return redirect('menu_estoque')
         except ValueError:
-            return render(request, 'management/adicionarestoque.html', {'itens':itens, 'erro':'Não foi possível adicionar ao estoque'})
+            return render(request, 'management/adicionar_estoque.html', {'itens':itens, 'erro':'Não foi possível adicionar ao estoque'})
 
-def cadastraritem(request):
+def cadastrar_item(request):
     if request.method == 'GET':
-        return render(request, 'management/cadastraritem.html', {'formulario':FormItem()})
+        return render(request, 'management/cadastrar_item.html', {'formulario':FormItem()})
     else:
         try:
             formulario = FormItem(request.POST)
@@ -636,14 +638,14 @@ def cadastraritem(request):
             estoque.quantidade = quantidade
             item.save()
             estoque.save()
-            return redirect('menuestoque')
+            return redirect('menu_estoque')
         except ValueError:
-            return render(request, 'management/cadastraritem.html', {'formulario':FormItem(), 'erro':'Não foi possível adicionar o item'})
+            return render(request, 'management/cadastrar_item.html', {'formulario':FormItem(), 'erro':'Não foi possível adicionar o item'})
 
-def menuitemperdido(request):
+def menu_item_perdido(request):
     itensperdidos = ItemPerdidoExtraviado.objects.all().order_by('-id')
-    return render(request, 'management/menuitemperdido.html', {'itensperdidos':itensperdidos})
+    return render(request, 'management/menu_item_perdido.html', {'itensperdidos':itensperdidos})
 
-def detalheitemperdido(request, pk_perda_extravio):
+def detalhe_item_perdido(request, pk_perda_extravio):
     perda_extravio = get_object_or_404(ItemPerdidoExtraviado, pk=pk_perda_extravio)
-    return render(request, 'management/detalheitemperdido.html', {'perda_extravio':perda_extravio})
+    return render(request, 'management/detalhe_item_perdido.html', {'perda_extravio':perda_extravio})
