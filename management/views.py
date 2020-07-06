@@ -173,55 +173,51 @@ def procurarportipo(request):
                 except ValueError:
                     valido = False
             else:
-                return render(request, 'management/procurarportipo.html', {'resultado':'nenhum'})
+                return render(request, 'management/procurarportipoalocacao.html', {'resultado':'nenhum'})
 
             data = mudarformato(valor)
 
             if len(data) == 10 and data[4] == '-' and data[7] == '-':
                 # O IF abaixo basicamente verifica se a data informada é inválida
                 if not valido:
-                    return render(request, 'management/procurarportipo.html', {'resultado':'nenhum'})
+                    return render(request, 'management/procurarportipoalocacao.html', {'resultado':'nenhum'})
                 else:
                     alocacoes = Alocacao.objects.filter(data=data).order_by('-data')
                     if alocacoes:
-                        alocacoes = paginador(alocacoes)
-                        return render(request, 'management/procurarportipo.html', {'alocacoes':alocacoes, 'resultado':'data'})
+                        return render(request, 'management/procurarportipoalocacao.html', {'alocacoes':alocacoes, 'resultado':'data'})
                     else:
-                        return render(request, 'management/procurarportipo.html', {'resultado':'nenhum'})
+                        return render(request, 'management/procurarportipoalocacao.html', {'resultado':'nenhum'})
             else:
-                return render(request, 'management/procurarportipo.html', {'resultado':'nenhum'})
+                return render(request, 'management/procurarportipoalocacao.html', {'resultado':'nenhum'})
         elif tipo == 'item': # Verifica se a opção de busca foi 'Item'
             item = Item.objects.filter(nome=valor)
             if item: # Verifica se exite itens com o nome informado
                 item = Item.objects.get(nome=valor)
                 alocacoes = Alocacao.objects.filter(item_id=item.id).order_by('-id')
-                alocacoes = paginador(alocacoes)
-                return render(request, 'management/procurarportipo.html', {'alocacoes':alocacoes, 'resultado':'item'})
+                return render(request, 'management/procurarportipoalocacao.html', {'alocacoes':alocacoes, 'resultado':'item'})
             else:
-                return render(request, 'management/procurarportipo.html', {'resultado':'nenhum'})
+                return render(request, 'management/procurarportipoalocacao.html', {'resultado':'nenhum'})
         elif tipo == 'agente': # Verifica se a opção de busca foi 'Agente'
             agente = Agente.objects.filter(gritodeguerra=valor)
             if agente:
                 agente = Agente.objects.get(gritodeguerra=valor)
                 alocacoes = AlocacaoAgente.objects.filter(agente_id=agente.id).order_by('-id')
-                alocacoes = paginador(alocacoes)
-                return render(request, 'management/procurarportipo.html', {'alocacoes':alocacoes, 'resultado':'agente'})
+                return render(request, 'management/procurarportipoalocacao.html', {'alocacoes':alocacoes, 'resultado':'agente'})
             else:
-                return render(request, 'management/procurarportipo.html', {'resultado':'nenhum'})
+                return render(request, 'management/procurarportipoalocacao.html', {'resultado':'nenhum'})
         elif tipo == 'viatura': # Verifica se a opção de busca foi 'Viatura'
             if valor.isdigit():
                 viatura = Viatura.objects.filter(numero=valor)
                 if viatura:
                     viatura = Viatura.objects.get(numero=valor)
                     alocacoes = Alocacao.objects.filter(viatura_id=viatura.id).order_by('-id')
-                    alocacoes = paginador(alocacoes)
-                    return render(request, 'management/procurarportipo.html', {'alocacoes':alocacoes, 'resultado':'viatura'})
+                    return render(request, 'management/procurarportipoalocacao.html', {'alocacoes':alocacoes, 'resultado':'viatura'})
                 else:
-                    return render(request, 'management/procurarportipo.html', {'resultado':'nenhum'})
+                    return render(request, 'management/procurarportipoalocacao.html', {'resultado':'nenhum'})
             else:
-                return render(request, 'management/procurarportipo.html', {'resultado':'nenhum'})
+                return render(request, 'management/procurarportipoalocacao.html', {'resultado':'nenhum'})
     else:
-        return render(request, 'management/procurarportipo.html', {'dica':'Selecione o tipo desejado e coloque o valor que procura'})
+        return render(request, 'management/procurarportipoalocacao.html', {'dica':'Selecione o tipo desejado e coloque o valor que procura'})
 
 
 """

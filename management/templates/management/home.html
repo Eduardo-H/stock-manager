@@ -56,7 +56,7 @@
                       {% if alocacaorecolhimento.alocacao %}
                         href="{% url 'detalhealocacao' alocacaorecolhimento.alocacao_id %}"
                       {% elif alocacaorecolhimento.recolhimento %}
-                        href="#"
+                        href="{% url 'detalherecolhimento' alocacaorecolhimento.recolhimento_id  %}"
                       {% endif %}
                       class="btn btn-outline-primary">Detalhes</a>
                     </th>
