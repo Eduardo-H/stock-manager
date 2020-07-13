@@ -125,7 +125,12 @@ def detalhe_alocacao(request, pk_alocacao):
     alocacao = get_object_or_404(Alocacao, pk=pk_alocacao)
     agentes = AlocacaoAgente.objects.filter(alocacao_id=pk_alocacao)
     if request.method == 'GET':
-        return render(request, 'management/detalhe_alocacao.html', {'alocacao':alocacao, 'agentes':agentes})
+        agente_1 = agentes[0].agente.gritodeguerra
+        if len(agentes) > 1:
+            agente_2 = agentes[1].agente.gritodeguerra
+            return render(request, 'management/detalhe_alocacao.html', {'alocacao':alocacao, 'agente_1':agente_1, 'agente_2':agente_2})
+
+        return render(request, 'management/detalhe_alocacao.html', {'alocacao':alocacao, 'agente_1':agente_1})
     else:
         try:
             if 'alocacaoDesativar' in request.POST:

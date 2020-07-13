@@ -36,9 +36,12 @@
 
           <h2>Agente{{ agentes.count|pluralize }}</h2>
           <div class="alert alert-secondary">
-            {% for agente in agentes %}
-              <p><strong>Grito de Guerra:</strong> {{ agente.agente.gritodeguerra }}</p>
-            {% endfor %}
+            {% if agente_2 %}
+              <p><strong>Grito de Guerra:</strong> {{ agente_1 }}</p>
+              <p class="mb-0"><strong>Grito de Guerra:</strong> {{ agente_2 }}</p>
+            {% else %}
+              <p class="mb-0"><strong>Grito de Guerra:</strong> {{ agente_1 }}</p>
+            {% endif %}
           </div>
 
           {% if alocacao.viatura %}
