@@ -548,17 +548,40 @@ def detalhe_recolhimento(request, pk_recolhimento):
     agentealocacao = AlocacaoAgente.objects.filter(alocacao_id=recolhimento.alocacao_id)
     perdas = ItemPerdidoExtraviado.objects.filter(alocacao_id=recolhimento.alocacao_id)
 
+    if len(agentealocacao) == 1:
+        agentes = ('{}' .format(agentealocacao[0].agente.gritodeguerra))
+    elif len(agentealocacao) > 1:
+        agentes = ('{} e {}' .format(agentealocacao[0].agente.gritodeguerra, agentealocacao[1].agente.gritodeguerra))
+
+    agente_recolhimento_1 = agenterecolhimento[0].agente.gritodeguerra
+    agente_recolhimento_2 = int(0)
+    if len(agenterecolhimento) > 1:
+        agente_recolhimento_2 = agenterecolhimento[1].agente.gritodeguerra
+
     if perdas is not None:
         total = int(0)
         for perda in perdas:
             total += perda.quantidade
-        return render(request, 'management/detalhe_recolhimento.html',
-                {'recolhimento':recolhimento, 'agenterecolhimento':agenterecolhimento, 'agentealocacao':agentealocacao, 'perdas':total}
-            )
+        if agente_recolhimento_2 != 0:
+            return render(request, 'management/detalhe_recolhimento.html',
+                    {'recolhimento':recolhimento, 'agente_recolhimento_1':agente_recolhimento_1,\
+                      'agente_recolhimento_2':agente_recolhimento_2, 'agentealocacao':agentes, 'perdas':total}
+                )
+        else:
+            return render(request, 'management/detalhe_recolhimento.html',
+                    {'recolhimento':recolhimento, 'agente_recolhimento_1':agente_recolhimento_1, 'agentealocacao':agentes, 'perdas':total}
+                )
     else:
-        return render(request, 'management/detalhe_recolhimento.html',
-                {'recolhimento':recolhimento, 'agenterecolhimento':agenterecolhimento, 'agentealocacao':agentealocacao}
-            )
+        if agente_recolhimento_2 != 0:
+            return render(request, 'management/detalhe_recolhimento.html',
+                    {'recolhimento':recolhimento, 'agente_recolhimento_1':agente_recolhimento_1,\
+                      'agente_recolhimento_2':agente_recolhimento_2, 'agentealocacao':agentes, 'perdas':total}
+                )
+        else:
+            return render(request, 'management/detalhe_recolhimento.html',
+                    {'recolhimento':recolhimento, 'agente_recolhimento_1':agente_recolhimento_1, 'agentealocacao':agentes, 'perdas':total}
+                )
+
 
 def procurar_por_tipo_recolhimento(request):
     if 'pesquisa' in request.GET:

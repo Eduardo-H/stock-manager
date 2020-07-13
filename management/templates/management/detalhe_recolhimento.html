@@ -24,15 +24,7 @@
                 </p>
                 <p><span class="mr-2"><strong>Item:</strong> {{ recolhimento.alocacao.item.nome }}</span> <span><strong>Quantidade:</strong> {{ recolhimento.alocacao.quantidade }}</span></p>
                 <p><strong>Motivo:</strong> {{ recolhimento.alocacao.motivo|striptags|truncatechars:27 }}</p>
-                <p class="mb-0"><span class="mr-2"><strong>Agente{{ agentealocacao.count|pluralize }}:</strong>
-                    {% for agente in agentealocacao %}
-                      {% if agente != ultimo %}
-                        {{ agente.agente.gritodeguerra }} e
-                      {% else %}
-                        {{ agente.agente.gritodeguerra }}
-                      {% endif %}
-                    {% endfor %}
-                  </span>
+                <p class="mb-0"><span class="mr-2"><strong>Agentes:</strong> {{ agentealocacao }}</span>
                   <span>
                     {% if alocacao.viatura %}
                       <strong>Viatura:</strong> {{ recolhimento.alocacao.viatura.numero }}
@@ -59,11 +51,14 @@
 
           <div class="d-flex justify-content-center">
             <div class="col-lg-5">
-              <h2>Agente{{ agenterecolhimento.count|pluralize }}</h2>
+              <h2>Agentes</h2>
               <div class="alert alert-secondary">
-                {% for agente in agenterecolhimento %}
-                  <p><strong>Grito de Guerra:</strong> {{ agente.agente.gritodeguerra }}</p>
-                {% endfor %}
+                {% if agente_recolhimento_2 %}
+                  <p><strong>Grito de Guerra:</strong> {{ agente_recolhimento_1 }}</p>
+                  <p class="mb-0"><strong>Grito de Guerra:</strong> {{ agente_recolhimento_2 }}</p>
+                {% else %}
+                  <p class="mb-0"><strong>Grito de Guerra:</strong> {{ agente_recolhimento_1 }}</p>
+                {% endif %}
               </div>
             </div>
             {% if recolhimento.viatura %}
