@@ -1,0 +1,38 @@
+{% extends 'management/base.html' %}
+
+{% block content %}
+  <section class="py-5">
+    <div class="container">
+      <h1 class="display-4 text-center mb-5">Total de Perdas/Extravios</h1>
+      <div class="row mb-5">
+        <div class="col-lg-4">
+          <a href="{% url 'menu_item_perdido' %}" class="btn btn-primary btn-block rounded-pill"><i class="fas fa-arrow-left mr-2"></i> VOLTAR</a>
+        </div>
+        <div class="col-lg-4">
+          <a href="{% url 'menu_estoque' %}" class="btn btn-success btn-block rounded-pill"><i class="fas fa-home mr-2"></i> MENU ESTOQUE</a>
+        </div>
+        <div class="col-lg-4">
+          <a href="{% url 'total_item_perdido' %}" class="btn btn-warning btn-block rounded-pill"><i class="fas fa-plus mr-2"></i> CADASTRAR PERDA/EXTRAVIO</a>
+        </div>
+      </div>
+      <div class="row justify-content-center mb-4">
+        <div class="col-lg-9">
+          <div class="card-body rounded bg-warning text-dark text-center">
+            <h2 class="mb-0">Quantidade total de itens perdidos/extraviados: {{ total_itens }}</h2>
+          </div>
+        </div>
+      </div>
+
+      <div class="row justify-content-center">
+        {% for item_atual in item %}
+          <div class="col-lg-4">
+            <div class="card-body rounded bg-primary text-white text-center">
+              <h2>{{ item_atual.nome }}</h2>
+              <p class="mb-0">Quantidade perdida/extraviada: {{ item_atual.quantidade }}</p>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+{% endblock %}

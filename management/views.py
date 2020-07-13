@@ -848,3 +848,33 @@ def menu_item_perdido(request):
 def detalhe_item_perdido(request, pk_perda_extravio):
     perda_extravio = get_object_or_404(ItemPerdidoExtraviado, pk=pk_perda_extravio)
     return render(request, 'management/detalhe_item_perdido.html', {'perda_extravio':perda_extravio})
+
+def total_item_perdido(request):
+    lista_item = list()
+    tamanho = Item.objects.all()
+
+    for item_atual in tamanho:
+        item_novo = ItemQuantidade(item_atual.nome, int(0))
+        lista_item.append(item_novo)
+
+    total_itens = int(0)
+    perdas = ItemPerdidoExtraviado.objects.all()
+
+    i = int(0)
+    for item_atual in tamanho:
+        perda_total_item = int(0)
+        for perda in perdas:
+            if perda.alocacao.item.nome == item_atual.nome:
+                perda_total_item += perda.quantidade
+        lista_item[i].quantidade += perda_total_item
+        total_itens += perda_total_item
+        i += 1
+
+    return render(request, 'management/total_perdido_extraviado.html', {'item':lista_item, 'total_itens':total_itens})
+
+
+class ItemQuantidade:
+
+    def __init__(self, nome, quantidade):
+        self.nome = nome
+        self.quantidade = quantidade
