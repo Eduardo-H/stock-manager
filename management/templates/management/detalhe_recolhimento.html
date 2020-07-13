@@ -26,7 +26,7 @@
                 <p><strong>Motivo:</strong> {{ recolhimento.alocacao.motivo|striptags|truncatechars:27 }}</p>
                 <p class="mb-0"><span class="mr-2"><strong>Agente{{ agentealocacao.count|pluralize }}:</strong>
                     {% for agente in agentealocacao %}
-                      {% if agente %}
+                      {% if agente != ultimo %}
                         {{ agente.agente.gritodeguerra }} e
                       {% else %}
                         {{ agente.agente.gritodeguerra }}

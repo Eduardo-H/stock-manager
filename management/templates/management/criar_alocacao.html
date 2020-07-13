@@ -135,7 +135,7 @@
               <label for="agente-1">Agente</label>
               <select class="form-control" name="agente-1"
                 {% if agentes.count > 5 %}
-                  id="agente-1" onfocus='this.size=5;' onblur='this.size=1;' onchange='this.size=1; this.blur();'
+                  id="select-agente-1" onfocus='this.size=5;' onblur='this.size=1;' onchange='this.size=1; this.blur();'
                 {% endif %}
               >
                 {% for agente in agentes %}
@@ -147,9 +147,9 @@
             <div class="col-lg-9 mx-auto mb-3">
               <div class="d-none" id="agente-2">
                 <label for="agente">Agente</label>
-                <select class="form-control" name="agente-2"
+                <select class="form-control agente-2-valor" name="agente-2"
                   {% if agentes.count > 5 %}
-                    id="agente-1" onfocus='this.size=5;' onblur='this.size=1;' onchange='this.size=1; this.blur();'
+                    id="select-agente-2" onfocus='this.size=5;' onblur='this.size=1;' onchange='this.size=1; this.blur();'
                   {% endif %}
                 >
                   <option value="-">-</option>
@@ -173,7 +173,6 @@
               </div>
 
             </div>
-
           </form>
         </div>
       </div>
@@ -203,6 +202,7 @@
       } else if (icon.classList.contains('fa-minus')) {
         document.querySelector('#icon').classList.remove('fa-minus');
         document.querySelector('#icon').classList.add('fa-plus');
+        document.querySelector('.agente-2-valor').selectedIndex = "0";
       }
 
     });

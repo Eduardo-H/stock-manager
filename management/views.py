@@ -142,6 +142,135 @@ def detalhe_alocacao(request, pk_alocacao):
         except ValueError:
             return render(request, 'management/detalhe_alocacao.html', {'alocacao':alocacao, 'agentes':agentes, 'erro':'Não foi possível desativar a alocação'})
 
+def editar_alocacao(request, pk_alocacao):
+    alocacao = get_object_or_404(Alocacao, pk=pk_alocacao)
+    if request.method == 'GET':
+        agentes_alocados = AlocacaoAgente.objects.filter(alocacao_id=pk_alocacao)
+        agentes = Agente.objects.all()
+
+        agente_1_id = agentes_alocados[0].agente.id
+        agente_2_id = int(0)
+        if len(agentes_alocados) > 1:
+            agente_2_id = agentes_alocados[1].agente.id
+
+        formulario = FormAlocacao(instance=alocacao)
+
+        if agente_2_id != 0:
+            return render(request, 'management/editar_alocacao.html',
+                        {'formulario':formulario, 'alocacao':alocacao, 'agentes_alocados':agentes_alocados, 'agentes':agentes, 'agente_1_id':agente_1_id, 'agente_2_id':agente_2_id}
+                    )
+        else:
+            return render(request, 'management/editar_alocacao.html',
+                        {'formulario':formulario, 'alocacao':alocacao, 'agentes_alocados':agentes_alocados, 'agentes':agentes, 'agente_1_id':agente_1_id}
+                    )
+    else:
+        agente_1 = int(request.POST['agente-1']) # Recebe o ID do agente 1 e o transforma em INT
+        if request.POST['agente-2'] != '-': # Se o valor for diferente de '-', recebe o ID do agente 2 e o transforma em INT
+            agente_2 = int(request.POST['agente-2'])
+        else:
+            agente_2 = request.POST['agente-2']
+        """-------------------------------------------------------------------------------------------------------------------"""
+        agentes = AlocacaoAgente.objects.filter(alocacao_id=alocacao.id)
+        """-------------------------------------------------------------------------------------------------------------------"""
+        if not agentes: # Verifica se não há nenhum agente relacionado
+            cadastrar_alocacao_agente(alocacao, agente_1) # Cadastra o novo agente 1
+            if agente_2 != '-':
+                cadastrar_alocacao_agente(alocacao, agente_2) # Cadastra o novo agente 2
+            try: # Salva os dados sobre rua, número e bairro
+                alocacao.rua = request.POST['rua']
+                alocacao.numero = request.POST['numero']
+                alocacao.bairro = request.POST['bairro']
+                alocacao.save()
+                return redirect('detalhe_alocacao', alocacao.id)
+            except:
+                return render(request, 'management/editar_alocacao.html',
+                        {'formulario':formulario, 'alocacao':alocacao, 'agentes_alocados':agentes_alocados, \
+                        'agentes':agentes, 'erro':'Não foi possível editar a alocação'}
+                    )
+        """-------------------------------------------------------------------------------------------------------------------"""
+        igual_1 = False
+        igual_2 = False
+        """-------------------------------------------------------------------------------------------------------------------"""
+        for cadastro in agentes: # Vefica se o agente 1 não foi modificado
+            if cadastro.agente.id == agente_1:
+                agente_1_igual = AlocacaoAgente.objects.get(alocacao_id=alocacao.id, agente_id=cadastro.agente.id)
+                igual_1 = True
+
+                if agente_2 == '-':
+                    for cadastro in agentes:
+                        if cadastro.agente.id != agente_1_igual.agente.id:
+                            remover_agente = AlocacaoAgente.objects.get(alocacao_id=alocacao.id, agente_id=cadastro.agente.id)
+                            remover_agente.delete()
+        """-------------------------------------------------------------------------------------------------------------------"""
+        if agente_2 != '-': # Se o valor selecionado for diferente de '-'
+            for cadastro in agentes: # Vefica se o agente 2 não foi modificado
+                if cadastro.agente.id == agente_2:
+                    agente_2_igual = AlocacaoAgente.objects.get(alocacao_id=alocacao.id, agente_id=cadastro.agente.id)
+                    igual_2 = True
+        else: # Se o valor selecionado for igual de '-', remove o agente 2 sem excluír o agente 1
+            for cadastro in agentes:
+                if igual_1 == True:
+                    if len(agentes) > 1:
+                        if cadastro.agente.id != agente_1_igual.agente.id:
+                            cadastro.delete()
+                            igual_2 = True
+                else:
+                    remover_agente = AlocacaoAgente.objects.get(alocacao_id=alocacao.id, agente_id=cadastro.agente.id)
+                    remover_agente.delete()
+        """-------------------------------------------------------------------------------------------------------------------"""
+        agentes = AlocacaoAgente.objects.filter(alocacao_id=alocacao.id)
+        """-------------------------------------------------------------------------------------------------------------------"""
+        if igual_1 == False and igual_2 == True: # Verifica se o agente 1 foi modificado e agente 2 permanece o mesmo
+            for cadastro in agentes: # Remove o agente 1 sem excluír o agente 2
+                if cadastro.agente.id != agente_2_igual.agente.id:
+                    remover_agente = AlocacaoAgente.objects.get(alocacao_id=alocacao.id, agente_id=cadastro.agente.id)
+                    remover_agente.delete()
+            cadastrar_alocacao_agente(alocacao, agente_1) # Cadastra o novo agente 1
+        elif igual_1 == False and igual_2 == False: # Verifica se o agente 1 e agente 2 foram modificados e remove os dois
+            for cadastro in agentes:
+                remover_agente = AlocacaoAgente.objects.get(alocacao_id=alocacao.id, agente_id=cadastro.agente.id)
+                remover_agente.delete()
+            cadastrar_alocacao_agente(alocacao, agente_1) # Cadastra o novo agente 1
+            cadastrar_alocacao_agente(alocacao, agente_2) # Cadastra o novo agente 2
+        elif igual_1 == True and igual_2 == False: # Verifica se o agente 2 foi modificado e agente 1 permanece o mesmo
+            for cadastro in agentes: # Remove o agente 2 sem excluír o agente 1
+                if cadastro.agente.id != agente_1_igual.agente.id:
+                    remover_agente = AlocacaoAgente.objects.get(alocacao_id=alocacao.id, agente_id=cadastro.agente.id)
+                    remover_agente.delete()
+            cadastrar_alocacao_agente(alocacao, agente_2) # Cadastra o novo agente 2
+        """-------------------------------------------------------------------------------------------------------------------"""
+        try: # Salva os dados 'rua, número e bairro'
+            alocacao.rua = request.POST['rua']
+            alocacao.numero = request.POST['numero']
+            alocacao.bairro = request.POST['bairro']
+            alocacao.save()
+            return redirect('detalhe_alocacao', alocacao.id)
+        except:
+            return render(request, 'management/editar_alocacao.html',
+                    {'formulario':formulario, 'alocacao':alocacao, 'agentes_alocados':agentes_alocados, 'agentes':agentes, 'erro':'Não foi possível editar a alocação'}
+                )
+        """-------------------------------------------------------------------------------------------------------------------"""
+
+def cadastrar_alocacao_agente(alocacao, agente):
+    novo_agente = Agente.objects.get(id=agente)
+    novo_cadastro = AlocacaoAgente()
+    novo_cadastro.alocacao = alocacao
+    novo_cadastro.agente = novo_agente
+    novo_cadastro.save()
+
+def salvar_edicao(rua, numero, bairro):
+    try: # Salva os dados sobre rua, número e bairro
+        alocacao.rua = rua
+        alocacao.numero = numero
+        alocacao.bairro = bairro
+        alocacao.save()
+        return redirect('detalhe_alocacao', alocacao.id)
+    except:
+        return render(request, 'management/editar_alocacao.html',
+                {'formulario':formulario, 'alocacao':alocacao, 'agentes_alocados':agentes_alocados, \
+                'agentes':agentes, 'erro':'Não foi possível editar a alocação'}
+            )
+
 def alocacoes_abertas(request):
     lista_alocacoes = Alocacao.objects.filter(status='Aberto')
     paginator = Paginator(lista_alocacoes, 6)
@@ -219,23 +348,6 @@ def procurar_por_tipo_alocacao(request):
     else:
         return render(request, 'management/procurar_por_tipo_alocacao.html', {'dica':'Selecione o tipo desejado e coloque o valor que procura'})
 
-
-"""
-FUNÇÃO PARA A PÁGINAÇÃO
-"""
-def paginador(lista_resultados):
-    paginator = Paginator(lista_resultados, 6) # Retorna 6 resultados para cada página
-    try:
-        page = int(request.GET.get('page', '1'))
-    except:
-        page = 1
-
-    try:
-        resultado = paginator.page(page)
-    except(EmptyPage, InvalidPage):
-        resultado = paginator.page(paginator.num_pages)
-
-    return resultado
 
 """
 FUNÇÃO PARA MUDAR O FORMATO DA DATA

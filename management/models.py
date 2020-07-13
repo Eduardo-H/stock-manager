@@ -60,6 +60,7 @@ class Alocacao(models.Model):
     def __str__(self):
         return 'Alocação feita no dia {} em {}'.format(self.data, self.rua)
 
+
 class AlocacaoAgente(models.Model):
     alocacao = models.ForeignKey(Alocacao, on_delete=models.PROTECT)
     agente = models.ForeignKey(Agente, on_delete=models.PROTECT)

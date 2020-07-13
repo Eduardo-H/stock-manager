@@ -18,18 +18,21 @@ body::-webkit-scrollbar-thumb {
 }
 
 #viatura::-webkit-scrollbar,
-#agente-1::-webkit-scrollbar {
+#select-agente-1::-webkit-scrollbar,
+#select-agente-2::-webkit-scrollbar {
   width: 5px;
 }
 
 #viatura::-webkit-scrollbar-track,
-#agente-1::-webkit-scrollbar-track {
+#select-agente-1::-webkit-scrollbar-track,
+#select-agente-2::-webkit-scrollbar-track {
   background: #4F4F4F;
   border-radius: 40px;
 }
 
 #viatura::-webkit-scrollbar-thumb,
-#agente-1::-webkit-scrollbar-thumb {
+#select-agente-1::-webkit-scrollbar-thumb,
+#select-agente-2::-webkit-scrollbar-thumb {
   background: #bdbdbd;
   border-radius: 40px;
 }
