@@ -848,8 +848,21 @@ def menu_item_perdido(request):
 
 def detalhe_item_perdido(request, pk_perda_extravio):
     perda_extravio = get_object_or_404(ItemPerdidoExtraviado, pk=pk_perda_extravio)
-    return render(request, 'management/detalhe_item_perdido.html', {'perda_extravio':perda_extravio})
+    if request.method == 'GET':
+        return render(request, 'management/detalhe_item_perdido.html', {'perda_extravio':perda_extravio})
+    else:
+        try:
+            perda_extravio.quantidade -= int(request.POST['quantidade'])
 
+            if perda_extravio.quantidade > 0:
+                perda_extravio.save()
+                return render(request, 'management/detalhe_item_perdido.html', {'perda_extravio':perda_extravio})
+            else:
+                perda_extravio.delete()
+                return redirect('menu_item_perdido')
+
+        except ValueError:
+            return render(request, 'management/detalhe_item_perdido.html', {'perda_extravio':perda_extravio, 'erro':'Não foi possível salvar a recuperção do item'})
 
 def total_item_perdido(request):
     lista_item = list()
@@ -876,8 +889,8 @@ def total_item_perdido(request):
 
     return render(request, 'management/total_perdido_extraviado.html', {'item':lista_item, 'total_itens':total_itens, 'alocacoes':alocacoes})
 
-
-class ItemQuantidade: # Classe utitlizada para armazenar o nome de um item e sua quantidade perdida/extraviada
+# Classe utitlizada para armazenar o nome de um item e sua quantidade perdida/extraviada
+class ItemQuantidade:
     def __init__(self, nome, quantidade):
         self.nome = nome
         self.quantidade = quantidade
