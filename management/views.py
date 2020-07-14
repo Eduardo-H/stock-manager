@@ -843,11 +843,13 @@ def cadastrar_item(request):
 
 def menu_item_perdido(request):
     itensperdidos = ItemPerdidoExtraviado.objects.all().order_by('-id')
-    return render(request, 'management/menu_item_perdido.html', {'itensperdidos':itensperdidos})
+    alocacoes = Alocacao.objects.filter(status='Aberto')
+    return render(request, 'management/menu_item_perdido.html', {'itensperdidos':itensperdidos, 'alocacoes':alocacoes})
 
 def detalhe_item_perdido(request, pk_perda_extravio):
     perda_extravio = get_object_or_404(ItemPerdidoExtraviado, pk=pk_perda_extravio)
     return render(request, 'management/detalhe_item_perdido.html', {'perda_extravio':perda_extravio})
+
 
 def total_item_perdido(request):
     lista_item = list()
@@ -870,11 +872,26 @@ def total_item_perdido(request):
         total_itens += perda_total_item
         i += 1
 
-    return render(request, 'management/total_perdido_extraviado.html', {'item':lista_item, 'total_itens':total_itens})
+    alocacoes = Alocacao.objects.filter(status='Aberto')
+
+    return render(request, 'management/total_perdido_extraviado.html', {'item':lista_item, 'total_itens':total_itens, 'alocacoes':alocacoes})
 
 
-class ItemQuantidade:
-
+class ItemQuantidade: # Classe utitlizada para armazenar o nome de um item e sua quantidade perdida/extraviada
     def __init__(self, nome, quantidade):
         self.nome = nome
         self.quantidade = quantidade
+
+def cadastrar_item_perdido(request, pk_alocacao):
+    alocacao = get_object_or_404(Alocacao, pk=pk_alocacao)
+    if request.method == 'GET':
+        return render(request, 'management/cadastrar_item_perdido.html', {'formulario':FormPerda(), 'alocacao':alocacao})
+    else:
+        try:
+            formulario = FormPerda(request.POST)
+            perda = formulario.save(commit=False)
+            perda.alocacao = alocacao
+            perda.save()
+            return redirect('menu_item_perdido')
+        except ValueError:
+            return render(request, 'management/cadastrar_item_perdido.html', {'formulario':FormPerda(), 'alocacao':alocacao, 'erro':'Não foi possível cadastrar a perda/extravio'})

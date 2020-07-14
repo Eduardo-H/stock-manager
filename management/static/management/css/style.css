@@ -57,6 +57,29 @@ body::-webkit-scrollbar-thumb {
   background: #bdbdbd;
   border-radius: 40px;
 }
+
+#tabela-item-perdido {
+  height: 600px;
+  overflow: auto;
+}
+
+#tabela-item-perdido::-webkit-scrollbar{
+  width: 10px;
+}
+
+#tabela-item-perdido::-webkit-scrollbar-track {
+  background: #343a40;
+  border-top-right-radius: 40px;
+  border-bottom-right-radius: 40px;
+  border-bottom-left-radius: 40px;
+}
+
+#tabela-item-perdido::-webkit-scrollbar-thumb {
+  background: #bdbdbd;
+  border-radius: 40px;
+}
+
+
 /*-----------------*/
 /* Demais estilos */
 /*---------------*/

@@ -42,3 +42,13 @@ class FormViatura(ModelForm):
     class Meta:
         model = Viatura
         fields = ['numero', 'placa']
+
+class FormPerda(ModelForm):
+    class Meta:
+        model = ItemPerdidoExtraviado
+        fields = ['data', 'horario', 'quantidade']
+
+    data = forms.DateField(
+        widget=forms.DateInput(format='%d/%m/%Y'),
+        input_formats=('%d/%m/%Y', )
+    )
