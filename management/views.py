@@ -174,9 +174,9 @@ def editar_alocacao(request, pk_alocacao):
             agente_2 = int(request.POST['agente-2'])
         else:
             agente_2 = request.POST['agente-2']
-        """-------------------------------------------------------------------------------------------------------------------"""
+
         agentes = AlocacaoAgente.objects.filter(alocacao_id=alocacao.id)
-        """-------------------------------------------------------------------------------------------------------------------"""
+
         if not agentes: # Verifica se não há nenhum agente relacionado
             cadastrar_alocacao_agente(alocacao, agente_1) # Cadastra o novo agente 1
             if agente_2 != '-':
@@ -192,10 +192,11 @@ def editar_alocacao(request, pk_alocacao):
                         {'formulario':formulario, 'alocacao':alocacao, 'agentes_alocados':agentes_alocados, \
                         'agentes':agentes, 'erro':'Não foi possível editar a alocação'}
                     )
-        """-------------------------------------------------------------------------------------------------------------------"""
+
         igual_1 = False
         igual_2 = False
-        """-------------------------------------------------------------------------------------------------------------------"""
+        nao_existente = False
+
         for cadastro in agentes: # Vefica se o agente 1 não foi modificado
             if cadastro.agente.id == agente_1:
                 agente_1_igual = AlocacaoAgente.objects.get(alocacao_id=alocacao.id, agente_id=cadastro.agente.id)
@@ -206,25 +207,27 @@ def editar_alocacao(request, pk_alocacao):
                         if cadastro.agente.id != agente_1_igual.agente.id:
                             remover_agente = AlocacaoAgente.objects.get(alocacao_id=alocacao.id, agente_id=cadastro.agente.id)
                             remover_agente.delete()
-        """-------------------------------------------------------------------------------------------------------------------"""
+
         if agente_2 != '-': # Se o valor selecionado for diferente de '-'
             for cadastro in agentes: # Vefica se o agente 2 não foi modificado
                 if cadastro.agente.id == agente_2:
                     agente_2_igual = AlocacaoAgente.objects.get(alocacao_id=alocacao.id, agente_id=cadastro.agente.id)
                     igual_2 = True
         else: # Se o valor selecionado for igual de '-', remove o agente 2 sem excluír o agente 1
-            for cadastro in agentes:
-                if igual_1 == True:
-                    if len(agentes) > 1:
-                        if cadastro.agente.id != agente_1_igual.agente.id:
-                            cadastro.delete()
-                            igual_2 = True
-                else:
-                    remover_agente = AlocacaoAgente.objects.get(alocacao_id=alocacao.id, agente_id=cadastro.agente.id)
-                    remover_agente.delete()
-        """-------------------------------------------------------------------------------------------------------------------"""
+            if len(agentes) > 1:
+                for cadastro in agentes:
+                    if igual_1 == True:
+                            if cadastro.agente.id != agente_1_igual.agente.id:
+                                cadastro.delete()
+                                igual_2 = True
+                    else:
+                        remover_agente = AlocacaoAgente.objects.get(alocacao_id=alocacao.id, agente_id=cadastro.agente.id)
+                        remover_agente.delete()
+            else:
+                nao_existente = True
+
         agentes = AlocacaoAgente.objects.filter(alocacao_id=alocacao.id)
-        """-------------------------------------------------------------------------------------------------------------------"""
+
         if igual_1 == False and igual_2 == True: # Verifica se o agente 1 foi modificado e agente 2 permanece o mesmo
             for cadastro in agentes: # Remove o agente 1 sem excluír o agente 2
                 if cadastro.agente.id != agente_2_igual.agente.id:
@@ -236,14 +239,15 @@ def editar_alocacao(request, pk_alocacao):
                 remover_agente = AlocacaoAgente.objects.get(alocacao_id=alocacao.id, agente_id=cadastro.agente.id)
                 remover_agente.delete()
             cadastrar_alocacao_agente(alocacao, agente_1) # Cadastra o novo agente 1
-            cadastrar_alocacao_agente(alocacao, agente_2) # Cadastra o novo agente 2
+            if nao_existente == False:
+                cadastrar_alocacao_agente(alocacao, agente_2) # Cadastra o novo agente 2
         elif igual_1 == True and igual_2 == False: # Verifica se o agente 2 foi modificado e agente 1 permanece o mesmo
             for cadastro in agentes: # Remove o agente 2 sem excluír o agente 1
                 if cadastro.agente.id != agente_1_igual.agente.id:
                     remover_agente = AlocacaoAgente.objects.get(alocacao_id=alocacao.id, agente_id=cadastro.agente.id)
                     remover_agente.delete()
             cadastrar_alocacao_agente(alocacao, agente_2) # Cadastra o novo agente 2
-        """-------------------------------------------------------------------------------------------------------------------"""
+
         try: # Salva os dados 'rua, número e bairro'
             alocacao.rua = request.POST['rua']
             alocacao.numero = request.POST['numero']
@@ -254,7 +258,7 @@ def editar_alocacao(request, pk_alocacao):
             return render(request, 'management/editar_alocacao.html',
                     {'formulario':formulario, 'alocacao':alocacao, 'agentes_alocados':agentes_alocados, 'agentes':agentes, 'erro':'Não foi possível editar a alocação'}
                 )
-        """-------------------------------------------------------------------------------------------------------------------"""
+
 
 def cadastrar_alocacao_agente(alocacao, agente):
     novo_agente = Agente.objects.get(id=agente)
@@ -377,7 +381,7 @@ def menu_recolhimento(request):
 def cadastrar_recolhimento(request, pk_alocacao):
     alocacao = get_object_or_404(Alocacao, pk=pk_alocacao)
     agentealocacao = AlocacaoAgente.objects.filter(alocacao_id=pk_alocacao) # Busca o(s) agente(s) relacionado(s) à alocação
-    agentes = Agente.objects.all().order_by('nome') # Busca os agentes cadastrados no sistema
+    agentes = Agente.objects.all().order_by('gritodeguerra') # Busca os agentes cadastrados no sistema
     viaturas = Viatura.objects.all().order_by('numero')
     quantidadeperdida = ItemPerdidoExtraviado.objects.filter(alocacao_id=alocacao.id) # Buscando os cadastros de perda/extravio com o ID da alocação
 
@@ -424,7 +428,11 @@ def cadastrar_recolhimento(request, pk_alocacao):
             agente1 = request.POST['agente-1'] # Recebe o ID do primeiro agente, e do segundo, se houver
             agente2 = request.POST['agente-2']
             agente1 = get_object_or_404(Agente, pk=agente1) # Recebe o objeto 'Agente 1'
-            quantidade = request.POST['quantidade'] # Recebe a quantidade do item informada
+
+            data = request.POST['data']
+            horario = request.POST['horario']
+            turno = request.POST['turno']
+            quantidade = int(request.POST['quantidade']) # Recebe a quantidade do item informada
 
             perdas = ItemPerdidoExtraviado.objects.filter(alocacao_id=alocacao.id)
 
@@ -454,7 +462,7 @@ def cadastrar_recolhimento(request, pk_alocacao):
                     if viatura is not None: # Verifica se foi retornado um objeto
                         try:
                             formulario = FormRecolhimento(request.POST)
-                            salvarrecolhimento(formulario, alocacao, viatura, agente1, agente2, request.POST['cadastrador']) # Função para a persistência de dados
+                            salvar_recolhimento_total(formulario, data, horario, turno, quantidade, alocacao, viatura, agente1, agente2, request.POST['cadastrador']) # Função para a persistência de dados
 
                             return redirect('menu_recolhimento')
                         except ValueError:
@@ -467,7 +475,7 @@ def cadastrar_recolhimento(request, pk_alocacao):
                     try:
                         formulario = FormRecolhimento(request.POST)
                         viatura = None # Atribui o valor None para que na função abaixo não seja feita a persistência da viatura na alocação
-                        salvarrecolhimento(formulario, alocacao, viatura, agente1, agente2, request.POST['cadastrador'])
+                        salvar_recolhimento_total(formulario, data, horario, turno, quantidade, alocacao, viatura, agente1, agente2, request.POST['cadastrador'])
 
                         return redirect('menu_recolhimento')
                     except ValueError:
@@ -481,7 +489,7 @@ def cadastrar_recolhimento(request, pk_alocacao):
                 if viatura is not None: # Verifica se foi retornado um objeto
                     try:
                         formulario = FormRecolhimento(request.POST)
-                        salvarrecolhimento(formulario, alocacao, viatura, agente1, agente2, request.POST['cadastrador'])
+                        salvar_recolhimento_total(formulario, data, horario, turno, quantidade, alocacao, viatura, agente1, agente2, request.POST['cadastrador'])
 
                         return redirect('menu_recolhimento')
                     except ValueError:
@@ -494,7 +502,7 @@ def cadastrar_recolhimento(request, pk_alocacao):
                     try:
                         formulario = FormRecolhimento(request.POST)
                         viatura = None
-                        salvarrecolhimento(formulario, alocacao, viatura, agente1, agente2, request.POST['cadastrador'])
+                        salvar_recolhimento_total(formulario, data, horario, turno, quantidade, alocacao, viatura, agente1, agente2, request.POST['cadastrador'])
 
                         return redirect('menu_recolhimento')
                     except ValueError:
@@ -504,44 +512,296 @@ def cadastrar_recolhimento(request, pk_alocacao):
                                 }
                             )
 
-"""
-FUNÇÃO PARA A PERSISTÊNCIA DE UM RECOLHIMENTO NO BANCO DE DADOS
-"""
-def salvarrecolhimento(formulario, alocacao, viatura, agente1, agente2, cadastrador):
-    recolhimento = formulario.save(commit=False)
-    if viatura is not None:
-        recolhimento.viatura = viatura
-    recolhimento.alocacao = alocacao
-    recolhimento.cadastrador = get_object_or_404(User, pk=cadastrador)
-    recolhimento.save()
+#########################################################################
+#                                                                       #
+# FUNÇÃO PARA A PERSISTÊNCIA DE UM RECOLHIMENTO TOTAL NO BANCO DE DADOS #
+#                                                                       #
+#########################################################################
+def salvar_recolhimento_total(formulario, data, horario, turno, quantidade, alocacao, viatura, agente1, agente2, cadastrador):
+    recolhimento_existente = Recolhimento.objects.filter(alocacao_id=alocacao.id)
+
+    if recolhimento_existente:
+        recolhimento_existente = Recolhimento.objects.get(alocacao_id=alocacao.id)
+
+        data = mudarformato(data)
+        recolhimento_existente.data = data
+        recolhimento_existente.horario = horario
+        recolhimento_existente.turno = turno
+
+        alocacao = Alocacao.objects.get(id=alocacao.id)
+        alocacao.quantidade += recolhimento_existente.quantidade
+        alocacao.save()
+
+        recolhimento_existente.quantidade += quantidade
+        if viatura is not None:
+            recolhimento_existente.viatura = viatura
+        recolhimento_existente.alocacao = alocacao
+        recolhimento_existente.cadastrador = get_object_or_404(User, pk=cadastrador)
+
+        recolhimento_existente.save()
+
+        estoque = Estoque.objects.get(item=alocacao.item)
+        estoque.quantidade += quantidade
+        estoque.save()
+
+
+        agentes_recolhimento = RecolhimentoAgente.objects.filter(recolhimento_id=recolhimento_existente.id)
+        mudar_agentes(agentes_recolhimento, agente1, agente2, recolhimento_existente)
+    else:
+        recolhimento = formulario.save(commit=False)
+        if viatura is not None:
+            recolhimento.viatura = viatura
+        recolhimento.alocacao = alocacao
+        recolhimento.cadastrador = get_object_or_404(User, pk=cadastrador)
+        recolhimento.save()
+
+        estoque = Estoque.objects.get(item=alocacao.item)
+        estoque.quantidade += int(recolhimento.quantidade)
+        estoque.save()
+
+        alocacaoRecolhimento = AlocacaoRecolhimento()
+        alocacaoRecolhimento.recolhimento = recolhimento
+        alocacaoRecolhimento.save()
+
+        recolhimentoAgente = get_object_or_404(Recolhimento, pk=recolhimento.id)
+
+        agenteRecolhimento1 = RecolhimentoAgente()
+        agenteRecolhimento1.recolhimento = recolhimentoAgente
+        agenteRecolhimento1.agente = agente1
+        agenteRecolhimento1.save()
+
+        if agente2 != '-':
+            agente2 = get_object_or_404(Agente, pk=agente2)
+            agenteRecolhimento2 = RecolhimentoAgente()
+            agenteRecolhimento2.recolhimento = recolhimentoAgente
+            agenteRecolhimento2.agente = agente2
+            agenteRecolhimento2.save()
 
     alocacao = Alocacao.objects.get(id=alocacao.id)
     alocacao.status = 'Fechado'
     alocacao.save()
 
-    estoque = Estoque.objects.get(item=alocacao.item)
-    estoque.quantidade += int(recolhimento.quantidade)
-    estoque.save()
+#########################################
+#                                       #
+# CADASTRAMENTO PARCIAL DO RECOLHIMENTO #
+#                                       #
+#########################################
+def cadastrar_recolhimento_parcial(request, pk_alocacao):
+    alocacao = get_object_or_404(Alocacao, pk=pk_alocacao)
+    agentesalocacao = AlocacaoAgente.objects.filter(alocacao_id=alocacao.id)
+    agentes = Agente.objects.all().order_by('gritodeguerra')
+    viaturas = Viatura.objects.all().order_by('numero')
+    quantidade_max = alocacao.quantidade - 1
 
-    alocacaoRecolhimento = AlocacaoRecolhimento()
-    alocacaoRecolhimento.recolhimento = recolhimento
-    alocacaoRecolhimento.save()
+    if len(agentesalocacao) == 1:
+        agentesalocacao = ('{}' .format(agentesalocacao[0].agente.gritodeguerra))
+    else:
+        agentesalocacao = ('{} e {}' .format(agentesalocacao[0].agente.gritodeguerra, agentesalocacao[1].agente.gritodeguerra))
 
-    recolhimentoAgente = recolhimento.id
-    recolhimentoAgente = get_object_or_404(Recolhimento, pk=recolhimentoAgente)
+    if request.method == 'GET':
+        return render(request, 'management/cadastrar_recolhimento_parcial.html',
+                {'alocacao':alocacao, 'agentesalocacao':agentesalocacao, 'agentes':agentes, 'viaturas':viaturas, 'quantidade_max':quantidade_max}
+            )
+    else:
+        agente1 = request.POST['agente-1']
+        agente2 = request.POST['agente-2']
+        agente1 = get_object_or_404(Agente, pk=agente1) # Recebe o objeto 'Agente 1'
 
-    agenteRecolhimento1 = RecolhimentoAgente()
-    agenteRecolhimento1.recolhimento = recolhimentoAgente
-    agenteRecolhimento1.agente = agente1
-    agenteRecolhimento1.save()
+        data = request.POST['data']
+        horario = request.POST['horario']
+        turno = request.POST['turno']
+        quantidade = int(request.POST['quantidade']) # Recebe a quantidade do item informada
 
-    if agente2 != '-':
-        agente2 = get_object_or_404(Agente, pk=agente2)
-        agenteRecolhimento2 = RecolhimentoAgente()
-        agenteRecolhimento2.recolhimento = recolhimentoAgente
-        agenteRecolhimento2.agente = agente2
-        agenteRecolhimento2.save()
+        data = mudarformato(data)
 
+        if 'viaturaId' in request.POST:
+            try:
+                formulario = FormRecolhimento(request.POST)
+
+                if request.POST['viaturaId'] != '-':
+                    viatura = get_object_or_404(Viatura, pk=request.POST['viaturaId'])
+                else:
+                    viatura = None
+
+                salvar_recolhimento_parcial(data, horario, turno, alocacao, quantidade, viatura, agente1, agente2, request.POST['cadastrador'])
+
+                return redirect('menu_recolhimento')
+            except ValueError:
+                return render(request, 'management/cadastrar_recolhimento_parcial.html',
+                        {'alocacao':alocacao, 'agentesalocacao':agentesalocacao,\
+                         'agentes':agentes, 'viaturas':viaturas, 'quantidade_max':quantidade_max, 'erro':'Não foi possível cadastrar o recolhimento'}
+                    )
+        elif 'viaturaNumero' in request.POST:
+            try:
+                formulario = FormRecolhimento(request.POST)
+
+                if request.POST['viaturaNumero'] is None:
+                    viatura = None
+                else:
+                    viatura = Viatura.objects.filter(numero=request.POST['viaturaNumero'])
+
+                    if viatura:
+                        viatura = Viatura.objects.get(numero=request.POST['viaturaNumero'])
+                    else:
+                        return render(request, 'management/cadastrar_recolhimento_parcial.html',
+                                {'alocacao':alocacao, 'agentesalocacao':agentesalocacao,\
+                                 'agentes':agentes, 'viaturas':viaturas, 'quantidade_max':quantidade_max, 'erroViatura':'Viatura inexistente'}
+                            )
+
+                salvar_recolhimento_parcial(data, horario, turno, alocacao, quantidade, viatura, agente1, agente2, request.POST['cadastrador'])
+
+                return redirect('menu_recolhimento')
+            except ValueError:
+                return render(request, 'management/cadastrar_recolhimento_parcial.html',
+                        {'formulario':FormRecolhimento(), 'alocacao':alocacao, 'agentesalocacao':agentesalocacao,\
+                         'agentes':agentes, 'viaturas':viaturas, 'quantidade_max':quantidade_max, 'erro':'Não foi possível cadastrar o recolhimento'}
+                    )
+
+###########################################################################
+#                                                                         #
+# FUNÇÃO PARA A PERSISTÊNCIA DE UM RECOLHIMENTO PARCIAL NO BANCO DE DADOS #
+#                                                                         #
+###########################################################################
+def salvar_recolhimento_parcial(data, horario, turno, alocacao, quantidade, viatura, agente1, agente2, cadastrador):
+    recolhimento_existente = Recolhimento.objects.filter(alocacao_id=alocacao.id)
+
+    if recolhimento_existente:
+        recolhimento_existente = Recolhimento.objects.get(alocacao_id=alocacao.id)
+
+        recolhimento_existente.data = data
+        recolhimento_existente.horario = horario
+        recolhimento_existente.turno = turno
+        recolhimento_existente.quantidade += quantidade
+
+        if viatura is not None:
+            recolhimento_existente.viatura = viatura
+        recolhimento_existente.cadastrador = get_object_or_404(User, pk=cadastrador)
+        recolhimento_existente.save()
+
+        alocacao = Alocacao.objects.get(id=alocacao.id)
+        alocacao.quantidade -= quantidade
+        alocacao.save()
+
+        estoque = Estoque.objects.get(item=alocacao.item)
+        estoque.quantidade += quantidade
+        estoque.save()
+
+        agentes_recolhimento = RecolhimentoAgente.objects.filter(recolhimento_id=recolhimento_existente.id)
+
+        mudar_agentes(agentes_recolhimento, agente1, agente2, recolhimento_existente)
+
+    else:
+        recolhimento = Recolhimento()
+
+        recolhimento.data = data
+        recolhimento.horario = horario
+        recolhimento.turno = turno
+        recolhimento.quantidade = quantidade
+
+        if viatura is not None:
+            recolhimento.viatura = viatura
+        recolhimento.alocacao = alocacao
+        recolhimento.cadastrador = get_object_or_404(User, pk=cadastrador)
+        recolhimento.save()
+
+        alocacao = Alocacao.objects.get(id=alocacao.id)
+        alocacao.quantidade -= recolhimento.quantidade
+        alocacao.save()
+
+        estoque = Estoque.objects.get(item=alocacao.item)
+        estoque.quantidade += int(recolhimento.quantidade)
+        estoque.save()
+
+        alocacaoRecolhimento = AlocacaoRecolhimento()
+        alocacaoRecolhimento.recolhimento = recolhimento
+        alocacaoRecolhimento.save()
+
+        recolhimentoAgente = get_object_or_404(Recolhimento, pk=recolhimento.id)
+
+        agenteRecolhimento1 = RecolhimentoAgente()
+        agenteRecolhimento1.recolhimento = recolhimentoAgente
+        agenteRecolhimento1.agente = agente1
+        agenteRecolhimento1.save()
+
+        if agente2 != '-':
+            agente2 = get_object_or_404(Agente, pk=agente2)
+            agenteRecolhimento2 = RecolhimentoAgente()
+            agenteRecolhimento2.recolhimento = recolhimentoAgente
+            agenteRecolhimento2.agente = agente2
+            agenteRecolhimento2.save()
+
+###############################################################################################
+#                                                                                             #
+# FUNÇÃO QUE VERIFICA SE EXISTE A NECESSIDADE DE MUDAR O AGENTE CADASTRADO EM UM RECOLHIMENTO #
+#                                                                                             #
+###############################################################################################
+def mudar_agentes(agentes_recolhimento, agente1, agente2, recolhimento_existente):
+    if len(agentes_recolhimento) == 1:
+        excluir_agente1 = True
+        if agente2 != '-':
+            if agentes_recolhimento[0].agente.id == agente1.id:
+                excluir_agente1 = False
+            elif agentes_recolhimento[0].agente.id == int(agente2):
+                excluir_agente1 = False
+        else:
+            if agentes_recolhimento[0].agente.id == agente1.id:
+                excluir_agente1 = False
+
+        if excluir_agente1 == True:
+            agente_existente = RecolhimentoAgente.objects.get(agente_id=agentes_recolhimento[0].agente.id, recolhimento_id=recolhimento_existente.id)
+            agente_existente.delete()
+
+            agente_novo = RecolhimentoAgente()
+            agente_novo.recolhimento = recolhimento_existente
+            agente_novo.agente = agente1
+            agente_novo.save()
+
+    elif len(agentes_recolhimento) > 1:
+        excluir_agente1 = True
+        excluir_agente2 = True
+
+        if agente2 != '-':
+            if agentes_recolhimento[0].agente.id == agente1.id:
+                excluir_agente1 = False
+            elif agentes_recolhimento[0].agente.id == int(agente2):
+                excluir_agente1 = False
+
+            if agentes_recolhimento[1].agente.id == agente1.id:
+                excluir_agente1 = False
+            elif agentes_recolhimento[1].agente.id == int(agente2):
+                excluir_agente1 = False
+        else:
+            if agentes_recolhimento[0].agente.id == agente1.id:
+                excluir_agente1 = False
+            elif agentes_recolhimento[1].agente.id == agente1.id:
+                excluir_agente2 = False
+
+        if excluir_agente1 == True:
+            agente_existente = RecolhimentoAgente.objects.get(agente_id=agentes_recolhimento[0].agente.id, recolhimento_id=recolhimento_existente.id)
+            agente_existente.delete()
+
+            agente_novo = RecolhimentoAgente()
+            agente_novo.recolhimento = recolhimento_existente
+            agente_novo.agente = agente1
+            agente_novo.save()
+
+        if excluir_agente2 == True:
+            agente_existente = RecolhimentoAgente.objects.get(agente_id=agentes_recolhimento[1].agente.id, recolhimento_id=recolhimento_existente.id)
+            agente_existente.delete()
+
+            if agente2 != '-':
+                agente2 = get_object_or_404(Agente, pk=agente2)
+
+                agente_novo = RecolhimentoAgente()
+                agente_novo.recolhimento = recolhimento_existente
+                agente_novo.agente = agente2
+                agente_novo.save()
+
+############################
+#                          #
+# DETALHES DO RECOLHIMENTO #
+#                          #
+############################
 def detalhe_recolhimento(request, pk_recolhimento):
     recolhimento = get_object_or_404(Recolhimento, pk=pk_recolhimento)
     agenterecolhimento = RecolhimentoAgente.objects.filter(recolhimento_id=recolhimento.id)

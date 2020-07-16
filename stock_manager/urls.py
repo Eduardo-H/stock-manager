@@ -24,9 +24,10 @@ urlpatterns = [
     path('alocacao/<int:pk_alocacao>/detalhes/', views.detalhe_alocacao, name='detalhe_alocacao'),
     path('alocacao/<int:pk_alocacao>/editar/', views.editar_alocacao, name='editar_alocacao'),
     path('alocacao/procurar-por-tipo/', views.procurar_por_tipo_alocacao, name='procurar_por_tipo_alocacao'),
-    path('alocacao/alocacoes-em-aberto', views.alocacoes_abertas, name='alocacoes_abertas'),
+    path('alocacao/alocacoes-em-aberto/', views.alocacoes_abertas, name='alocacoes_abertas'),
     path('recolhimento/', views.menu_recolhimento, name='menu_recolhimento'),
     path('recolhimento/<int:pk_alocacao>/cadastar/', views.cadastrar_recolhimento, name='cadastrar_recolhimento'),
+    path('recolhimento/<int:pk_alocacao>/cadastar-parcial/', views.cadastrar_recolhimento_parcial, name='cadastrar_recolhimento_parcial'),
     path('recolhimento/<int:pk_recolhimento>/detalhes/', views.detalhe_recolhimento, name='detalhe_recolhimento'),
     path('recolhimento/procurar-por-tipo/', views.procurar_por_tipo_recolhimento, name='procurar_por_tipo_recolhimento'),
     path('agente/', views.menu_agente, name='menu_agente'),
@@ -41,8 +42,8 @@ urlpatterns = [
     path('estoque/cadastrar-item/', views.cadastrar_item, name='cadastrar_item'),
     path('estoque/itens-perdidos-extraviados/', views.menu_item_perdido, name='menu_item_perdido'),
     path('estoque/itens-perdidos-extraviados/<int:pk_perda_extravio>/detalhes', views.detalhe_item_perdido, name='detalhe_item_perdido'),
-    path('estoque/itens-perdidos-extraviados/total-perdido-extraviado', views.total_item_perdido, name='total_item_perdido'),
-    path('estoque/itens-perdidos-extraviados/<int:pk_alocacao>/cadastrar', views.cadastrar_item_perdido, name='cadastrar_item_perdido'),
+    path('estoque/itens-perdidos-extraviados/total-perdido-extraviado/', views.total_item_perdido, name='total_item_perdido'),
+    path('estoque/itens-perdidos-extraviados/<int:pk_alocacao>/cadastrar/', views.cadastrar_item_perdido, name='cadastrar_item_perdido'),
 
     path('admin/', admin.site.urls),
 ]
