@@ -1,21 +1,50 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from .models import *
 from .forms import *
 import datetime
 
+##################
+# LOGIN E SINGIN #
+##################
+def login_usuario(request):
+    if request.method == 'GET':
+        return render(request, 'management/login.html', {'formulario':AuthenticationForm()})
+    else:
+        user = authenticate(
+            request, username=request.POST['username'], password=request.POST['password'])
+        if user is None:
+            return render(request, 'management/login.html', {'formulario': AuthenticationForm(), 'erro': 'Usuário ou senha incorreta'})
+        else:
+            login(request, user)
+            return redirect('home')
+
+@login_required
+def logout_usuario(request):
+    if request.method == 'POST':
+        logout(request)
+        return redirect('home')
+
 def home(request):
-    alocacoesrecolhimentos = AlocacaoRecolhimento.objects.all().order_by('-id')[:50]
-    return render(request, 'management/home.html', {'alocacoesrecolhimentos':alocacoesrecolhimentos})
+    if request.user.is_authenticated:
+        alocacoesrecolhimentos = AlocacaoRecolhimento.objects.all().order_by('-id')[:50]
+        return render(request, 'management/home.html', {'alocacoesrecolhimentos':alocacoesrecolhimentos})
+    else:
+        return redirect('login_usuario')
 
 #############
 # ALOCAÇÕES #
 #############
+@login_required
 def menu_alocacao(request):
     alocacoes = Alocacao.objects.all().order_by('-id')
     return render(request, 'management/menu_alocacao.html', {'alocacoes':alocacoes})
 
+@login_required
 def criar_alocacao(request):
     itens = Item.objects.all()
     viaturas = Viatura.objects.all().order_by('numero')
@@ -121,6 +150,7 @@ def salvaralocacao(formulario, viatura, agente1, agente2, cadastrador):
         agenteAlocacao2.agente = agente2
         agenteAlocacao2.save()
 
+@login_required
 def detalhe_alocacao(request, pk_alocacao):
     alocacao = get_object_or_404(Alocacao, pk=pk_alocacao)
     agentes = AlocacaoAgente.objects.filter(alocacao_id=pk_alocacao)
@@ -147,6 +177,7 @@ def detalhe_alocacao(request, pk_alocacao):
         except ValueError:
             return render(request, 'management/detalhe_alocacao.html', {'alocacao':alocacao, 'agentes':agentes, 'erro':'Não foi possível desativar a alocação'})
 
+@login_required
 def editar_alocacao(request, pk_alocacao):
     alocacao = get_object_or_404(Alocacao, pk=pk_alocacao)
     if request.method == 'GET':
@@ -280,6 +311,7 @@ def salvar_edicao(rua, numero, bairro):
                 'agentes':agentes, 'erro':'Não foi possível editar a alocação'}
             )
 
+@login_required
 def alocacoes_abertas(request):
     lista_alocacoes = Alocacao.objects.filter(status='Aberto')
     paginator = Paginator(lista_alocacoes, 6)
@@ -295,6 +327,7 @@ def alocacoes_abertas(request):
 
     return render(request, 'management/alocacoes_abertas.html', {'alocacoes':alocacoes})
 
+@login_required
 def procurar_por_tipo_alocacao(request):
     if 'pesquisa' in request.GET:
         tipo = request.GET.get('pesquisa')
@@ -374,10 +407,12 @@ def mudarformato(valor):
 # RECOLHIMENTOS #
 #################
 
+@login_required
 def menu_recolhimento(request):
     recolhimentos = Recolhimento.objects.all().order_by('-id')
     return render(request, 'management/menu_recolhimento.html', {'recolhimentos':recolhimentos})
 
+@login_required
 def cadastrar_recolhimento(request, pk_alocacao):
     alocacao = get_object_or_404(Alocacao, pk=pk_alocacao)
     agentealocacao = AlocacaoAgente.objects.filter(alocacao_id=pk_alocacao) # Busca o(s) agente(s) relacionado(s) à alocação
@@ -586,6 +621,7 @@ def salvar_recolhimento_total(formulario, data, horario, turno, quantidade, aloc
 # CADASTRAMENTO PARCIAL DO RECOLHIMENTO #
 #                                       #
 #########################################
+@login_required
 def cadastrar_recolhimento_parcial(request, pk_alocacao):
     alocacao = get_object_or_404(Alocacao, pk=pk_alocacao)
     agentesalocacao = AlocacaoAgente.objects.filter(alocacao_id=alocacao.id)
@@ -802,6 +838,7 @@ def mudar_agentes(agentes_recolhimento, agente1, agente2, recolhimento_existente
 # DETALHES DO RECOLHIMENTO #
 #                          #
 ############################
+@login_required
 def detalhe_recolhimento(request, pk_recolhimento):
     recolhimento = get_object_or_404(Recolhimento, pk=pk_recolhimento)
     agenterecolhimento = RecolhimentoAgente.objects.filter(recolhimento_id=recolhimento.id)
@@ -842,7 +879,7 @@ def detalhe_recolhimento(request, pk_recolhimento):
                     {'recolhimento':recolhimento, 'agente_recolhimento_1':agente_recolhimento_1, 'agentealocacao':agentes, 'perdas':total}
                 )
 
-
+@login_required
 def procurar_por_tipo_recolhimento(request):
     if 'pesquisa' in request.GET:
         tipo = request.GET.get('pesquisa')
@@ -908,10 +945,12 @@ def procurar_por_tipo_recolhimento(request):
 ###########
 # AGENTES #
 ###########
+@login_required
 def menu_agente(request):
     agentes = Agente.objects.all()
     return render(request, 'management/menu_agente.html', {'agentes':agentes})
 
+@login_required
 def cadastrar_agente(request):
     if request.method == 'GET':
         agente = Agente()
@@ -924,6 +963,7 @@ def cadastrar_agente(request):
         except ValueError:
             return render(request, 'management/cadastrar_agente.html', {'formulario':FormAgente(), 'erro':'Não foi possível cadastrar o agente'})
 
+@login_required
 def detalhe_agente(request, pk_agente):
     agente = get_object_or_404(Agente, pk=pk_agente)
     alocacoes = AlocacaoAgente.objects.filter(agente_id=agente.id)
@@ -940,6 +980,7 @@ def detalhe_agente(request, pk_agente):
                 {'agente':agente, 'alocacoes':alocacoes, 'recolhimentos':recolhimentos, 'erro':'Não foi possível deletar este agente'}
             )
 
+@login_required
 def editar_agente(request, pk_agente):
     agente = get_object_or_404(Agente, pk=pk_agente)
     if request.method == 'GET':
@@ -955,6 +996,7 @@ def editar_agente(request, pk_agente):
                 {'agente':agente, 'formulario':formulario, 'erro':'Não foi possível editar o agente'}
             )
 
+@login_required
 def procurar_agente(request):
     if 'procura_agente' in request.GET:
         agentes = Agente.objects.filter(gritodeguerra__contains=request.GET.get('procura_agente'))
@@ -970,6 +1012,7 @@ def procurar_agente(request):
 ############
 # VIATURAS #
 ############
+@login_required
 def menu_viatura(request):
     viaturas = Viatura.objects.all()
     if request.method == 'GET':
@@ -992,6 +1035,7 @@ def menu_viatura(request):
             except ValueError:
                 return render(request, 'management/menu_viatura.html', {'viaturas':viaturas, 'erro':'Não foi possível editar a viatura'})
 
+@login_required
 def cadastrar_viatura(request):
     if request.method == 'GET':
         return render(request, 'management/cadastrar_viatura.html', {'formulario':FormViatura()})
@@ -1019,6 +1063,7 @@ def cadastrar_viatura(request):
 ###########
 # ESTOQUE #
 ###########
+@login_required
 def menu_estoque(request):
     itensestoque = Estoque.objects.all()
     itensperdidoextraviado = ItemPerdidoExtraviado.objects.all()
@@ -1026,7 +1071,6 @@ def menu_estoque(request):
     for item in itensperdidoextraviado:
         total_perdido_extraviado += int(item.quantidade)
 
-    print(total_perdido_extraviado)
     if request.method == 'GET':
         return render(request, 'management/menu_estoque.html', {'itensestoque':itensestoque, 'totalperdido':total_perdido_extraviado})
     else:
@@ -1068,6 +1112,7 @@ def menu_estoque(request):
                     {'itensestoque':itensestoque, 'itensperdidoextraviado':itensperdidoextraviado, 'erro':'Não foi possível editar o item'}
                 )
 
+@login_required
 def adicionar_estoque(request):
     itens = Item.objects.all()
     if request.method == 'GET':
@@ -1083,6 +1128,7 @@ def adicionar_estoque(request):
         except ValueError:
             return render(request, 'management/adicionar_estoque.html', {'itens':itens, 'erro':'Não foi possível adicionar ao estoque'})
 
+@login_required
 def cadastrar_item(request):
     if request.method == 'GET':
         return render(request, 'management/cadastrar_item.html', {'formulario':FormItem()})
@@ -1101,11 +1147,13 @@ def cadastrar_item(request):
         except ValueError:
             return render(request, 'management/cadastrar_item.html', {'formulario':FormItem(), 'erro':'Não foi possível adicionar o item'})
 
+@login_required
 def menu_item_perdido(request):
     itensperdidos = ItemPerdidoExtraviado.objects.all().order_by('-id')
     alocacoes = Alocacao.objects.filter(status='Aberto')
     return render(request, 'management/menu_item_perdido.html', {'itensperdidos':itensperdidos, 'alocacoes':alocacoes})
 
+@login_required
 def detalhe_item_perdido(request, pk_perda_extravio):
     perda_extravio = get_object_or_404(ItemPerdidoExtraviado, pk=pk_perda_extravio)
     if request.method == 'GET':
@@ -1124,6 +1172,7 @@ def detalhe_item_perdido(request, pk_perda_extravio):
         except ValueError:
             return render(request, 'management/detalhe_item_perdido.html', {'perda_extravio':perda_extravio, 'erro':'Não foi possível salvar a recuperção do item'})
 
+@login_required
 def total_item_perdido(request):
     lista_item = list()
     tamanho = Item.objects.all()
@@ -1155,6 +1204,7 @@ class ItemQuantidade:
         self.nome = nome
         self.quantidade = quantidade
 
+@login_required
 def cadastrar_item_perdido(request, pk_alocacao):
     alocacao = get_object_or_404(Alocacao, pk=pk_alocacao)
     if request.method == 'GET':

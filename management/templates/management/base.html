@@ -68,9 +68,9 @@
             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false">OLÁ, <span style="text-transform: uppercase;">{{ user.username }}</span></a>
             <div class="dropdown-menu">
               <a href="#" class="dropdown-item">CONFIGURAÇÕES</a>
-              <form  method="POST">
+              <form action="{% url 'logout_usuario' %}" method="POST">
                 {% csrf_token %}
-                <a type="submit" class="dropdown-item" id="sair-button">SAIR</a>
+                <button type="submit" class="dropdown-item" id="sair-button">SAIR</button>
               </form>
             </div>
           </li>
