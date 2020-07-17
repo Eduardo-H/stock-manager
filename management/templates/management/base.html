@@ -67,7 +67,7 @@
           <li class="nav-item dropdown ml-4 mr-5">
             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false">OLÁ, <span style="text-transform: uppercase;">{{ user.username }}</span></a>
             <div class="dropdown-menu">
-              <a href="#" class="dropdown-item">CONFIGURAÇÕES</a>
+              <a href="{% url 'configuracoes' %}" class="dropdown-item">CONFIGURAÇÕES</a>
               <form action="{% url 'logout_usuario' %}" method="POST">
                 {% csrf_token %}
                 <button type="submit" class="dropdown-item" id="sair-button">SAIR</button>

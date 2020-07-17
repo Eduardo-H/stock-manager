@@ -21,6 +21,7 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('login/', views.login_usuario, name='login_usuario'),
     path('logout/', views.logout_usuario, name='logout_usuario'),
+    path('configuracoes/', views.configuracoes, name='configuracoes'),
     path('alocacao/', views.menu_alocacao, name='menu_alocacao'),
     path('alocacao/criar-alocacao/', views.criar_alocacao, name='criar_alocacao'),
     path('alocacao/<int:pk_alocacao>/detalhes/', views.detalhe_alocacao, name='detalhe_alocacao'),

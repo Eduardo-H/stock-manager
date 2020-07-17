@@ -3,6 +3,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from django.db import IntegrityError
 from django.core.paginator import Paginator
 from .models import *
 from .forms import *
@@ -35,6 +36,24 @@ def home(request):
         return render(request, 'management/home.html', {'alocacoesrecolhimentos':alocacoesrecolhimentos})
     else:
         return redirect('login_usuario')
+
+#################
+# CONFIGURAÇÕES #
+#################
+def configuracoes(request):
+    if request.method == 'GET':
+        return render(request, 'management/configuracoes.html')
+    else:
+        if 'usuario' in request.POST:
+            if request.POST['password1'] == request.POST['password2']:
+                try:
+                    usuario = User.objects.create_user(request.POST['usuario'], password=request.POST['password1'])
+                    usuario.save()
+                    return render(request, 'management/configuracoes.html', {'mensagem':'Usuário cadastrado com sucesso'})
+                except IntegrityError:
+                    return render(request, 'management/configuracoes.html', {'mensagem_erro':'Não foi possível cadastrar o usuário'})
+            else:
+                return render(request, 'management/configuracoes.html', {'mensagem_erro':'As duas senhas devem ser iguais'})
 
 #############
 # ALOCAÇÕES #
