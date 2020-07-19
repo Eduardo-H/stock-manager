@@ -1,0 +1,128 @@
+body {
+  font-family: 'Roboto', Arial;
+}
+/*--------------*/
+/* Scroll Bars */
+/*-------------*/
+body::-webkit-scrollbar {
+  width: 10px;
+}
+
+body::-webkit-scrollbar-track {
+  background: #343a40;
+}
+
+body::-webkit-scrollbar-thumb {
+  background: #bdbdbd;
+  border-radius: 40px;
+}
+
+#viatura::-webkit-scrollbar,
+#select-agente-1::-webkit-scrollbar,
+#select-agente-2::-webkit-scrollbar {
+  width: 5px;
+}
+
+#viatura::-webkit-scrollbar-track,
+#select-agente-1::-webkit-scrollbar-track,
+#select-agente-2::-webkit-scrollbar-track {
+  background: #4F4F4F;
+  border-radius: 40px;
+}
+
+#viatura::-webkit-scrollbar-thumb,
+#select-agente-1::-webkit-scrollbar-thumb,
+#select-agente-2::-webkit-scrollbar-thumb {
+  background: #bdbdbd;
+  border-radius: 40px;
+}
+
+#tabela-colaboracao {
+  height: 500px;
+  overflow: auto;
+}
+
+#tabela-colaboracao::-webkit-scrollbar {
+  width: 10px;
+}
+
+#tabela-colaboracao::-webkit-scrollbar-track {
+  background: #343a40;
+  border-top-right-radius: 40px;
+  border-bottom-right-radius: 40px;
+  border-bottom-left-radius: 40px;
+}
+
+#tabela-colaboracao::-webkit-scrollbar-thumb {
+  background: #bdbdbd;
+  border-radius: 40px;
+}
+
+#tabela-item-perdido {
+  height: 600px;
+  overflow: auto;
+}
+
+#tabela-item-perdido::-webkit-scrollbar{
+  width: 10px;
+}
+
+#tabela-item-perdido::-webkit-scrollbar-track {
+  background: #343a40;
+  border-top-right-radius: 40px;
+  border-bottom-right-radius: 40px;
+  border-bottom-left-radius: 40px;
+}
+
+#tabela-item-perdido::-webkit-scrollbar-thumb {
+  background: #bdbdbd;
+  border-radius: 40px;
+}
+
+
+/*-----------------*/
+/* Demais estilos */
+/*---------------*/
+#icon {
+  transition: 0.3s;
+}
+
+#icon:hover {
+  color: #797979;
+}
+
+#add-agent {
+  margin-right: 15%;
+  decoration: none;
+  color: #333;
+  transition: 0.2s;
+}
+
+#add-agent-recolhimento {
+  margin-right: 18%;
+  decoration: none;
+  color: #333;
+  transition: 0.2s;
+}
+
+#select-option:hover {
+  background: #248eff;
+  color: #fff;
+}
+
+#my-modal {
+  top: 30%;
+}
+
+#paginador {
+  position: fixed;
+  top: 92%;
+}
+
+#input-pesquisa {
+  border-top-left-radius: 3px !important;
+}
+
+#btn-pesquisa {
+  border-top-right-radius: 3px !important;
+}

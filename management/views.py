@@ -42,6 +42,7 @@ def home(request):
 #################
 def configuracoes(request):
     if request.method == 'GET':
+        print(request.user.id)
         return render(request, 'management/configuracoes.html')
     else:
         if 'usuario' in request.POST:
@@ -54,7 +55,22 @@ def configuracoes(request):
                     return render(request, 'management/configuracoes.html', {'mensagem_erro':'Não foi possível cadastrar o usuário'})
             else:
                 return render(request, 'management/configuracoes.html', {'mensagem_erro':'As duas senhas devem ser iguais'})
+        elif 'senha-atual' in request.POST:
+            usuario = User.objects.get(id=request.user.id)
+            senha_igual = usuario.check_password(request.POST['senha-atual'])
 
+            if senha_igual == True:
+                if request.POST['password1'] == request.POST['password2']:
+                    try:
+                        usuario.set_password(request.POST['password1'])
+                        usuario.save()
+                        return redirect('login_usuario')
+                    except IntegrityError:
+                        return render(request, 'management/configuracoes.html', {'mensagem_erro':'Não foi possível atualizar a senha'})
+                else:
+                    return render(request, 'management/configuracoes.html', {'mensagem_erro':'As duas senhas devem ser iguais'})
+            else:
+                return render(request, 'management/configuracoes.html', {'mensagem_erro':'Senha atual informada não válida'})
 #############
 # ALOCAÇÕES #
 #############
