@@ -4,7 +4,7 @@ from datetime import date
 
 class Viatura(models.Model):
     numero = models.IntegerField()
-    placa = models.CharField(max_length=7)
+    placa = models.CharField(max_length=7, blank=True, default='-')
 
     def __str__(self):
         return str(self.numero)
@@ -22,7 +22,7 @@ class Agente(models.Model):
     )
 
     nome = models.CharField(max_length=200)
-    datanascimento = models.DateField()
+    datanascimento = models.DateField(blank=True, null=True)
     sexo = models.CharField(max_length=10, choices=SEXO_CHOICES)
     gritodeguerra = models.CharField(max_length=50)
 

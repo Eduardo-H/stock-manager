@@ -31,12 +31,7 @@ class FormItem(ModelForm):
 class FormAgente(ModelForm):
     class Meta:
         model = Agente
-        fields = ['nome', 'datanascimento', 'sexo', 'gritodeguerra']
-
-    datanascimento = forms.DateField(
-        widget=forms.DateInput(format='%d/%m/%Y'),
-        input_formats=('%d/%m/%Y', )
-    )
+        fields = ['nome', 'sexo', 'gritodeguerra']
 
 class FormViatura(ModelForm):
     class Meta:

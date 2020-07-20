@@ -29,12 +29,12 @@
             <div class="form-group">
               <label for="placa">Placa (Sem simbolos)</label>
               {% if erroPlaca %}
-                <input type="text" class="form-control is-invalid" id="placa" name="placa" placeholder="Digite a placa da viatura" required>
+                <input type="text" class="form-control is-invalid" id="placa" name="placa" placeholder="Digite a placa da viatura" >
                 <div class="invalid-feedback">
                   {{ erroPlaca }}
                 </div>
               {% else %}
-                <input type="text" class="form-control" id="placa" name="placa" placeholder="Digite a placa da viatura" required>
+                <input type="text" class="form-control" id="placa" name="placa" placeholder="Digite a placa da viatura">
               {% endif %}
             </div>
 

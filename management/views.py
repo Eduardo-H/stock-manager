@@ -991,9 +991,14 @@ def cadastrar_agente(request):
         agente = Agente()
         return render(request, 'management/cadastrar_agente.html', {'formulario':FormAgente(), 'agente':agente})
     else:
+        data = request.POST['datanascimento']
         try:
             formulario = FormAgente(request.POST)
-            formulario.save()
+            agente = formulario.save(commit=False)
+            if len(data) > 7:
+                data = mudarformato(data)
+                agente.datanascimento = data
+            agente.save()
             return redirect('menu_agente')
         except ValueError:
             return render(request, 'management/cadastrar_agente.html', {'formulario':FormAgente(), 'erro':'Não foi possível cadastrar o agente'})
@@ -1090,8 +1095,15 @@ def cadastrar_viatura(request):
                         return render(request, 'management/cadastrar_viatura.html', {'formulario':FormViatura(), 'erro':'Não foi possível cadastrar a viatura'})
                 else:
                     return render(request, 'management/cadastrar_viatura.html', {'formulario':FormViatura(), 'erroPlaca':'Essa placa já foi cadastrada'})
-            else:
+            elif len(placa) > 0:
                 return render(request, 'management/cadastrar_viatura.html', {'formulario':FormViatura(), 'erroPlaca':'A placa deve ter 7 caracteres, sem simbolos'})
+            else:
+                try:
+                    formulario = FormViatura(request.POST)
+                    formulario.save()
+                    return redirect('menu_viatura')
+                except ValueError:
+                    return render(request, 'management/cadastrar_viatura.html', {'formulario':FormViatura(), 'erro':'Não foi possível cadastrar a viatura'})
         else:
             return render(request, 'management/cadastrar_viatura.html', {'formulario':FormViatura(), 'erroNumero':'Viatura existente com este número'})
 
