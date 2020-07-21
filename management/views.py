@@ -450,10 +450,15 @@ def menu_recolhimento(request):
 @login_required
 def cadastrar_recolhimento(request, pk_alocacao):
     alocacao = get_object_or_404(Alocacao, pk=pk_alocacao)
-    agentealocacao = AlocacaoAgente.objects.filter(alocacao_id=pk_alocacao) # Busca o(s) agente(s) relacionado(s) à alocação
+    agentes_alocacao = AlocacaoAgente.objects.filter(alocacao_id=pk_alocacao) # Busca o(s) agente(s) relacionado(s) à alocação
     agentes = Agente.objects.all().order_by('gritodeguerra') # Busca os agentes cadastrados no sistema
     viaturas = Viatura.objects.all().order_by('numero')
     quantidadeperdida = ItemPerdidoExtraviado.objects.filter(alocacao_id=alocacao.id) # Buscando os cadastros de perda/extravio com o ID da alocação
+
+    if len(agentes_alocacao) > 1:
+        agentes_alocacao = ('{} e {}' .format(agentes_alocacao[0].agente.gritodeguerra, agentes_alocacao[1].agente.gritodeguerra))
+    else:
+        agentes_alocacao = ('{}' .format(agentes_alocacao[0].agente.gritodeguerra))
 
     if request.method == 'GET':
         if quantidadeperdida: # Se tiver algum resultado de itens perdidos/extraviados
@@ -463,11 +468,11 @@ def cadastrar_recolhimento(request, pk_alocacao):
 
             nova_quantidade = alocacao.quantidade - numero
             return render(request, 'management/cadastrar_recolhimento.html',
-                    {'formulario':FormRecolhimento(), 'alocacao':alocacao, 'agentes':agentes, 'agentealocacao':agentealocacao, 'viaturas':viaturas, 'quantidadeperdida':nova_quantidade}
+                    {'formulario':FormRecolhimento(), 'alocacao':alocacao, 'agentes':agentes, 'agentes_alocacao':agentes_alocacao, 'viaturas':viaturas, 'quantidadeperdida':nova_quantidade}
                 )
         else:
             return render(request, 'management/cadastrar_recolhimento.html',
-                    {'formulario':FormRecolhimento(), 'alocacao':alocacao, 'agentes':agentes, 'agentealocacao':agentealocacao, 'viaturas':viaturas}
+                    {'formulario':FormRecolhimento(), 'alocacao':alocacao, 'agentes':agentes, 'agentes_alocacao':agentes_alocacao, 'viaturas':viaturas}
                 )
     else:
         # Se o formulário enviado foi o de itens perdidos/extraviados
@@ -491,7 +496,7 @@ def cadastrar_recolhimento(request, pk_alocacao):
             perda.save()
 
             return render(request, 'management/cadastrar_recolhimento.html',
-                    {'formulario':FormRecolhimento(), 'alocacao':alocacao, 'agentes':agentes, 'agentealocacao':agentealocacao, 'viaturas':viaturas, 'novaquantidade':nova_quantidade}
+                    {'formulario':FormRecolhimento(), 'alocacao':alocacao, 'agentes':agentes, 'agentes_alocacao':agentes_alocacao, 'viaturas':viaturas, 'novaquantidade':nova_quantidade}
                 )
         # Se o formulário enviado foi o de cadastração de recolhimento
         else:
@@ -514,7 +519,7 @@ def cadastrar_recolhimento(request, pk_alocacao):
                 if int(quantidade) < total:
                     return render(request, 'management/cadastrar_recolhimento.html',
                             {'formulario':FormRecolhimento(), 'alocacao':alocacao, 'agentes':agentes, \
-                                'agentealocacao':agentealocacao, 'viaturas':viaturas, 'erroNumero':'Valor incorreto, se necessário, cadastre uma perda/extravio'
+                                'agentes_alocacao':agentes_alocacao, 'viaturas':viaturas, 'erroNumero':'Valor incorreto, se necessário, cadastre uma perda/extravio'
                             }
                         )
             # Se não houver, verifica se a quantidade digitada é igual a disponível para cadastrar
@@ -522,7 +527,7 @@ def cadastrar_recolhimento(request, pk_alocacao):
                 if int(quantidade) < alocacao.quantidade:
                     return render(request, 'management/cadastrar_recolhimento.html',
                             {'formulario':FormRecolhimento(), 'alocacao':alocacao, 'agentes':agentes, \
-                                'agentealocacao':agentealocacao, 'viaturas':viaturas, 'erroNumero':'Valor incorreto, se necessário, cadastre uma perda/extravio'
+                                'agentes_alocacao':agentes_alocacao, 'viaturas':viaturas, 'erroNumero':'Valor incorreto, se necessário, cadastre uma perda/extravio'
                             }
                         )
 
@@ -538,7 +543,7 @@ def cadastrar_recolhimento(request, pk_alocacao):
                         except ValueError:
                             return render(request, 'management/cadastrar_recolhimento.html',
                                     {'formulario':FormRecolhimento(), 'alocacao':alocacao, 'agentes':agentes, \
-                                        'agentealocacao':agentealocacao, 'viaturas':viaturas, 'erro':'Não foi possível cadastrar o recolhimento'
+                                        'agentes_alocacao':agentes_alocacao, 'viaturas':viaturas, 'erro':'Não foi possível cadastrar o recolhimento'
                                     }
                                 )
                 elif request.POST['viaturaId'] == '-':
@@ -551,7 +556,7 @@ def cadastrar_recolhimento(request, pk_alocacao):
                     except ValueError:
                         return render(request, 'management/cadastrar_recolhimento.html',
                                 {'formulario':FormRecolhimento(), 'alocacao':alocacao, 'agentes':agentes, \
-                                    'agentealocacao':agentealocacao, 'viaturas':viaturas, 'erro':'Não foi possível cadastrar o recolhimento'
+                                    'agentes_alocacao':agentes_alocacao, 'viaturas':viaturas, 'erro':'Não foi possível cadastrar o recolhimento'
                                 }
                             )
             elif 'viaturaNumero' in request.POST:
@@ -565,7 +570,7 @@ def cadastrar_recolhimento(request, pk_alocacao):
                     except ValueError:
                         return render(request, 'management/cadastrar_recolhimento.html',
                                 {'formulario':FormRecolhimento(), 'alocacao':alocacao, 'agentes':agentes, \
-                                    'agentealocacao':agentealocacao, 'viaturas':viaturas, 'erroViatura':'Viatura inexistente'
+                                    'agentes_alocacao':agentes_alocacao, 'viaturas':viaturas, 'erroViatura':'Viatura inexistente'
                                 }
                             )
                 else:
@@ -578,7 +583,7 @@ def cadastrar_recolhimento(request, pk_alocacao):
                     except ValueError:
                         return render(request, 'management/cadastrar_recolhimento.html',
                                 {'formulario':FormRecolhimento(), 'alocacao':alocacao, 'agentes':agentes, \
-                                    'agentealocacao':agentealocacao, 'viaturas':viaturas, 'erro':'Não foi possível cadastrar o recolhimento'
+                                    'agentes_alocacao':agentes_alocacao, 'viaturas':viaturas, 'erro':'Não foi possível cadastrar o recolhimento'
                                 }
                             )
 

@@ -20,7 +20,17 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
+"""
+DESCOMENTE PARA UTILIZAR EM LOCALHOST
 
+ALLOWED_HOSTS = []
+"""
+
+"""
+DESCOMENTE PARA OBTER AJUDA EM ERROS
+
+DEBUG = True
+"""
 
 # Application definition
 
@@ -65,7 +75,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'stock_manager.wsgi.application'
 
 """
-DESCOMENTE ESTÁ PARTE DO CÓDIGO PARA UTILIZAR O BANCO DE DADOS
+DESCOMENTE PARA UTILIZAR O BANCO DE DADOS
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
@@ -100,7 +110,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'pt-br'
 
 TIME_ZONE = 'UTC'
 

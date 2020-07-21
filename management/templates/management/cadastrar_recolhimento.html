@@ -27,14 +27,9 @@
             </p>
             <p><span class="mr-2"><strong>Item:</strong> {{ alocacao.item.nome }}</span> <span><strong>Quantidade:</strong> {{ alocacao.quantidade }}</span></p>
             <p><strong>Motivo:</strong> {{ alocacao.motivo|striptags|truncatechars:27 }}</p>
-            <p class="mb-0"><span class="mr-2"><strong>Agente{{ agentealocacao.count|pluralize }}:</strong>
-                {% for agente in agentealocacao %}
-                  {% if agente %}
-                    {{ agente.agente.gritodeguerra }} e
-                  {% else %}
-                    {{ agente.agente.gritodeguerra }}
-                  {% endif %}
-                {% endfor %}
+            <p class="mb-0">
+              <span class="mr-2">
+                <strong>Agentes:</strong> {{ agentes_alocacao }}
               </span>
               <span>
                 {% if alocacao.viatura %}
