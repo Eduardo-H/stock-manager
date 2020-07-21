@@ -1188,6 +1188,7 @@ def cadastrar_item(request):
             quantidade = request.POST['quantidade']
             quantidade = int(quantidade)
             estoque.quantidade = quantidade
+            estoque.item_id = item.id
             item.save()
             estoque.save()
             return redirect('menu_estoque')
