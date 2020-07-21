@@ -1184,12 +1184,11 @@ def cadastrar_item(request):
             formulario = FormItem(request.POST)
             item = formulario.save(commit=False)
             estoque = Estoque()
-            estoque.item = item
-            quantidade = request.POST['quantidade']
-            quantidade = int(quantidade)
-            estoque.quantidade = quantidade
-            estoque.item_id = item.id
             item.save()
+            estoque.item = item
+            estoque.quantidade = int(request.POST['quantidade'])
+            estoque.item_id = item.id
+
             estoque.save()
             return redirect('menu_estoque')
         except ValueError:
