@@ -36,7 +36,7 @@
                   </div>
                   <div class="card-body">
                     <p><strong>Nome:</strong> {{ agente.nome|striptags|truncatechars:27 }}</p>
-                    <p><strong>Data de Nascimento:</strong> {{ agente.datanascimento|date:'d/m/Y' }}</p>
+                    <p><strong>Data de Nascimento:</strong> {% if agente.datanascimento %} {{ agente.datanascimento|date:'d/m/Y' }} {% else %} Não informado {% endif %}</p>
                     <p class="mb-0"><strong>Sexo:</strong> {{ agente.sexo }}</p>
                   </div>
                   <div class="card-footer text-center">

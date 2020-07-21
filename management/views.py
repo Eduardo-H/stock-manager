@@ -1034,7 +1034,12 @@ def editar_agente(request, pk_agente):
     else:
         try:
             formulario = FormAgente(request.POST, instance=agente)
-            formulario.save()
+            agente = formulario.save(commit=False)
+            data = request.POST['datanascimento']
+            if len(data) > 7:
+                data = mudarformato(data)
+                agente.datanascimento = data
+            agente.save()
             return redirect('menu_agente')
         except ValueError:
             return render(request, 'management/editar_agente.html',
