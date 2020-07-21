@@ -191,7 +191,8 @@
   </script>
 
   <script>
-    document.querySelector('#add-agent').addEventListener('click', function() {
+    document.querySelector('#add-agent').addEventListener('click', function(e) {
+      e.preventDefault();
       document.querySelector('#agente-2').classList.toggle('d-none');
 
       var icon = document.querySelector('#icon');

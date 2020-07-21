@@ -83,7 +83,7 @@ def menu_alocacao(request):
 def criar_alocacao(request):
     itens = Item.objects.all()
     viaturas = Viatura.objects.all().order_by('numero')
-    agentes = Agente.objects.all().order_by('nome')
+    agentes = Agente.objects.all().order_by('gritodeguerra')
 
     if request.method == 'GET':
         return render(request, 'management/criar_alocacao.html',
@@ -217,7 +217,7 @@ def editar_alocacao(request, pk_alocacao):
     alocacao = get_object_or_404(Alocacao, pk=pk_alocacao)
     if request.method == 'GET':
         agentes_alocados = AlocacaoAgente.objects.filter(alocacao_id=pk_alocacao)
-        agentes = Agente.objects.all()
+        agentes = Agente.objects.all().order_by('gritodeguerra')
 
         agente_1_id = agentes_alocados[0].agente.id
         agente_2_id = int(0)
