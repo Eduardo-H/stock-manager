@@ -143,9 +143,12 @@
               <div class="col-lg-4">
                 <div class="form-group">
                   <label for="agente">Agente</label>
-                  <select class="form-control" name="agente-1">
+                  <select class="form-control"
+                    {% if agentes.count > 5 %} id="viatura" onfocus='this.size=5;' onblur='this.size=1;' onchange='this.size=1; this.blur();' {% endif %}
+                    name="agente-1"
+                  >
                     {% for agente in agentes %}
-                      <option value="{{ agente.id }}">{{ agente.gritodeguerra }}</option>
+                      <option value="{{ agente.id }}" {% if agentes.count > 5 %} id="select-option" {% endif %}>{{ agente.gritodeguerra }}</option>
                     {% endfor %}
                   </select>
                 </div>
@@ -156,10 +159,13 @@
               <div class="col-lg-4 mx-auto mb-2">
                 <div class="d-none" id="agente-2">
                   <label for="agente">Agente</label>
-                  <select class="form-control" name="agente-2">
+                  <select class="form-control agente-2-valor"
+                    {% if agentes.count > 5 %} id="viatura" onfocus='this.size=5;' onblur='this.size=1;' onchange='this.size=1; this.blur();' {% endif %}
+                    name="agente-2"
+                  >
                     <option value="-">-</option>
                     {% for agente in agentes %}
-                      <option value="{{ agente.id }}">{{ agente.gritodeguerra }}</option>
+                      <option value="{{ agente.id }}" {% if agentes.count > 5 %} id="select-option" {% endif %}>{{ agente.gritodeguerra }}</option>
                     {% endfor %}
                   </select>
                 </div>
@@ -264,6 +270,7 @@
       } else if (icon.classList.contains('fa-minus')) {
         document.querySelector('#icon').classList.remove('fa-minus');
         document.querySelector('#icon').classList.add('fa-plus');
+        document.querySelector('.agente-2-valor').selectedIndex = "0";
       }
 
     });
