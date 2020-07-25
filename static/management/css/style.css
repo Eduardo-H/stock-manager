@@ -1,5 +1,6 @@
 body {
   font-family: 'Roboto', Arial;
+  text-rendering: optimizeLegibility;
 }
 /*--------------*/
 /* Scroll Bars */
@@ -79,7 +80,6 @@ body::-webkit-scrollbar-thumb {
   border-radius: 40px;
 }
 
-
 /*-----------------*/
 /* Demais estilos */
 /*---------------*/
@@ -125,4 +125,112 @@ body::-webkit-scrollbar-thumb {
 
 #btn-pesquisa {
   border-top-right-radius: 3px !important;
+}
+
+/*-------------------*/
+/*   Media Queries  */
+/*------------------*/
+@media (max-width: 991px) {
+  /*-------
+    Botões
+  --------*/
+  .btn-agente {
+    margin: 0 !important;
+  }
+
+  .btn-alocacao {
+    font-size: 12px !important;
+  }
+
+  .btn-config {
+    font-size: 9px !important;
+  }
+
+  .btn-recolhimento {
+    font-size: 9px !important;
+  }
+
+  .btn-estoque{
+    padding: 0;
+    display: flex !important;
+    font-size: 15px;
+    align-items: center !important;
+    justify-content: center;
+  }
+
+  .btn-estoque i {
+    font-size: 25px;
+    margin-right: 15px;
+    margin-bottom: 0 !important;
+  }
+
+  .num-perdidos {
+    margin-bottom: 0!important;
+    font-size: 8px !important;
+    margin-right: 10px;
+  }
+
+  .msg-perdidos{
+    margin-bottom: 0!important;
+    font-size: 14px;
+  }
+
+  #add-agent {
+    margin-right: 7% !important;
+  }
+
+  #add-agent-recolhimento {
+    margin-right: 7%;
+  }
+
+  /*--------
+    NAVBAR
+  ----------*/
+  #navbar-brand {
+    margin-left: 5px !important;
+  }
+
+  .menu-link {
+    margin-top: 15px !important;
+  }
+
+  #user-button {
+    margin-left: 5px !important;
+  }
+
+  /*---------
+    Tabelas
+  -----------*/
+  tbody th {
+    font-size: 14px !important;
+  }
+
+  .tabela-agente-tr {
+    font-size: 12px !important;
+    font-weight: 300 !important;
+  }
+
+  #tabela-colaboracao {
+    max-height: 500px !important;
+  }
+
+  #tabela-colaboracao::-webkit-scrollbar,
+  #tabela-item-perdido::-webkit-scrollbar {
+    width: 5px !important;
+  }
+
+  /*--------
+    Outros
+  ----------*/
+  .display-4 {
+    font-size: 40px !important;
+  }
+
+  .total-perdido {
+    font-size: 20px !important;
+  }
+
+  #paginador {
+    position: relative;
+  }
 }

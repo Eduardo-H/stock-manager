@@ -53,21 +53,21 @@
           {% endif %}
 
           <div class="d-flex">
-            <a href="{% url 'menu_alocacao' %}" class="btn btn-outline-primary rounded-pill mt-3 mx-auto"><i class="fas fa-arrow-left"></i> Voltar</a>
+            <a href="{% url 'menu_alocacao' %}" class="btn btn-outline-primary rounded-pill mt-3 mx-auto btn-alocacao"><i class="fas fa-arrow-left"></i> Voltar</a>
             {% if alocacao.status == 'Aberto' %}
-              <a href="#" data-toggle="modal" data-target="#desativar-alocacao" class="btn btn-outline-danger rounded-pill mt-3 mx-auto" id="btn-desativar">
+              <a href="#" data-toggle="modal" data-target="#desativar-alocacao" class="btn btn-outline-danger rounded-pill mt-3 mx-auto btn-alocacao" id="btn-desativar">
                 <i class="fas fa-times-circle"></i> Desativar
               </a>
-              <a href="{% url 'editar_alocacao' alocacao.id %}" class="btn btn-outline-warning rounded-pill mt-3 mx-auto"><i class="fas fa-pencil-alt"></i> Editar</a>
+              <a href="{% url 'editar_alocacao' alocacao.id %}" class="btn btn-outline-warning rounded-pill mt-3 mx-auto btn-alocacao"><i class="fas fa-pencil-alt"></i> Editar</a>
               {% if alocacao.quantidade > 1 %}
-                <a href="#" data-toggle="modal" data-target="#modal-escolha-recolhimento" class="btn btn-outline-success rounded-pill mt-3 mx-auto">
+                <a href="#" data-toggle="modal" data-target="#modal-escolha-recolhimento" class="btn btn-outline-success rounded-pill mt-3 mx-auto btn-alocacao">
                   <i class="fas fa-check"></i> Recolher
                 </a>
               {% else %}
-                <a href="{% url 'cadastrar_recolhimento' alocacao.id %}" class="btn btn-outline-success rounded-pill mt-3 mx-auto"><i class="fas fa-check"></i> Recolher</a>
+                <a href="{% url 'cadastrar_recolhimento' alocacao.id %}" class="btn btn-outline-success rounded-pill mt-3 mx-auto btn-alocacao"><i class="fas fa-check"></i> Recolher</a>
               {% endif %}
             {% elif alocacao.status == 'Desativado' %}
-              <a href="#" data-toggle="modal" data-target="#ativar-alocacao" class="btn btn-outline-success rounded-pill mt-3 mx-auto" id="btn-ativar"><i class="fas fa-check"></i> Ativar</a>
+              <a href="#" data-toggle="modal" data-target="#ativar-alocacao" class="btn btn-outline-success rounded-pill mt-3 mx-auto btn-alocacao" id="btn-ativar"><i class="fas fa-check"></i> Ativar</a>
             {% endif %}
           </div>
 
@@ -133,8 +133,8 @@
             <div class="modal-body">
               <div class="container-fluid">
                 <div class="d-flex justify-content-center">
-                  <a href="{% url 'cadastrar_recolhimento_parcial' alocacao.id %}" class="btn btn-primary mr-4">Recolhimento Parcial</a>
-                  <a href="{% url 'cadastrar_recolhimento' alocacao.id %}" class="btn btn-success">Recolhimento Completo</a>
+                  <a href="{% url 'cadastrar_recolhimento_parcial' alocacao.id %}" class="btn btn-primary mr-4 btn-alocacao">Recolhimento Parcial</a>
+                  <a href="{% url 'cadastrar_recolhimento' alocacao.id %}" class="btn btn-success btn-alocacao">Recolhimento Completo</a>
                 </div>
               </div>
             </div>

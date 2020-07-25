@@ -7,19 +7,19 @@
       <div class="row justify-content-center mt-4">
         <!-- Botões para cadastro e visualização -->
         <div class="col-lg-4">
-          <a href="{% url 'adicionar_estoque' %}" class="btn btn-primary btn-block py-4 px-5 mb-3 rounded-pill">
-            <i class="fas fa-box-open fa-3x mb-3"></i><br> ADICIONAR AO ESTOQUE
+          <a href="{% url 'adicionar_estoque' %}" class="btn btn-primary btn-block py-4 px-5 mb-3 rounded-pill btn-estoque">
+            <i class="fas fa-box-open fa-3x mb-3 d-block"></i> ADICIONAR AO ESTOQUE
           </a>
         </div>
         <div class="col-lg-4">
-          <a href="{% url 'cadastrar_item' %}" class="btn btn-success btn-block py-4 px-5 mb-3 rounded-pill">
-            <i class="fas fa-plus-circle fa-3x mb-3"></i><br> ADICIONAR NOVO ITEM
+          <a href="{% url 'cadastrar_item' %}" class="btn btn-success btn-block py-4 px-5 mb-3 rounded-pill btn-estoque">
+            <i class="fas fa-plus-circle fa-3x mb-3 d-block"></i> ADICIONAR NOVO ITEM
           </a>
         </div>
         <div class="col-lg-4">
-          <a href="{% url 'menu_item_perdido' %}" class="btn btn-warning btn-block py-3 px-4 mb-3 rounded-pill">
-            <h2 class="display-4 mb-1">{{ totalperdido }}</h2>
-            <p class="mb-2">ITENS PERDIDOS/EXTRAVIADOS</p>
+          <a href="{% url 'menu_item_perdido' %}" class="btn btn-warning btn-block py-3 px-4 mb-3 rounded-pill btn-estoque">
+            <h2 class="display-4 mb-1 num-perdidos">{{ totalperdido }}</h2>
+            <p class="mb-2 msg-perdidos">ITENS PERDIDOS/EXTRAVIADOS</p>
           </a>
         </div>
       </div>

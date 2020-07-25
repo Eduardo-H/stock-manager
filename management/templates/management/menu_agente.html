@@ -5,10 +5,10 @@
     <div class="container">
       <h1 class="display-4 text-center mb-5">Agentes</h1>
       <div class="row mb-4">
-        <div class="col-lg-3 ml-auto mr-5">
+        <div class="col-lg-3 ml-auto mr-5 btn-agente">
           <a href="{% url 'cadastrar_agente' %}" class="btn btn-primary btn-block py-2 mb-4 rounded-pill"><i class="fas fa-plus mr-2"></i> ADICIONAR NOVO AGENTE</a>
         </div>
-        <div class="col-lg-3 mr-auto ml-5">
+        <div class="col-lg-3 mr-auto ml-5 btn-agente">
           <a href="{% url 'procurar_agente' %}" class="btn btn-success btn-block py-2 mb-4 rounded-pill"><i class="fas fa-search"></i> PROCURAR AGENTE</a>
         </div>
       </div>
@@ -19,7 +19,7 @@
             <div class="table-responsive" id="tabela-colaboracao">
               <table class="table table-hover">
                   <thead class="thead-dark">
-                    <tr>
+                    <tr class="tabela-agente-tr">
                       <th scope="col" class="text-center">#</th>
                       <th scope="col" class="text-center">Grito de Guerra</th>
                       <th scope="col" class="text-center">Sexo</th>
