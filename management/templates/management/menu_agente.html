@@ -128,7 +128,10 @@
           x = linhas[i].getElementsByTagName('TD')[0];
           y = linhas[i + 1].getElementsByTagName('TD')[0];
 
-          if(x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+          x = Number(x.innerHTML)
+          y = Number(y.innerHTML)
+
+          if(x > y) {
             deveTrocar = true;
             break;
           }
@@ -154,7 +157,10 @@
           x = linhas[i].getElementsByTagName('TD')[0];
           y = linhas[i + 1].getElementsByTagName('TD')[0];
 
-          if(x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+          x = Number(x.innerHTML)
+          y = Number(y.innerHTML)
+
+          if(x < y) {
             deveTrocar = true;
             break;
           }
