@@ -1,23 +1,38 @@
 {% extends 'management/base.html' %}
 
 {% block content %}
-  <section class="py-5">
+  <section class="pt-5 pb-3">
     <div class="container">
       <h1 class="display-4 text-center mb-5">Agentes</h1>
-      <div class="row mb-4">
+      <div class="row mb-3">
         <div class="col-lg-3 ml-auto mr-5 btn-agente">
           <a href="{% url 'cadastrar_agente' %}" class="btn btn-primary btn-block py-2 mb-4 rounded-pill"><i class="fas fa-plus mr-2"></i> ADICIONAR NOVO AGENTE</a>
         </div>
         <div class="col-lg-3 mr-auto ml-5 btn-agente">
-          <a href="{% url 'procurar_agente' %}" class="btn btn-success btn-block py-2 mb-4 rounded-pill"><i class="fas fa-search"></i> PROCURAR AGENTE</a>
+          <a href="{% url 'procurar_agente' %}" class="btn btn-success btn-block py-2 mb-4 rounded-pill"><i class="fas fa-search mr-2"></i> PROCURAR AGENTE</a>
         </div>
       </div>
 
-      <div class="row">
+      <div class="row justify-content-end">
+
+        <div class="mb-3 mr-4">
+          <div class="dropdown">
+            <a href="#" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-expanded="false" data-offset="-58,0">
+              Filtrar <i class="fas fa-filter"></i>
+            </a>
+            <div class="dropdown-menu">
+              <button onclick="ordenarAZ()" class="dropdown-item"><i class="fas fa-sort-alpha-down"></i> De A a Z</button>
+              <button onclick="ordenarZA()" class="dropdown-item"><i class="fas fa-sort-alpha-up-alt"></i> De Z a A</button>
+              <button onclick="ordenarCrescente()" class="dropdown-item"><i class="fas fa-sort-numeric-down"></i> Crescente</button>
+              <button onclick="ordenarDecrescente()" class="dropdown-item"><i class="fas fa-sort-numeric-up-alt"></i> Decrescente</button>
+            </div>
+          </div>
+        </div>
+
         <div class="col-lg-12">
           {% if agentes %}
             <div class="table-responsive" id="tabela-colaboracao">
-              <table class="table table-hover">
+              <table class="table table-hover" id="tabela">
                   <thead class="thead-dark">
                     <tr class="tabela-agente-tr">
                       <th scope="col" class="text-center">#</th>
@@ -29,10 +44,10 @@
                 <tbody>
                   {% for agente in agentes %}
                     <tr>
-                      <th scope="row" class="text-center py-4">{{ agente.id }}</th>
-                      <th class="text-center py-4">{{ agente.gritodeguerra }}</th>
-                      <th class="text-center py-4">{{ agente.sexo }}</th>
-                      <th class="text-center py-3"><a href="{% url 'detalhe_agente' agente.id %}" class="btn btn-outline-primary">Detalhes</a></th>
+                      <td scope="row" class="text-center py-4">{{ agente.id }}</td>
+                      <td class="text-center py-4">{{ agente.gritodeguerra }}</td>
+                      <td class="text-center py-4">{{ agente.sexo }}</td>
+                      <td class="text-center py-3"><a href="{% url 'detalhe_agente' agente.id %}" class="btn btn-outline-primary">Detalhes</a></td>
                     </tr>
                   {% endfor %}
                 </tbody>
@@ -45,4 +60,112 @@
       </div>
     </div>
   </section>
+
+  <script>
+    function ordenarAZ() {
+      var tabela, linhas, trocando, i, x, y, deveTrocar;
+      tabela = document.getElementById('tabela');
+      trocando = true;
+
+      while (trocando) {
+        trocando = false;
+        linhas = tabela.rows;
+
+        for (i=1; i < (linhas.length - 1); i++) {
+          deveTrocar = false;
+          x = linhas[i].getElementsByTagName('TD')[1];
+          y = linhas[i + 1].getElementsByTagName('TD')[1];
+
+          if(x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+            deveTrocar = true;
+            break;
+          }
+        }
+        if (deveTrocar) {
+          linhas[i].parentNode.insertBefore(linhas[i + 1], linhas[i]);
+          trocando = true
+        }
+      }
+    }
+
+    function ordenarZA() {
+      var tabela, linhas, trocando, i, x, y, deveTrocar;
+      tabela = document.getElementById('tabela');
+      trocando = true;
+
+      while (trocando) {
+        trocando = false;
+        linhas = tabela.rows;
+
+        for (i=1; i < (linhas.length - 1); i++) {
+          deveTrocar = false;
+          x = linhas[i].getElementsByTagName('TD')[1];
+          y = linhas[i + 1].getElementsByTagName('TD')[1];
+
+          if(x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+            deveTrocar = true;
+            break;
+          }
+        }
+        if (deveTrocar) {
+          linhas[i].parentNode.insertBefore(linhas[i + 1], linhas[i]);
+          trocando = true
+        }
+      }
+    }
+
+    function ordenarCrescente() {
+      var tabela, linhas, trocando, i, x, y, deveTrocar;
+      tabela = document.getElementById('tabela');
+      trocando = true;
+
+      while (trocando) {
+        trocando = false;
+        linhas = tabela.rows;
+
+        for (i=1; i < (linhas.length - 1); i++) {
+          deveTrocar = false;
+          x = linhas[i].getElementsByTagName('TD')[0];
+          y = linhas[i + 1].getElementsByTagName('TD')[0];
+
+          if(x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+            deveTrocar = true;
+            break;
+          }
+        }
+        if (deveTrocar) {
+          linhas[i].parentNode.insertBefore(linhas[i + 1], linhas[i]);
+          trocando = true
+        }
+      }
+    }
+
+    function ordenarDecrescente() {
+      var tabela, linhas, trocando, i, x, y, deveTrocar;
+      tabela = document.getElementById('tabela');
+      trocando = true;
+
+      while (trocando) {
+        trocando = false;
+        linhas = tabela.rows;
+
+        for (i=1; i < (linhas.length - 1); i++) {
+          deveTrocar = false;
+          x = linhas[i].getElementsByTagName('TD')[0];
+          y = linhas[i + 1].getElementsByTagName('TD')[0];
+
+          if(x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+            deveTrocar = true;
+            break;
+          }
+        }
+        if (deveTrocar) {
+          linhas[i].parentNode.insertBefore(linhas[i + 1], linhas[i]);
+          trocando = true
+        }
+      }
+    }
+  </script>
+
+
 {% endblock %}

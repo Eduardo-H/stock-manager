@@ -1162,11 +1162,11 @@ def menu_estoque(request):
                 estoque.save()
 
                 return render(request, 'management/menu_estoque.html',
-                    {'itensestoque':itensestoque, 'itensperdidoextraviado':itensperdidoextraviado, 'confirmacao':'Item editado com sucesso!'}
+                    {'itensestoque':itensestoque, 'totalperdido':total_perdido_extraviado, 'confirmacao':'Item editado com sucesso!'}
                 )
             except ValueError:
                 return render(request, 'management/menu_estoque.html',
-                    {'itensestoque':itensestoque, 'itensperdidoextraviado':itensperdidoextraviado, 'erro':'Não foi possível editar o item'}
+                    {'itensestoque':itensestoque, 'totalperdido':total_perdido_extraviado, 'erro':'Não foi possível editar o item'}
                 )
 
 @login_required
