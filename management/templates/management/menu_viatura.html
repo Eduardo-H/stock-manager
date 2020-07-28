@@ -10,11 +10,26 @@
         </div>
       </div>
 
-      <div class="row  mt-4">
+      <div class="row justify-content-end mt-4">
+
+        <div class="mb-3 mr-4">
+          <div class="dropdown">
+            <a href="#" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown" aria-expanded="false" data-offset="-125,0">
+              Filtrar <i class="fas fa-filter"></i>
+            </a>
+            <div class="dropdown-menu">
+              <button onclick="ordenarNumeroCrescente()" class="dropdown-item"><i class="fas fa-sort-numeric-down"></i> Nº Viatura Crescente</button>
+              <button onclick="ordenarNumeroDecrescente()" class="dropdown-item"><i class="fas fa-sort-numeric-up-alt"></i> Nº Viatura Decrescente</button>
+              <button onclick="ordenarCrescente()" class="dropdown-item"><i class="fas fa-sort-amount-up"></i> ID Crescente</button>
+              <button onclick="ordenarDecrescente()" class="dropdown-item"><i class="fas fa-sort-amount-down"></i> ID Decrescente</button>
+            </div>
+          </div>
+        </div>
+
         <div class="col-lg-12">
           {% if viaturas %}
             <div class="table-resposive" id="tabela-colaboracao">
-              <table class="table table-hover">
+              <table class="table table-hover" id="tabela">
                 <thead class="thead-dark">
                   <tr>
                     <th scope="col" class="text-center">#</th>
@@ -26,10 +41,10 @@
                 <tbody>
                   {% for viatura in viaturas %}
                     <tr>
-                      <th scope="row" class="text-center py-4">{{ viatura.id }}</th>
-                      <th class="text-center py-4">{{ viatura.numero }}</th>
-                      <th class="text-center py-4">{{ viatura.placa }}</th>
-                      <th class="text-center py-3">
+                      <td scope="row" class="text-center py-4">{{ viatura.id }}</td>
+                      <td class="text-center py-4">{{ viatura.numero }}</td>
+                      <td class="text-center py-4">{{ viatura.placa }}</td>
+                      <td class="text-center py-3">
                         <div class="dropdown">
                           <a href="#" class="nav-link dropdown-toggle btn btn-outline-primary mx-auto" style="max-width: 100px" data-toggle="dropdown" aria-expanded="false">Opções</a>
                           <div class="dropdown-menu">
@@ -37,7 +52,7 @@
                             <a href="#" class="dropdown-item" data-toggle="modal" data-target="#excluir-viatura-modal-{{ viatura.numero }}"><i class="fas fa-trash"></i> Deletar</a>
                           </div>
                         </div>
-                      </th>
+                      </td>
                     </tr>
 
                     <!-- Modal para a edição da viatura -->
@@ -105,4 +120,123 @@
       </div>
     </div>
   </section>
+
+  <script>
+    function ordenarNumeroCrescente() {
+      console.log('ENTROU')
+      var tabela, linhas, trocando, i, x, y, deveTrocar;
+      tabela = document.getElementById('tabela');
+      trocando = true;
+
+      while (trocando) {
+        trocando = false;
+        linhas = tabela.rows;
+
+        for (i=1; i < (linhas.length - 1); i++) {
+          deveTrocar = false;
+          x = linhas[i].getElementsByTagName('TD')[1];
+          y = linhas[i + 1].getElementsByTagName('TD')[1];
+
+          x = Number(x.innerHTML)
+          y = Number(y.innerHTML)
+
+          if(x > y) {
+            deveTrocar = true;
+            break;
+          }
+        }
+        if (deveTrocar) {
+          linhas[i].parentNode.insertBefore(linhas[i + 1], linhas[i]);
+          trocando = true
+        }
+      }
+    }
+
+    function ordenarNumeroDecrescente() {
+      var tabela, linhas, trocando, i, x, y, deveTrocar;
+      tabela = document.getElementById('tabela');
+      trocando = true;
+
+      while (trocando) {
+        trocando = false;
+        linhas = tabela.rows;
+
+        for (i=1; i < (linhas.length - 1); i++) {
+          deveTrocar = false;
+          x = linhas[i].getElementsByTagName('TD')[1];
+          y = linhas[i + 1].getElementsByTagName('TD')[1];
+
+          x = Number(x.innerHTML)
+          y = Number(y.innerHTML)
+
+          if(x < y) {
+            deveTrocar = true;
+            break;
+          }
+        }
+        if (deveTrocar) {
+          linhas[i].parentNode.insertBefore(linhas[i + 1], linhas[i]);
+          trocando = true
+        }
+      }
+    }
+
+    function ordenarCrescente() {
+      var tabela, linhas, trocando, i, x, y, deveTrocar;
+      tabela = document.getElementById('tabela');
+      trocando = true;
+
+      while (trocando) {
+        trocando = false;
+        linhas = tabela.rows;
+
+        for (i=1; i < (linhas.length - 1); i++) {
+          deveTrocar = false;
+          x = linhas[i].getElementsByTagName('TD')[0];
+          y = linhas[i + 1].getElementsByTagName('TD')[0];
+
+          x = Number(x.innerHTML)
+          y = Number(y.innerHTML)
+
+          if(x > y) {
+            deveTrocar = true;
+            break;
+          }
+        }
+        if (deveTrocar) {
+          linhas[i].parentNode.insertBefore(linhas[i + 1], linhas[i]);
+          trocando = true
+        }
+      }
+    }
+
+    function ordenarDecrescente() {
+      var tabela, linhas, trocando, i, x, y, deveTrocar;
+      tabela = document.getElementById('tabela');
+      trocando = true;
+
+      while (trocando) {
+        trocando = false;
+        linhas = tabela.rows;
+
+        for (i=1; i < (linhas.length - 1); i++) {
+          deveTrocar = false;
+          x = linhas[i].getElementsByTagName('TD')[0];
+          y = linhas[i + 1].getElementsByTagName('TD')[0];
+
+          x = Number(x.innerHTML)
+          y = Number(y.innerHTML)
+
+          if(x < y) {
+            deveTrocar = true;
+            break;
+          }
+        }
+        if (deveTrocar) {
+          linhas[i].parentNode.insertBefore(linhas[i + 1], linhas[i]);
+          trocando = true
+        }
+      }
+    }
+  </script>
 {% endblock %}
